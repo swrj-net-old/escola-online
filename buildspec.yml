@@ -8,7 +8,11 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws --version
-      - $(aws ecr get-login --region sa-east-1 --no-include-email)
+      - aws ecr get-login-password \
+        --region <region> \
+        | docker login \
+        --username AWS \
+        --password-stdin 332938810515.dkr.ecr.sa-east-1.amazonaws.com
   build:
     commands:
       - echo Build started on `date`
