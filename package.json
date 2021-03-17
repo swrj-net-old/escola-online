@@ -116,7 +116,9 @@
     "webpack:prod": "npm run cleanup && npm run webpack:prod:main && npm run clean-www",
     "webpack:test": "npm run test",
     "webpack-dev-server": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js",
-    "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js"
+    "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js",
+    "db:start": "docker-compose -f src/main/docker/postgresql.yml up -d",
+    "db:stop": "docker-compose -f src/main/docker/postgresql.yml down"
   },
   "jestSonar": {
     "reportPath": "target/test-results/jest",
