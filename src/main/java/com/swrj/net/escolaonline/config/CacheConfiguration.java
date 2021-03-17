@@ -47,6 +47,24 @@ public class CacheConfiguration {
             createCache(cm, com.swrj.net.escolaonline.domain.User.class.getName());
             createCache(cm, com.swrj.net.escolaonline.domain.Authority.class.getName());
             createCache(cm, com.swrj.net.escolaonline.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.swrj.net.escolaonline.domain.Pessoa.class.getName());
+            createCache(cm, com.swrj.net.escolaonline.domain.Pessoa.class.getName() + ".diretors");
+            createCache(cm, com.swrj.net.escolaonline.domain.Pessoa.class.getName() + ".professors");
+            createCache(cm, com.swrj.net.escolaonline.domain.Pessoa.class.getName() + ".alunos");
+            createCache(cm, com.swrj.net.escolaonline.domain.Escola.class.getName());
+            createCache(cm, com.swrj.net.escolaonline.domain.Escola.class.getName() + ".alunos");
+            createCache(cm, com.swrj.net.escolaonline.domain.Escola.class.getName() + ".unidades");
+            createCache(cm, com.swrj.net.escolaonline.domain.Diretor.class.getName());
+            createCache(cm, com.swrj.net.escolaonline.domain.Unidade.class.getName());
+            createCache(cm, com.swrj.net.escolaonline.domain.Unidade.class.getName() + ".diretors");
+            createCache(cm, com.swrj.net.escolaonline.domain.Unidade.class.getName() + ".professors");
+            createCache(cm, com.swrj.net.escolaonline.domain.Unidade.class.getName() + ".turmas");
+            createCache(cm, com.swrj.net.escolaonline.domain.Turma.class.getName());
+            createCache(cm, com.swrj.net.escolaonline.domain.Turma.class.getName() + ".matriculas");
+            createCache(cm, com.swrj.net.escolaonline.domain.Professor.class.getName());
+            createCache(cm, com.swrj.net.escolaonline.domain.Aluno.class.getName());
+            createCache(cm, com.swrj.net.escolaonline.domain.Aluno.class.getName() + ".matriculas");
+            createCache(cm, com.swrj.net.escolaonline.domain.Matricula.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

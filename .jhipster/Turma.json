@@ -1,0 +1,35 @@
+{
+  "name": "Turma",
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "matricula",
+      "otherEntityRelationshipName": "turmaMatricula",
+      "relationshipName": "matricula"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "unidade",
+      "otherEntityRelationshipName": "turma",
+      "relationshipName": "unidadeTurma",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210317023202",
+  "entityTableName": "turma",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

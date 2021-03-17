@@ -1,0 +1,34 @@
+{
+  "name": "Escola",
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "aluno",
+      "otherEntityRelationshipName": "escolaAluno",
+      "relationshipName": "aluno"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "unidade",
+      "otherEntityRelationshipName": "escolaUnidade",
+      "relationshipName": "unidade"
+    }
+  ],
+  "changelogDate": "20210317022902",
+  "entityTableName": "escola",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

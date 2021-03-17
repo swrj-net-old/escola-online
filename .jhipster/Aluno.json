@@ -1,0 +1,37 @@
+{
+  "name": "Aluno",
+  "fields": [],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "matricula",
+      "otherEntityRelationshipName": "alunoMatricula",
+      "relationshipName": "matricula"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "pessoa",
+      "otherEntityRelationshipName": "aluno",
+      "relationshipName": "pessoaAluno",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "escola",
+      "otherEntityRelationshipName": "aluno",
+      "relationshipName": "escolaAluno",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210317023402",
+  "entityTableName": "aluno",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}
