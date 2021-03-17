@@ -1,0 +1,68 @@
+entity Pessoa {
+  nome String
+}
+
+entity Escola {
+  nome String
+}
+
+entity Diretor {
+  anoLetivo Integer
+  dataInicio LocalDate
+  dataFim LocalDate
+}
+
+entity Unidade {
+  nome String
+}
+
+entity Turma {
+  nome String
+}
+
+entity Professor {
+  anoLetivo Integer
+  dataInicio LocalDate
+  dataFim LocalDate
+}
+
+entity Aluno {
+}
+
+entity Matricula {
+  anoLetivo Integer
+  dataInicio LocalDate
+  dataFim LocalDate
+}
+
+relationship OneToMany {
+  Pessoa to Diretor{pessoaDiretor}
+}
+relationship OneToMany {
+  Unidade to Diretor{unidadeDiretor}
+}  
+relationship OneToMany {
+  Pessoa to Professor{pessoaProfessor}
+}
+relationship OneToMany {
+  Unidade to Professor{unidadeProfessor}
+}  
+relationship OneToMany {
+  Pessoa to Aluno{pessoaAluno}
+}
+relationship OneToMany {
+  Escola to Aluno{EscolaAluno}
+}
+relationship OneToMany {
+  Escola to Unidade{EscolaUnidade}
+}
+relationship OneToMany {
+  Unidade to Turma{UnidadeTurma}
+}  
+relationship OneToMany {
+  Turma to Matricula{TurmaMatricula}
+}
+relationship OneToMany {
+  Aluno to Matricula{AlunoMatricula}
+}
+
