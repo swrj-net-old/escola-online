@@ -1,0 +1,318 @@
+enum TipoSanguineo {
+  NI,
+  AP,
+  AN,
+  BP,
+  BN,
+  ABP,
+  ABN,
+  OP,
+  ON
+}
+
+enum TipoDebito {
+  MENSALIDADE,
+  TAXA_MATERIAL,
+  TAXA_MATRICULA,
+  TAXA_DOCUMENTO,
+  UNIFORME,
+  LIVRO,
+  CANTINA,
+  EVENTO,
+  OUTROS
+}
+
+enum SituacaoDebito {
+  NAO_PAGO,
+  PAGO_PARCIAL,
+  PAGO,
+  CANCELADO
+}
+
+enum SituacaoSolicitacao {
+  AGUARDANDO,
+  EM_ANDAMENTO,
+  CONCLUIDO,
+  CANCELADO
+}
+
+enum UF {
+  AC,
+  AL,
+  AP,
+  AM,
+  BA,
+  CE,
+  DF,
+  ES,
+  GO,
+  MA,
+  MT,
+  MS,
+  MG,
+  PA,
+  PB,
+  PR,
+  PE,
+  PI,
+  RJ,
+  RN,
+  RS,
+  RO,
+  RR,
+  SC,
+  SP,
+  SE,
+  TO
+}
+
+entity Cidade {
+  nome String
+  Uf UF
+}
+
+entity Escola {
+  nome String
+  razaoSocial String
+  cnpjPrincipal String
+  url String
+  prefixo String
+  responsavelNome String,
+  responsavelCpf String,
+  responsavelEmail String,
+  responsavelCelular String
+}
+
+entity Pessoa {
+  nome String
+  cpf String
+  rg String
+  endereco String
+  complemento String
+  bairro String
+  cidade String 
+  cep String
+  telefoneCelular String
+  telefoneResidencial String
+  telefoneComercial String
+  email String
+  observacoes String
+}
+
+entity Diretor {
+  anoLetivo Integer
+  dataInicio LocalDate
+  dataFim LocalDate
+}
+
+entity Unidade {
+  nome String
+  cnpj String
+  endereco String
+  complemento String
+  bairro String
+  cidade String 
+  cep String  
+  telefoneComercial String
+  telefoneWhatsapp String
+  email String
+  facebook String
+  observacoes String
+}
+
+entity Serie {
+  nome String
+}
+
+entity Materia {
+  nome String
+  sigla String
+}
+
+entity Grade {
+  anoLetivo Integer
+}
+
+entity Turma {
+  nome String
+}
+
+entity Professor {
+  anoLetivo Integer
+  dataInicio LocalDate
+  dataFim LocalDate
+}
+
+entity Chamada {
+  dataAula LocalDate
+  observacoes String
+}
+
+entity Conteudo {
+  dataAula LocalDate
+  habilidadesCompetencias String
+  observacoes String
+}
+
+entity Aluno {
+  dataNascimento LocalDate
+  tipoSanguineo TipoSanguineo,
+  nomePai String,
+  telefonePai String,
+  nomeMae String,
+  telefoneMae String
+  nomeResponsavel String,
+  cpfResponsavel String,
+  observacoes String
+}		
+
+entity Matricula {
+  anoLetivo Integer
+  dataInicio LocalDate
+  dataFim LocalDate
+}
+
+entity Debito {
+  tipoDebito TipoDebito,
+  situacaoDebito SituacaoDebito,
+  dataVencimento LocalDate
+  dataPagamento LocalDate
+  valorOriginal BigDecimal
+  totalPago BigDecimal
+  totalDesconto BigDecimal
+  totalDevido BigDecimal
+  observacoes String
+}
+
+entity HistoricoDebito {
+  dataLancamento LocalDate
+  situacaoDebito SituacaoDebito,
+  dataVencimento LocalDate
+  dataPagamento LocalDate
+  valorOriginal BigDecimal
+  totalPago BigDecimal
+  totalDesconto BigDecimal
+  totalDevido BigDecimal
+  observacoes String
+}
+
+entity DetalheUsuario {
+   cpf String
+   celular String
+}
+
+
+entity TipoSolicitacao {
+  nome String
+  prazoAtendimento Integer
+  valorEmissao BigDecimal
+}
+
+entity Solicitacao {
+  situacaoSolicitacao SituacaoSolicitacao
+  dataSolicitacao LocalDate
+  observacoesSolicitante String
+  observacoesAtendimento String
+}
+
+relationship OneToMany {
+  TipoSolicitacao to Solicitacao{tipoSolicitacaoSolicitacao}
+}
+
+relationship OneToMany {
+  Aluno to Solicitacao{alunoSolicitacao}
+}
+
+relationship OneToOne {
+   User to DetalheUsuario(usuario)
+}
+
+relationship OneToMany {
+  Aluno to Debito{alunoDebito}
+}
+
+relationship OneToMany {
+  Debito to HistoricoDebito{debitoHistoricoDebito}
+}
+
+relationship OneToMany {
+  User to HistoricoDebito{usuarioLancamento}
+}
+
+relationship OneToMany {
+  Serie to Grade{serieGrade}
+}
+
+relationship OneToMany {
+  Materia to Grade{materiaGrade}
+}
+
+relationship OneToMany {
+  Cidade to Pessoa{cidadePessoa}
+}
+
+relationship OneToMany {
+  Aluno to Chamada{alunoChamada}
+}
+
+relationship OneToMany {
+  Turma to Chamada{turmaChamada}
+}
+
+relationship OneToMany {
+  Professor to Chamada{professorChamada}
+}
+
+relationship OneToMany {
+  Turma to Conteudo{turmaConteudo}
+}
+
+relationship OneToMany {
+  Professor to Conteudo{professorConteudo}
+}
+
+relationship OneToMany {
+  Materia to Conteudo{materiaConteudo}
+}
+
+relationship OneToMany {
+  Escola to Pessoa{escolaPessoa}
+}
+
+relationship OneToMany {
+  Pessoa to Diretor{pessoaDiretor}
+}
+relationship OneToMany {
+  Unidade to Diretor{unidadeDiretor}
+}  
+relationship OneToMany {
+  Pessoa to Professor{pessoaProfessor}
+}
+relationship OneToMany {
+  Unidade to Professor{unidadeProfessor}
+}  
+relationship OneToMany {
+  Pessoa to Aluno{pessoaAluno}
+}
+relationship OneToMany {
+  Escola to Aluno{EscolaAluno}
+}
+relationship OneToMany {
+  Escola to Unidade{EscolaUnidade}
+}
+
+relationship OneToMany {
+  Serie to Turma{SerieTurma}
+}
+
+relationship OneToMany {
+  Unidade to Turma{UnidadeTurma}
+}  
+
+relationship OneToMany {
+  Turma to Matricula{TurmaMatricula}
+}
+relationship OneToMany {
+  Aluno to Matricula{AlunoMatricula}
+}
+
