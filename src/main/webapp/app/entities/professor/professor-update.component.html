@@ -1,0 +1,68 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-professor-heading" jhiTranslate="escolaOnlineApp.professor.home.createOrEditLabel">Create or edit a Professor</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.professor.anoLetivo" for="field_anoLetivo">Ano Letivo</label>
+                    <input type="number" class="form-control" name="anoLetivo" id="field_anoLetivo"
+                           formControlName="anoLetivo"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.professor.dataInicio" for="field_dataInicio">Data Inicio</label>
+                    <div class="input-group">
+                        <input id="field_dataInicio" type="text" class="form-control" name="dataInicio" ngbDatepicker #dataInicioDp="ngbDatepicker" formControlName="dataInicio"/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="dataInicioDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.professor.dataFim" for="field_dataFim">Data Fim</label>
+                    <div class="input-group">
+                        <input id="field_dataFim" type="text" class="form-control" name="dataFim" ngbDatepicker #dataFimDp="ngbDatepicker" formControlName="dataFim"/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="dataFimDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.professor.pessoaProfessor" for="field_pessoaProfessor">Pessoa Professor</label>
+                    <select class="form-control" id="field_pessoaProfessor" name="pessoaProfessor" formControlName="pessoaProfessor">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="pessoaOption.id === editForm.get('pessoaProfessor')!.value?.id ? editForm.get('pessoaProfessor')!.value : pessoaOption" *ngFor="let pessoaOption of pessoas; trackBy: trackById">{{ pessoaOption.id }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.professor.unidadeProfessor" for="field_unidadeProfessor">Unidade Professor</label>
+                    <select class="form-control" id="field_unidadeProfessor" name="unidadeProfessor" formControlName="unidadeProfessor">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="unidadeOption.id === editForm.get('unidadeProfessor')!.value?.id ? editForm.get('unidadeProfessor')!.value : unidadeOption" *ngFor="let unidadeOption of unidades; trackBy: trackById">{{ unidadeOption.id }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-cidade-heading" jhiTranslate="escolaOnlineApp.cidade.home.createOrEditLabel">Create or edit a Cidade</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.cidade.nome" for="field_nome">Nome</label>
+                    <input type="text" class="form-control" name="nome" id="field_nome"
+                           formControlName="nome"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.cidade.uf" for="field_uf">Uf</label>
+                    <select class="form-control" name="uf" formControlName="uf" id="field_uf">
+                        <option value="AC">{{ 'escolaOnlineApp.UF.AC' | translate }}</option>
+                        <option value="AL">{{ 'escolaOnlineApp.UF.AL' | translate }}</option>
+                        <option value="AP">{{ 'escolaOnlineApp.UF.AP' | translate }}</option>
+                        <option value="AM">{{ 'escolaOnlineApp.UF.AM' | translate }}</option>
+                        <option value="BA">{{ 'escolaOnlineApp.UF.BA' | translate }}</option>
+                        <option value="CE">{{ 'escolaOnlineApp.UF.CE' | translate }}</option>
+                        <option value="DF">{{ 'escolaOnlineApp.UF.DF' | translate }}</option>
+                        <option value="ES">{{ 'escolaOnlineApp.UF.ES' | translate }}</option>
+                        <option value="GO">{{ 'escolaOnlineApp.UF.GO' | translate }}</option>
+                        <option value="MA">{{ 'escolaOnlineApp.UF.MA' | translate }}</option>
+                        <option value="MT">{{ 'escolaOnlineApp.UF.MT' | translate }}</option>
+                        <option value="MS">{{ 'escolaOnlineApp.UF.MS' | translate }}</option>
+                        <option value="MG">{{ 'escolaOnlineApp.UF.MG' | translate }}</option>
+                        <option value="PA">{{ 'escolaOnlineApp.UF.PA' | translate }}</option>
+                        <option value="PB">{{ 'escolaOnlineApp.UF.PB' | translate }}</option>
+                        <option value="PR">{{ 'escolaOnlineApp.UF.PR' | translate }}</option>
+                        <option value="PE">{{ 'escolaOnlineApp.UF.PE' | translate }}</option>
+                        <option value="PI">{{ 'escolaOnlineApp.UF.PI' | translate }}</option>
+                        <option value="RJ">{{ 'escolaOnlineApp.UF.RJ' | translate }}</option>
+                        <option value="RN">{{ 'escolaOnlineApp.UF.RN' | translate }}</option>
+                        <option value="RS">{{ 'escolaOnlineApp.UF.RS' | translate }}</option>
+                        <option value="RO">{{ 'escolaOnlineApp.UF.RO' | translate }}</option>
+                        <option value="RR">{{ 'escolaOnlineApp.UF.RR' | translate }}</option>
+                        <option value="SC">{{ 'escolaOnlineApp.UF.SC' | translate }}</option>
+                        <option value="SP">{{ 'escolaOnlineApp.UF.SP' | translate }}</option>
+                        <option value="SE">{{ 'escolaOnlineApp.UF.SE' | translate }}</option>
+                        <option value="TO">{{ 'escolaOnlineApp.UF.TO' | translate }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+{
+  "name": "Chamada",
+  "fields": [
+    {
+      "fieldName": "dataAula",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "observacoes",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "aluno",
+      "otherEntityRelationshipName": "chamada",
+      "relationshipName": "alunoChamada",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "turma",
+      "otherEntityRelationshipName": "chamada",
+      "relationshipName": "turmaChamada",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "professor",
+      "otherEntityRelationshipName": "chamada",
+      "relationshipName": "professorChamada",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210321215415",
+  "entityTableName": "chamada",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

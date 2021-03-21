@@ -1,0 +1,33 @@
+{
+  "name": "Cidade",
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "uf",
+      "fieldType": "UF",
+      "fieldValues": "AC,AL,AP,AM,BA,CE,DF,ES,GO,MA,MT,MS,MG,PA,PB,PR,PE,PI,RJ,RN,RS,RO,RR,SC,SP,SE,TO"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "pessoa",
+      "otherEntityRelationshipName": "cidadePessoa",
+      "relationshipName": "pessoa"
+    }
+  ],
+  "changelogDate": "20210321214415",
+  "entityTableName": "cidade",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

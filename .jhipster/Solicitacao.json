@@ -1,0 +1,49 @@
+{
+  "name": "Solicitacao",
+  "fields": [
+    {
+      "fieldName": "situacaoSolicitacao",
+      "fieldType": "SituacaoSolicitacao",
+      "fieldValues": "AGUARDANDO,EM_ANDAMENTO,CONCLUIDO,CANCELADO"
+    },
+    {
+      "fieldName": "dataSolicitacao",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "observacoesSolicitante",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "observacoesAtendimento",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "tipoSolicitacao",
+      "otherEntityRelationshipName": "solicitacao",
+      "relationshipName": "tipoSolicitacaoSolicitacao",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "aluno",
+      "otherEntityRelationshipName": "solicitacao",
+      "relationshipName": "alunoSolicitacao",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210321220215",
+  "entityTableName": "solicitacao",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}
