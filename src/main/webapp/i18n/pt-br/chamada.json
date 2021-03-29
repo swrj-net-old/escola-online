@@ -1,0 +1,28 @@
+{
+  "escolaOnlineApp": {
+    "chamada": {
+      "home": {
+        "title": "Chamadas",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Chamada",
+        "createOrEditLabel": "Criar ou editar Chamada",
+        "notFound": "Nenhum Chamada encontrado"
+      },
+      "created": "Um novo Chamada foi criado com o identificador {{ param }}",
+      "updated": "Um Chamada foi atualizado com o identificador {{ param }}",
+      "deleted": "Um Chamada foi excluído com o identificador {{ param }}",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Chamada {{ id }}?"
+      },
+      "detail": {
+        "title": "Chamada"
+      },
+      "id": "ID",
+      "dataAula": "Data Aula",
+      "observacoes": "Observacoes",
+      "alunoChamada": "Aluno Chamada",
+      "turmaChamada": "Turma Chamada",
+      "professorChamada": "Professor Chamada"
+    }
+  }
+}

@@ -1,0 +1,181 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-aluno-heading" data-cy="AlunoCreateUpdateHeading" jhiTranslate="escolaOnlineApp.aluno.home.createOrEditLabel">
+        Create or edit a Aluno
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="escolaOnlineApp.aluno.dataNascimento" for="field_dataNascimento"
+            >Data Nascimento</label
+          >
+          <div class="input-group">
+            <input
+              id="field_dataNascimento"
+              data-cy="dataNascimento"
+              type="text"
+              class="form-control"
+              name="dataNascimento"
+              ngbDatepicker
+              #dataNascimentoDp="ngbDatepicker"
+              formControlName="dataNascimento"
+            />
+            <span class="input-group-append">
+              <button type="button" class="btn btn-secondary" (click)="dataNascimentoDp.toggle()">
+                <fa-icon icon="calendar-alt"></fa-icon>
+              </button>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="escolaOnlineApp.aluno.tipoSanguineo" for="field_tipoSanguineo"
+            >Tipo Sanguineo</label
+          >
+          <select
+            class="form-control"
+            name="tipoSanguineo"
+            formControlName="tipoSanguineo"
+            id="field_tipoSanguineo"
+            data-cy="tipoSanguineo"
+          >
+            <option [ngValue]="null">{{ 'escolaOnlineApp.TipoSanguineo.null' | translate }}</option>
+            <option value="NI">{{ 'escolaOnlineApp.TipoSanguineo.NI' | translate }}</option>
+            <option value="AP">{{ 'escolaOnlineApp.TipoSanguineo.AP' | translate }}</option>
+            <option value="AN">{{ 'escolaOnlineApp.TipoSanguineo.AN' | translate }}</option>
+            <option value="BP">{{ 'escolaOnlineApp.TipoSanguineo.BP' | translate }}</option>
+            <option value="BN">{{ 'escolaOnlineApp.TipoSanguineo.BN' | translate }}</option>
+            <option value="ABP">{{ 'escolaOnlineApp.TipoSanguineo.ABP' | translate }}</option>
+            <option value="ABN">{{ 'escolaOnlineApp.TipoSanguineo.ABN' | translate }}</option>
+            <option value="OP">{{ 'escolaOnlineApp.TipoSanguineo.OP' | translate }}</option>
+            <option value="ON">{{ 'escolaOnlineApp.TipoSanguineo.ON' | translate }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="escolaOnlineApp.aluno.nomePai" for="field_nomePai">Nome Pai</label>
+          <input type="text" class="form-control" name="nomePai" id="field_nomePai" data-cy="nomePai" formControlName="nomePai" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="escolaOnlineApp.aluno.telefonePai" for="field_telefonePai">Telefone Pai</label>
+          <input
+            type="text"
+            class="form-control"
+            name="telefonePai"
+            id="field_telefonePai"
+            data-cy="telefonePai"
+            formControlName="telefonePai"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="escolaOnlineApp.aluno.nomeMae" for="field_nomeMae">Nome Mae</label>
+          <input type="text" class="form-control" name="nomeMae" id="field_nomeMae" data-cy="nomeMae" formControlName="nomeMae" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="escolaOnlineApp.aluno.telefoneMae" for="field_telefoneMae">Telefone Mae</label>
+          <input
+            type="text"
+            class="form-control"
+            name="telefoneMae"
+            id="field_telefoneMae"
+            data-cy="telefoneMae"
+            formControlName="telefoneMae"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="escolaOnlineApp.aluno.nomeResponsavel" for="field_nomeResponsavel"
+            >Nome Responsavel</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="nomeResponsavel"
+            id="field_nomeResponsavel"
+            data-cy="nomeResponsavel"
+            formControlName="nomeResponsavel"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="escolaOnlineApp.aluno.cpfResponsavel" for="field_cpfResponsavel"
+            >Cpf Responsavel</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="cpfResponsavel"
+            id="field_cpfResponsavel"
+            data-cy="cpfResponsavel"
+            formControlName="cpfResponsavel"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="escolaOnlineApp.aluno.observacoes" for="field_observacoes">Observacoes</label>
+          <input
+            type="text"
+            class="form-control"
+            name="observacoes"
+            id="field_observacoes"
+            data-cy="observacoes"
+            formControlName="observacoes"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="escolaOnlineApp.aluno.pessoaAluno" for="field_pessoaAluno">Pessoa Aluno</label>
+          <select class="form-control" id="field_pessoaAluno" data-cy="pessoaAluno" name="pessoaAluno" formControlName="pessoaAluno">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="pessoaOption.id === editForm.get('pessoaAluno')!.value?.id ? editForm.get('pessoaAluno')!.value : pessoaOption"
+              *ngFor="let pessoaOption of pessoasSharedCollection; trackBy: trackPessoaById"
+            >
+              {{ pessoaOption.id }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="escolaOnlineApp.aluno.escolaAluno" for="field_escolaAluno">Escola Aluno</label>
+          <select class="form-control" id="field_escolaAluno" data-cy="escolaAluno" name="escolaAluno" formControlName="escolaAluno">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="escolaOption.id === editForm.get('escolaAluno')!.value?.id ? editForm.get('escolaAluno')!.value : escolaOption"
+              *ngFor="let escolaOption of escolasSharedCollection; trackBy: trackEscolaById"
+            >
+              {{ escolaOption.id }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

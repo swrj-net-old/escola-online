@@ -1,0 +1,90 @@
+<div>
+  <h2 id="page-heading" data-cy="DebitoHeading">
+    <span jhiTranslate="escolaOnlineApp.debito.home.title">Debitos</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="escolaOnlineApp.debito.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-debito"
+        [routerLink]="['/debito/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="escolaOnlineApp.debito.home.createLabel"> Create a new Debito </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="debitos?.length === 0">
+    <span jhiTranslate="escolaOnlineApp.debito.home.notFound">No debitos found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="debitos && debitos.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
+          <th scope="col"><span jhiTranslate="escolaOnlineApp.debito.tipoDebito">Tipo Debito</span></th>
+          <th scope="col"><span jhiTranslate="escolaOnlineApp.debito.situacaoDebito">Situacao Debito</span></th>
+          <th scope="col"><span jhiTranslate="escolaOnlineApp.debito.dataVencimento">Data Vencimento</span></th>
+          <th scope="col"><span jhiTranslate="escolaOnlineApp.debito.dataPagamento">Data Pagamento</span></th>
+          <th scope="col"><span jhiTranslate="escolaOnlineApp.debito.valorOriginal">Valor Original</span></th>
+          <th scope="col"><span jhiTranslate="escolaOnlineApp.debito.totalPago">Total Pago</span></th>
+          <th scope="col"><span jhiTranslate="escolaOnlineApp.debito.totalDesconto">Total Desconto</span></th>
+          <th scope="col"><span jhiTranslate="escolaOnlineApp.debito.totalDevido">Total Devido</span></th>
+          <th scope="col"><span jhiTranslate="escolaOnlineApp.debito.observacoes">Observacoes</span></th>
+          <th scope="col"><span jhiTranslate="escolaOnlineApp.debito.alunoDebito">Aluno Debito</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let debito of debitos; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/debito', debito.id, 'view']">{{ debito.id }}</a>
+          </td>
+          <td jhiTranslate="{{ 'escolaOnlineApp.TipoDebito.' + debito.tipoDebito }}">{{ debito.tipoDebito }}</td>
+          <td jhiTranslate="{{ 'escolaOnlineApp.SituacaoDebito.' + debito.situacaoDebito }}">{{ debito.situacaoDebito }}</td>
+          <td>{{ debito.dataVencimento | formatMediumDate }}</td>
+          <td>{{ debito.dataPagamento | formatMediumDate }}</td>
+          <td>{{ debito.valorOriginal }}</td>
+          <td>{{ debito.totalPago }}</td>
+          <td>{{ debito.totalDesconto }}</td>
+          <td>{{ debito.totalDevido }}</td>
+          <td>{{ debito.observacoes }}</td>
+          <td>
+            <div *ngIf="debito.alunoDebito">
+              <a [routerLink]="['/aluno', debito.alunoDebito?.id, 'view']">{{ debito.alunoDebito?.id }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button type="submit" [routerLink]="['/debito', debito.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+
+              <button type="submit" [routerLink]="['/debito', debito.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(debito)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+package com.swrj.net.escolaonline.domain;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.swrj.net.escolaonline.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
+
+class ConteudoTest {
+
+    @Test
+    void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(Conteudo.class);
+        Conteudo conteudo1 = new Conteudo();
+        conteudo1.setId(1L);
+        Conteudo conteudo2 = new Conteudo();
+        conteudo2.setId(conteudo1.getId());
+        assertThat(conteudo1).isEqualTo(conteudo2);
+        conteudo2.setId(2L);
+        assertThat(conteudo1).isNotEqualTo(conteudo2);
+        conteudo1.setId(null);
+        assertThat(conteudo1).isNotEqualTo(conteudo2);
+    }
+}

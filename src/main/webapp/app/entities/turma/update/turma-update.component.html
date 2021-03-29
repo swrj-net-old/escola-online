@@ -1,0 +1,65 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-turma-heading" data-cy="TurmaCreateUpdateHeading" jhiTranslate="escolaOnlineApp.turma.home.createOrEditLabel">
+        Create or edit a Turma
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="escolaOnlineApp.turma.nome" for="field_nome">Nome</label>
+          <input type="text" class="form-control" name="nome" id="field_nome" data-cy="nome" formControlName="nome" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="escolaOnlineApp.turma.serieTurma" for="field_serieTurma">Serie Turma</label>
+          <select class="form-control" id="field_serieTurma" data-cy="serieTurma" name="serieTurma" formControlName="serieTurma">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="serieOption.id === editForm.get('serieTurma')!.value?.id ? editForm.get('serieTurma')!.value : serieOption"
+              *ngFor="let serieOption of seriesSharedCollection; trackBy: trackSerieById"
+            >
+              {{ serieOption.id }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="escolaOnlineApp.turma.unidadeTurma" for="field_unidadeTurma">Unidade Turma</label>
+          <select class="form-control" id="field_unidadeTurma" data-cy="unidadeTurma" name="unidadeTurma" formControlName="unidadeTurma">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="unidadeOption.id === editForm.get('unidadeTurma')!.value?.id ? editForm.get('unidadeTurma')!.value : unidadeOption"
+              *ngFor="let unidadeOption of unidadesSharedCollection; trackBy: trackUnidadeById"
+            >
+              {{ unidadeOption.id }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

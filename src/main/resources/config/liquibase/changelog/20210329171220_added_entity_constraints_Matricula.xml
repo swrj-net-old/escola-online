@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <!--
+        Added the constraints for entity Matricula.
+    -->
+    <changeSet id="20210329171220-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="turma_matricula_id"
+                                 baseTableName="matricula"
+                                 constraintName="fk_matricula__turma_matricula_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="turma"/>
+
+        <addForeignKeyConstraint baseColumnNames="aluno_matricula_id"
+                                 baseTableName="matricula"
+                                 constraintName="fk_matricula__aluno_matricula_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="aluno"/>
+
+    </changeSet>
+</databaseChangeLog>

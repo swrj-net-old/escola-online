@@ -1,0 +1,26 @@
+{
+  "escolaOnlineApp": {
+    "detalheUsuario": {
+      "home": {
+        "title": "Detalhe Usuarios",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Detalhe Usuario",
+        "createOrEditLabel": "Criar ou editar Detalhe Usuario",
+        "notFound": "Nenhum Detalhe Usuario encontrado"
+      },
+      "created": "Um novo Detalhe Usuario foi criado com o identificador {{ param }}",
+      "updated": "Um Detalhe Usuario foi atualizado com o identificador {{ param }}",
+      "deleted": "Um Detalhe Usuario foi excluído com o identificador {{ param }}",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Detalhe Usuario {{ id }}?"
+      },
+      "detail": {
+        "title": "Detalhe Usuario"
+      },
+      "id": "ID",
+      "cpf": "Cpf",
+      "celular": "Celular",
+      "historicoDebito": "Historico Debito"
+    }
+  }
+}
