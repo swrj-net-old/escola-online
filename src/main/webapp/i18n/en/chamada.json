@@ -1,0 +1,28 @@
+{
+  "escolaOnlineApp": {
+    "chamada": {
+      "home": {
+        "title": "Chamadas",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Chamada",
+        "createOrEditLabel": "Create or edit a Chamada",
+        "notFound": "No Chamadas found"
+      },
+      "created": "A new Chamada is created with identifier {{ param }}",
+      "updated": "A Chamada is updated with identifier {{ param }}",
+      "deleted": "A Chamada is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Chamada {{ id }}?"
+      },
+      "detail": {
+        "title": "Chamada"
+      },
+      "id": "ID",
+      "dataAula": "Data Aula",
+      "observacoes": "Observacoes",
+      "alunoChamada": "Aluno Chamada",
+      "turmaChamada": "Turma Chamada",
+      "professorChamada": "Professor Chamada"
+    }
+  }
+}

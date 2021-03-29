@@ -1,0 +1,99 @@
+{
+  "name": "Pessoa",
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "cpf",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "rg",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "endereco",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "complemento",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "bairro",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "cidade",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "cep",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "telefoneCelular",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "telefoneResidencial",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "telefoneComercial",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "email",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "observacoes",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "diretor",
+      "otherEntityRelationshipName": "pessoaDiretor",
+      "relationshipName": "diretor"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "professor",
+      "otherEntityRelationshipName": "pessoaProfessor",
+      "relationshipName": "professor"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "aluno",
+      "otherEntityRelationshipName": "pessoaAluno",
+      "relationshipName": "aluno"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "cidade",
+      "otherEntityRelationshipName": "pessoa",
+      "relationshipName": "cidadePessoa"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "escola",
+      "otherEntityRelationshipName": "pessoa",
+      "relationshipName": "escolaPessoa"
+    }
+  ],
+  "entityTableName": "pessoa",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210329162022"
+}

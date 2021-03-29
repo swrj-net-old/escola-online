@@ -1,0 +1,84 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="historicoDebito">
+      <h2 data-cy="historicoDebitoDetailsHeading">
+        <span jhiTranslate="escolaOnlineApp.historicoDebito.detail.title">Historico Debito</span>
+      </h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ historicoDebito.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="escolaOnlineApp.historicoDebito.dataLancamento">Data Lancamento</span></dt>
+        <dd>
+          <span>{{ historicoDebito.dataLancamento | formatMediumDate }}</span>
+        </dd>
+        <dt><span jhiTranslate="escolaOnlineApp.historicoDebito.situacaoDebito">Situacao Debito</span></dt>
+        <dd>
+          <span jhiTranslate="{{ 'escolaOnlineApp.SituacaoDebito.' + historicoDebito.situacaoDebito }}">{{
+            historicoDebito.situacaoDebito
+          }}</span>
+        </dd>
+        <dt><span jhiTranslate="escolaOnlineApp.historicoDebito.dataVencimento">Data Vencimento</span></dt>
+        <dd>
+          <span>{{ historicoDebito.dataVencimento | formatMediumDate }}</span>
+        </dd>
+        <dt><span jhiTranslate="escolaOnlineApp.historicoDebito.dataPagamento">Data Pagamento</span></dt>
+        <dd>
+          <span>{{ historicoDebito.dataPagamento | formatMediumDate }}</span>
+        </dd>
+        <dt><span jhiTranslate="escolaOnlineApp.historicoDebito.valorOriginal">Valor Original</span></dt>
+        <dd>
+          <span>{{ historicoDebito.valorOriginal }}</span>
+        </dd>
+        <dt><span jhiTranslate="escolaOnlineApp.historicoDebito.totalPago">Total Pago</span></dt>
+        <dd>
+          <span>{{ historicoDebito.totalPago }}</span>
+        </dd>
+        <dt><span jhiTranslate="escolaOnlineApp.historicoDebito.totalDesconto">Total Desconto</span></dt>
+        <dd>
+          <span>{{ historicoDebito.totalDesconto }}</span>
+        </dd>
+        <dt><span jhiTranslate="escolaOnlineApp.historicoDebito.totalDevido">Total Devido</span></dt>
+        <dd>
+          <span>{{ historicoDebito.totalDevido }}</span>
+        </dd>
+        <dt><span jhiTranslate="escolaOnlineApp.historicoDebito.observacoes">Observacoes</span></dt>
+        <dd>
+          <span>{{ historicoDebito.observacoes }}</span>
+        </dd>
+        <dt><span jhiTranslate="escolaOnlineApp.historicoDebito.debitoHistoricoDebito">Debito Historico Debito</span></dt>
+        <dd>
+          <div *ngIf="historicoDebito.debitoHistoricoDebito">
+            <a [routerLink]="['/debito', historicoDebito.debitoHistoricoDebito?.id, 'view']">{{
+              historicoDebito.debitoHistoricoDebito?.id
+            }}</a>
+          </div>
+        </dd>
+        <dt><span jhiTranslate="escolaOnlineApp.historicoDebito.detalheUsuarioLancamento">Detalhe Usuario Lancamento</span></dt>
+        <dd>
+          <div *ngIf="historicoDebito.detalheUsuarioLancamento">
+            <a [routerLink]="['/detalhe-usuario', historicoDebito.detalheUsuarioLancamento?.id, 'view']">{{
+              historicoDebito.detalheUsuarioLancamento?.id
+            }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/historico-debito', historicoDebito.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>
