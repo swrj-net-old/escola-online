@@ -14,7 +14,40 @@
     <property name="uuidType" value="uuid" dbms="h2, postgresql"/>
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329172928_added_entity_Cidade.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329173028_added_entity_Escola.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329173128_added_entity_Pessoa.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329173228_added_entity_Diretor.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329173328_added_entity_Unidade.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329173428_added_entity_Serie.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329173528_added_entity_Materia.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329173628_added_entity_Grade.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329173728_added_entity_Turma.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329173828_added_entity_Professor.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329173928_added_entity_Chamada.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329174028_added_entity_Conteudo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329174128_added_entity_Aluno.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329174228_added_entity_Matricula.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329174328_added_entity_Debito.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329174428_added_entity_HistoricoDebito.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329174528_added_entity_DetalheUsuario.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329174628_added_entity_TipoSolicitacao.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329174728_added_entity_Solicitacao.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
+    <include file="config/liquibase/changelog/20210329173128_added_entity_constraints_Pessoa.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329173228_added_entity_constraints_Diretor.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329173328_added_entity_constraints_Unidade.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329173628_added_entity_constraints_Grade.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329173728_added_entity_constraints_Turma.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329173828_added_entity_constraints_Professor.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329173928_added_entity_constraints_Chamada.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329174028_added_entity_constraints_Conteudo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329174128_added_entity_constraints_Aluno.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329174228_added_entity_constraints_Matricula.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329174328_added_entity_constraints_Debito.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329174428_added_entity_constraints_HistoricoDebito.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329174728_added_entity_constraints_Solicitacao.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210329174528_added_entity_constraints_DetalheUsuario.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

@@ -21,7 +21,7 @@
     "buildTool": "maven",
     "useSass": true,
     "clientPackageManager": "npm",
-    "testFrameworks": ["gatling"],
+    "testFrameworks": [],
     "enableTranslation": true,
     "nativeLanguage": "pt-br",
     "languages": ["en", "pt-br"],

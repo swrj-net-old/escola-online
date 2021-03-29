@@ -1,0 +1,52 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="chamada">
+            <h2><span jhiTranslate="escolaOnlineApp.chamada.detail.title">Chamada</span> {{ chamada.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="escolaOnlineApp.chamada.dataAula">Data Aula</span></dt>
+                <dd>
+                    <span>{{ chamada.dataAula }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.chamada.observacoes">Observacoes</span></dt>
+                <dd>
+                    <span>{{ chamada.observacoes }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.chamada.alunoChamada">Aluno Chamada</span></dt>
+                <dd>
+                    <div *ngIf="chamada.alunoChamada">
+                        <a [routerLink]="['/aluno', chamada.alunoChamada?.id, 'view']">{{ chamada.alunoChamada?.id }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.chamada.turmaChamada">Turma Chamada</span></dt>
+                <dd>
+                    <div *ngIf="chamada.turmaChamada">
+                        <a [routerLink]="['/turma', chamada.turmaChamada?.id, 'view']">{{ chamada.turmaChamada?.id }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.chamada.professorChamada">Professor Chamada</span></dt>
+                <dd>
+                    <div *ngIf="chamada.professorChamada">
+                        <a [routerLink]="['/professor', chamada.professorChamada?.id, 'view']">{{ chamada.professorChamada?.id }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/chamada', chamada.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

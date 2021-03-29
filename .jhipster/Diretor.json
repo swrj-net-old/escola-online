@@ -1,0 +1,44 @@
+{
+  "name": "Diretor",
+  "fields": [
+    {
+      "fieldName": "anoLetivo",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "dataInicio",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "dataFim",
+      "fieldType": "LocalDate"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "pessoa",
+      "otherEntityRelationshipName": "diretor",
+      "relationshipName": "pessoaDiretor",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "unidade",
+      "otherEntityRelationshipName": "diretor",
+      "relationshipName": "unidadeDiretor",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210329173228",
+  "entityTableName": "diretor",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}
