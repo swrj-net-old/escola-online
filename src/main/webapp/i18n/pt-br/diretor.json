@@ -1,0 +1,28 @@
+{
+  "escolaOnlineApp": {
+    "diretor": {
+      "home": {
+        "title": "Diretors",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Diretor",
+        "createOrEditLabel": "Criar ou editar Diretor",
+        "notFound": "Nenhum Diretor encontrado"
+      },
+      "created": "Um novo Diretor foi criado com o identificador {{ param }}",
+      "updated": "Um Diretor foi atualizado com o identificador {{ param }}",
+      "deleted": "Um Diretor foi excluído com o identificador {{ param }}",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Diretor {{ id }}?"
+      },
+      "detail": {
+        "title": "Diretor"
+      },
+      "id": "ID",
+      "anoLetivo": "Ano Letivo",
+      "dataInicio": "Data Inicio",
+      "dataFim": "Data Fim",
+      "pessoaDiretor": "Pessoa Diretor",
+      "unidadeDiretor": "Unidade Diretor"
+    }
+  }
+}

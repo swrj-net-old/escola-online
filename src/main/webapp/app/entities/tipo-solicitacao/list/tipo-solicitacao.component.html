@@ -1,0 +1,82 @@
+<div>
+  <h2 id="page-heading" data-cy="TipoSolicitacaoHeading">
+    <span jhiTranslate="escolaOnlineApp.tipoSolicitacao.home.title">Tipo Solicitacaos</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="escolaOnlineApp.tipoSolicitacao.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-tipo-solicitacao"
+        [routerLink]="['/tipo-solicitacao/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="escolaOnlineApp.tipoSolicitacao.home.createLabel"> Create a new Tipo Solicitacao </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="tipoSolicitacaos?.length === 0">
+    <span jhiTranslate="escolaOnlineApp.tipoSolicitacao.home.notFound">No tipoSolicitacaos found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="tipoSolicitacaos && tipoSolicitacaos.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
+          <th scope="col"><span jhiTranslate="escolaOnlineApp.tipoSolicitacao.nome">Nome</span></th>
+          <th scope="col"><span jhiTranslate="escolaOnlineApp.tipoSolicitacao.prazoAtendimento">Prazo Atendimento</span></th>
+          <th scope="col"><span jhiTranslate="escolaOnlineApp.tipoSolicitacao.valorEmissao">Valor Emissao</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tipoSolicitacao of tipoSolicitacaos; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/tipo-solicitacao', tipoSolicitacao.id, 'view']">{{ tipoSolicitacao.id }}</a>
+          </td>
+          <td>{{ tipoSolicitacao.nome }}</td>
+          <td>{{ tipoSolicitacao.prazoAtendimento }}</td>
+          <td>{{ tipoSolicitacao.valorEmissao }}</td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/tipo-solicitacao', tipoSolicitacao.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/tipo-solicitacao', tipoSolicitacao.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(tipoSolicitacao)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,102 @@
+<div>
+  <h2 id="page-heading" data-cy="SolicitacaoHeading">
+    <span jhiTranslate="escolaOnlineApp.solicitacao.home.title">Solicitacaos</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="escolaOnlineApp.solicitacao.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-solicitacao"
+        [routerLink]="['/solicitacao/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="escolaOnlineApp.solicitacao.home.createLabel"> Create a new Solicitacao </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="solicitacaos?.length === 0">
+    <span jhiTranslate="escolaOnlineApp.solicitacao.home.notFound">No solicitacaos found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="solicitacaos && solicitacaos.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
+          <th scope="col"><span jhiTranslate="escolaOnlineApp.solicitacao.situacaoSolicitacao">Situacao Solicitacao</span></th>
+          <th scope="col"><span jhiTranslate="escolaOnlineApp.solicitacao.dataSolicitacao">Data Solicitacao</span></th>
+          <th scope="col"><span jhiTranslate="escolaOnlineApp.solicitacao.observacoesSolicitante">Observacoes Solicitante</span></th>
+          <th scope="col"><span jhiTranslate="escolaOnlineApp.solicitacao.observacoesAtendimento">Observacoes Atendimento</span></th>
+          <th scope="col">
+            <span jhiTranslate="escolaOnlineApp.solicitacao.tipoSolicitacaoSolicitacao">Tipo Solicitacao Solicitacao</span>
+          </th>
+          <th scope="col"><span jhiTranslate="escolaOnlineApp.solicitacao.alunoSolicitacao">Aluno Solicitacao</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let solicitacao of solicitacaos; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/solicitacao', solicitacao.id, 'view']">{{ solicitacao.id }}</a>
+          </td>
+          <td jhiTranslate="{{ 'escolaOnlineApp.SituacaoSolicitacao.' + solicitacao.situacaoSolicitacao }}">
+            {{ solicitacao.situacaoSolicitacao }}
+          </td>
+          <td>{{ solicitacao.dataSolicitacao | formatMediumDate }}</td>
+          <td>{{ solicitacao.observacoesSolicitante }}</td>
+          <td>{{ solicitacao.observacoesAtendimento }}</td>
+          <td>
+            <div *ngIf="solicitacao.tipoSolicitacaoSolicitacao">
+              <a [routerLink]="['/tipo-solicitacao', solicitacao.tipoSolicitacaoSolicitacao?.id, 'view']">{{
+                solicitacao.tipoSolicitacaoSolicitacao?.id
+              }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="solicitacao.alunoSolicitacao">
+              <a [routerLink]="['/aluno', solicitacao.alunoSolicitacao?.id, 'view']">{{ solicitacao.alunoSolicitacao?.id }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/solicitacao', solicitacao.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/solicitacao', solicitacao.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(solicitacao)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

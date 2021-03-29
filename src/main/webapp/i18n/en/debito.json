@@ -1,0 +1,34 @@
+{
+  "escolaOnlineApp": {
+    "debito": {
+      "home": {
+        "title": "Debitos",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Debito",
+        "createOrEditLabel": "Create or edit a Debito",
+        "notFound": "No Debitos found"
+      },
+      "created": "A new Debito is created with identifier {{ param }}",
+      "updated": "A Debito is updated with identifier {{ param }}",
+      "deleted": "A Debito is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Debito {{ id }}?"
+      },
+      "detail": {
+        "title": "Debito"
+      },
+      "id": "ID",
+      "tipoDebito": "Tipo Debito",
+      "situacaoDebito": "Situacao Debito",
+      "dataVencimento": "Data Vencimento",
+      "dataPagamento": "Data Pagamento",
+      "valorOriginal": "Valor Original",
+      "totalPago": "Total Pago",
+      "totalDesconto": "Total Desconto",
+      "totalDevido": "Total Devido",
+      "observacoes": "Observacoes",
+      "historicoDebito": "Historico Debito",
+      "alunoDebito": "Aluno Debito"
+    }
+  }
+}

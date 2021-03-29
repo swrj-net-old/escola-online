@@ -1,0 +1,90 @@
+{
+  "name": "Aluno",
+  "fields": [
+    {
+      "fieldName": "dataNascimento",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "tipoSanguineo",
+      "fieldType": "TipoSanguineo",
+      "fieldValues": "NI,AP,AN,BP,BN,ABP,ABN,OP,ON"
+    },
+    {
+      "fieldName": "nomePai",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "telefonePai",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "nomeMae",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "telefoneMae",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "nomeResponsavel",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "cpfResponsavel",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "observacoes",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "solicitacao",
+      "otherEntityRelationshipName": "alunoSolicitacao",
+      "relationshipName": "solicitacao"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "debito",
+      "otherEntityRelationshipName": "alunoDebito",
+      "relationshipName": "debito"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "chamada",
+      "otherEntityRelationshipName": "alunoChamada",
+      "relationshipName": "chamada"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "matricula",
+      "otherEntityRelationshipName": "alunoMatricula",
+      "relationshipName": "matricula"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "pessoa",
+      "otherEntityRelationshipName": "aluno",
+      "relationshipName": "pessoaAluno"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "escola",
+      "otherEntityRelationshipName": "aluno",
+      "relationshipName": "escolaAluno"
+    }
+  ],
+  "entityTableName": "aluno",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210329160610"
+}

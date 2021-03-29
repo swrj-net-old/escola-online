@@ -1,0 +1,89 @@
+{
+  "name": "Unidade",
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "cnpj",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "endereco",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "complemento",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "bairro",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "cidade",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "cep",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "telefoneComercial",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "telefoneWhatsapp",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "email",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "facebook",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "observacoes",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "diretor",
+      "otherEntityRelationshipName": "unidadeDiretor",
+      "relationshipName": "diretor"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "professor",
+      "otherEntityRelationshipName": "unidadeProfessor",
+      "relationshipName": "professor"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "turma",
+      "otherEntityRelationshipName": "unidadeTurma",
+      "relationshipName": "turma"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "escola",
+      "otherEntityRelationshipName": "unidade",
+      "relationshipName": "escolaUnidade"
+    }
+  ],
+  "entityTableName": "unidade",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210329160602"
+}
