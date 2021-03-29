@@ -1,0 +1,34 @@
+{
+  "name": "Serie",
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "grade",
+      "otherEntityRelationshipName": "serieGrade",
+      "relationshipName": "grade"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "turma",
+      "otherEntityRelationshipName": "serieTurma",
+      "relationshipName": "turma"
+    }
+  ],
+  "changelogDate": "20210329173428",
+  "entityTableName": "serie",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

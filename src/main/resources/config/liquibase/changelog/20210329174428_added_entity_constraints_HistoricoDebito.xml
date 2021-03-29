@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity HistoricoDebito.
+    -->
+    <changeSet id="20210329174428-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="debito_historico_debito_id"
+                                 baseTableName="historico_debito"
+                                 constraintName="fk_historico_debito_debito_historico_debito_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="debito"/>
+
+        <addForeignKeyConstraint baseColumnNames="detalhe_usuario_lancamento_id"
+                                 baseTableName="historico_debito"
+                                 constraintName="fk_historico_debito_detalhe_usuario_lancamento_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="detalhe_usuario"/>
+
+    </changeSet>
+</databaseChangeLog>

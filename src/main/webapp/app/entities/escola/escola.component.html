@@ -1,0 +1,77 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="escolaOnlineApp.escola.home.title">Escolas</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-escola" [routerLink]="['/escola/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span  jhiTranslate="escolaOnlineApp.escola.home.createLabel">
+            Create a new Escola
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="escolas?.length === 0">
+        <span jhiTranslate="escolaOnlineApp.escola.home.notFound">No escolas found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="escolas && escolas.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr>
+                    <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
+                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.escola.nome">Nome</span></th>
+                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.escola.razaoSocial">Razao Social</span></th>
+                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.escola.cnpjPrincipal">Cnpj Principal</span></th>
+                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.escola.url">Url</span></th>
+                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.escola.prefixo">Prefixo</span></th>
+                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.escola.responsavelNome">Responsavel Nome</span></th>
+                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.escola.responsavelCpf">Responsavel Cpf</span></th>
+                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.escola.responsavelEmail">Responsavel Email</span></th>
+                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.escola.responsavelCelular">Responsavel Celular</span></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let escola of escolas ;trackBy: trackId">
+                    <td><a [routerLink]="['/escola', escola.id, 'view']">{{ escola.id }}</a></td>
+                    <td>{{ escola.nome }}</td>
+                    <td>{{ escola.razaoSocial }}</td>
+                    <td>{{ escola.cnpjPrincipal }}</td>
+                    <td>{{ escola.url }}</td>
+                    <td>{{ escola.prefixo }}</td>
+                    <td>{{ escola.responsavelNome }}</td>
+                    <td>{{ escola.responsavelCpf }}</td>
+                    <td>{{ escola.responsavelEmail }}</td>
+                    <td>{{ escola.responsavelCelular }}</td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/escola', escola.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/escola', escola.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(escola)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

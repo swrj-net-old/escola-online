@@ -1,0 +1,72 @@
+{
+  "name": "Escola",
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "razaoSocial",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "cnpjPrincipal",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "url",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "prefixo",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "responsavelNome",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "responsavelCpf",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "responsavelEmail",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "responsavelCelular",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "pessoa",
+      "otherEntityRelationshipName": "escolaPessoa",
+      "relationshipName": "pessoa"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "aluno",
+      "otherEntityRelationshipName": "escolaAluno",
+      "relationshipName": "aluno"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "unidade",
+      "otherEntityRelationshipName": "escolaUnidade",
+      "relationshipName": "unidade"
+    }
+  ],
+  "changelogDate": "20210329173028",
+  "entityTableName": "escola",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

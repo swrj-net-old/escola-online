@@ -1,0 +1,38 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="tipoSolicitacao">
+            <h2><span jhiTranslate="escolaOnlineApp.tipoSolicitacao.detail.title">Tipo Solicitacao</span> {{ tipoSolicitacao.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="escolaOnlineApp.tipoSolicitacao.nome">Nome</span></dt>
+                <dd>
+                    <span>{{ tipoSolicitacao.nome }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.tipoSolicitacao.prazoAtendimento">Prazo Atendimento</span></dt>
+                <dd>
+                    <span>{{ tipoSolicitacao.prazoAtendimento }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.tipoSolicitacao.valorEmissao">Valor Emissao</span></dt>
+                <dd>
+                    <span>{{ tipoSolicitacao.valorEmissao }}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/tipo-solicitacao', tipoSolicitacao.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

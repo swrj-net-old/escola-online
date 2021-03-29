@@ -1,0 +1,37 @@
+{
+  "escolaOnlineApp": {
+    "unidade": {
+      "home": {
+        "title": "Unidades",
+        "createLabel": "Criar novo Unidade",
+        "createOrEditLabel": "Criar ou editar Unidade",
+        "notFound": "Nenhum Unidade encontrado"
+      },
+      "created": "Um novo Unidade foi criado com o identificador {{ param }}",
+      "updated": "Um Unidade foi atualizado com o identificador {{ param }}",
+      "deleted": "Um Unidade foi excluído com o identificador {{ param }}",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Unidade {{ id }}?"
+      },
+      "detail": {
+        "title": "Unidade"
+      },
+      "nome": "Nome",
+      "cnpj": "Cnpj",
+      "endereco": "Endereco",
+      "complemento": "Complemento",
+      "bairro": "Bairro",
+      "cidade": "Cidade",
+      "cep": "Cep",
+      "telefoneComercial": "Telefone Comercial",
+      "telefoneWhatsapp": "Telefone Whatsapp",
+      "email": "Email",
+      "facebook": "Facebook",
+      "observacoes": "Observacoes",
+      "diretor": "Diretor",
+      "professor": "Professor",
+      "turma": "Turma",
+      "escolaUnidade": "Escola Unidade"
+    }
+  }
+}
