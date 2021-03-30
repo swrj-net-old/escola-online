@@ -39,7 +39,7 @@ export const materiaRoute: Routes = [
     path: '',
     component: MateriaComponent,
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.materia.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -51,7 +51,7 @@ export const materiaRoute: Routes = [
       materia: MateriaResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.materia.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -63,7 +63,7 @@ export const materiaRoute: Routes = [
       materia: MateriaResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.materia.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -75,7 +75,7 @@ export const materiaRoute: Routes = [
       materia: MateriaResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.materia.home.title',
     },
     canActivate: [UserRouteAccessService],

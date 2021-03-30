@@ -2,14 +2,15 @@ package com.swrj.net.escolaonline.web.rest;
 
 import com.swrj.net.escolaonline.domain.Aluno;
 import com.swrj.net.escolaonline.repository.AlunoRepository;
+import com.swrj.net.escolaonline.security.AuthoritiesConstants;
 import com.swrj.net.escolaonline.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 @Transactional
+@Secured({ AuthoritiesConstants.GERENTE })
 public class AlunoResource {
 
     private final Logger log = LoggerFactory.getLogger(AlunoResource.class);

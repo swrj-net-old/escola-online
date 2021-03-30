@@ -39,7 +39,7 @@ export const historicoDebitoRoute: Routes = [
     path: '',
     component: HistoricoDebitoComponent,
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.historicoDebito.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -51,7 +51,7 @@ export const historicoDebitoRoute: Routes = [
       historicoDebito: HistoricoDebitoResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.historicoDebito.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -63,7 +63,7 @@ export const historicoDebitoRoute: Routes = [
       historicoDebito: HistoricoDebitoResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.historicoDebito.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -75,7 +75,7 @@ export const historicoDebitoRoute: Routes = [
       historicoDebito: HistoricoDebitoResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.historicoDebito.home.title',
     },
     canActivate: [UserRouteAccessService],

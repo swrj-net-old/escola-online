@@ -39,7 +39,7 @@ export const professorRoute: Routes = [
     path: '',
     component: ProfessorComponent,
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.professor.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -51,7 +51,7 @@ export const professorRoute: Routes = [
       professor: ProfessorResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.professor.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -63,7 +63,7 @@ export const professorRoute: Routes = [
       professor: ProfessorResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.professor.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -75,7 +75,7 @@ export const professorRoute: Routes = [
       professor: ProfessorResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.professor.home.title',
     },
     canActivate: [UserRouteAccessService],

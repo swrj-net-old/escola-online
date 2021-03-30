@@ -39,7 +39,7 @@ export const tipoSolicitacaoRoute: Routes = [
     path: '',
     component: TipoSolicitacaoComponent,
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.tipoSolicitacao.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -51,7 +51,7 @@ export const tipoSolicitacaoRoute: Routes = [
       tipoSolicitacao: TipoSolicitacaoResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.tipoSolicitacao.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -63,7 +63,7 @@ export const tipoSolicitacaoRoute: Routes = [
       tipoSolicitacao: TipoSolicitacaoResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.tipoSolicitacao.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -75,7 +75,7 @@ export const tipoSolicitacaoRoute: Routes = [
       tipoSolicitacao: TipoSolicitacaoResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.tipoSolicitacao.home.title',
     },
     canActivate: [UserRouteAccessService],

@@ -39,7 +39,7 @@ export const detalheUsuarioRoute: Routes = [
     path: '',
     component: DetalheUsuarioComponent,
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.detalheUsuario.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -51,7 +51,7 @@ export const detalheUsuarioRoute: Routes = [
       detalheUsuario: DetalheUsuarioResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.detalheUsuario.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -63,7 +63,7 @@ export const detalheUsuarioRoute: Routes = [
       detalheUsuario: DetalheUsuarioResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.detalheUsuario.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -75,7 +75,7 @@ export const detalheUsuarioRoute: Routes = [
       detalheUsuario: DetalheUsuarioResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.detalheUsuario.home.title',
     },
     canActivate: [UserRouteAccessService],

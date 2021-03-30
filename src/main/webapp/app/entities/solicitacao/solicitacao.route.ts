@@ -39,7 +39,7 @@ export const solicitacaoRoute: Routes = [
     path: '',
     component: SolicitacaoComponent,
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.solicitacao.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -51,7 +51,7 @@ export const solicitacaoRoute: Routes = [
       solicitacao: SolicitacaoResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.solicitacao.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -63,7 +63,7 @@ export const solicitacaoRoute: Routes = [
       solicitacao: SolicitacaoResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.solicitacao.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -75,7 +75,7 @@ export const solicitacaoRoute: Routes = [
       solicitacao: SolicitacaoResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'escolaOnlineApp.solicitacao.home.title',
     },
     canActivate: [UserRouteAccessService],
