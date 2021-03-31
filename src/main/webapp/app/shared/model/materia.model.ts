@@ -3,12 +3,10 @@ import { IConteudo } from 'app/shared/model/conteudo.model';
 
 export interface IMateria {
   id?: number;
-  nome?: string;
-  sigla?: string;
-  grades?: IGrade[];
-  conteudos?: IConteudo[];
+  nome?: string | null;
+  sigla?: string | null;
+  grades?: IGrade[] | null;
+  conteudos?: IConteudo[] | null;
 }
 
-export class Materia implements IMateria {
-  constructor(public id?: number, public nome?: string, public sigla?: string, public grades?: IGrade[], public conteudos?: IConteudo[]) {}
-}
+export const defaultValue: Readonly<IMateria> = {};

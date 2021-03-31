@@ -3,6 +3,7 @@
     "professor": {
       "home": {
         "title": "Professors",
+        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo Professor",
         "createOrEditLabel": "Criar ou editar Professor",
         "notFound": "Nenhum Professor encontrado"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Professor"
       },
+      "id": "ID",
       "anoLetivo": "Ano Letivo",
       "dataInicio": "Data Inicio",
       "dataFim": "Data Fim",

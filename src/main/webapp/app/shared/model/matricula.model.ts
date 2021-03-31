@@ -1,23 +1,14 @@
-import { Moment } from 'moment';
+import dayjs from 'dayjs';
 import { ITurma } from 'app/shared/model/turma.model';
 import { IAluno } from 'app/shared/model/aluno.model';
 
 export interface IMatricula {
   id?: number;
-  anoLetivo?: number;
-  dataInicio?: Moment;
-  dataFim?: Moment;
-  turmaMatricula?: ITurma;
-  alunoMatricula?: IAluno;
+  anoLetivo?: number | null;
+  dataInicio?: string | null;
+  dataFim?: string | null;
+  turmaMatricula?: ITurma | null;
+  alunoMatricula?: IAluno | null;
 }
 
-export class Matricula implements IMatricula {
-  constructor(
-    public id?: number,
-    public anoLetivo?: number,
-    public dataInicio?: Moment,
-    public dataFim?: Moment,
-    public turmaMatricula?: ITurma,
-    public alunoMatricula?: IAluno
-  ) {}
-}
+export const defaultValue: Readonly<IMatricula> = {};

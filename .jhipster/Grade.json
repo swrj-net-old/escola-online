@@ -11,26 +11,29 @@
       "relationshipType": "many-to-one",
       "otherEntityName": "serie",
       "otherEntityRelationshipName": "grade",
-      "relationshipName": "serieGrade",
-      "otherEntityField": "id"
+      "relationshipName": "serieGrade"
     },
     {
       "relationshipType": "many-to-one",
       "otherEntityName": "materia",
       "otherEntityRelationshipName": "grade",
-      "relationshipName": "materiaGrade",
-      "otherEntityField": "id"
+      "relationshipName": "materiaGrade"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "escola",
+      "otherEntityRelationshipName": "grade",
+      "relationshipName": "escolaGrade"
     }
   ],
-  "changelogDate": "20210329173628",
   "entityTableName": "grade",
   "dto": "no",
-  "pagination": "no",
-  "service": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "changelogDate": "20210331173548"
 }

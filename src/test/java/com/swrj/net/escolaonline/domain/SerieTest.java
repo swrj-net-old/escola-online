@@ -1,13 +1,14 @@
 package com.swrj.net.escolaonline.domain;
 
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import com.swrj.net.escolaonline.web.rest.TestUtil;
 
-public class SerieTest {
+import com.swrj.net.escolaonline.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
+
+class SerieTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Serie.class);
         Serie serie1 = new Serie();
         serie1.setId(1L);

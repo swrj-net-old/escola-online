@@ -1,20 +1,12 @@
-import { IUser } from 'app/core/user/user.model';
+import { IUser } from 'app/shared/model/user.model';
 import { IHistoricoDebito } from 'app/shared/model/historico-debito.model';
 
 export interface IDetalheUsuario {
   id?: number;
-  cpf?: string;
-  celular?: string;
-  usuario?: IUser;
-  historicoDebitos?: IHistoricoDebito[];
+  cpf?: string | null;
+  celular?: string | null;
+  usuario?: IUser | null;
+  historicoDebitos?: IHistoricoDebito[] | null;
 }
 
-export class DetalheUsuario implements IDetalheUsuario {
-  constructor(
-    public id?: number,
-    public cpf?: string,
-    public celular?: string,
-    public usuario?: IUser,
-    public historicoDebitos?: IHistoricoDebito[]
-  ) {}
-}
+export const defaultValue: Readonly<IDetalheUsuario> = {};

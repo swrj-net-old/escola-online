@@ -3,6 +3,7 @@
     "detalheUsuario": {
       "home": {
         "title": "Detalhe Usuarios",
+        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo Detalhe Usuario",
         "createOrEditLabel": "Criar ou editar Detalhe Usuario",
         "notFound": "Nenhum Detalhe Usuario encontrado"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Detalhe Usuario"
       },
+      "id": "ID",
       "cpf": "Cpf",
       "celular": "Celular",
       "usuario": "Usuario",

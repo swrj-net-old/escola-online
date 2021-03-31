@@ -1,13 +1,14 @@
 package com.swrj.net.escolaonline.domain;
 
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import com.swrj.net.escolaonline.web.rest.TestUtil;
 
-public class MatriculaTest {
+import com.swrj.net.escolaonline.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
+
+class MatriculaTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Matricula.class);
         Matricula matricula1 = new Matricula();
         matricula1.setId(1L);

@@ -19,33 +19,29 @@
       "relationshipType": "many-to-one",
       "otherEntityName": "turma",
       "otherEntityRelationshipName": "conteudo",
-      "relationshipName": "turmaConteudo",
-      "otherEntityField": "id"
+      "relationshipName": "turmaConteudo"
     },
     {
       "relationshipType": "many-to-one",
       "otherEntityName": "professor",
       "otherEntityRelationshipName": "conteudo",
-      "relationshipName": "professorConteudo",
-      "otherEntityField": "id"
+      "relationshipName": "professorConteudo"
     },
     {
       "relationshipType": "many-to-one",
       "otherEntityName": "materia",
       "otherEntityRelationshipName": "conteudo",
-      "relationshipName": "materiaConteudo",
-      "otherEntityField": "id"
+      "relationshipName": "materiaConteudo"
     }
   ],
-  "changelogDate": "20210329174028",
   "entityTableName": "conteudo",
   "dto": "no",
-  "pagination": "no",
-  "service": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "changelogDate": "20210331173552"
 }

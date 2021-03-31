@@ -1,36 +1,36 @@
 package com.swrj.net.escolaonline.web.rest;
 
-import com.swrj.net.escolaonline.EscolaOnlineApp;
-import com.swrj.net.escolaonline.domain.Aluno;
-import com.swrj.net.escolaonline.repository.AlunoRepository;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.swrj.net.escolaonline.IntegrationTest;
+import com.swrj.net.escolaonline.domain.Aluno;
 import com.swrj.net.escolaonline.domain.enumeration.TipoSanguineo;
+import com.swrj.net.escolaonline.repository.AlunoRepository;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * Integration tests for the {@link AlunoResource} REST controller.
  */
-@SpringBootTest(classes = EscolaOnlineApp.class)
+@IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-public class AlunoResourceIT {
+class AlunoResourceIT {
 
     private static final LocalDate DEFAULT_DATA_NASCIMENTO = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DATA_NASCIMENTO = LocalDate.now(ZoneId.systemDefault());
@@ -58,6 +58,12 @@ public class AlunoResourceIT {
 
     private static final String DEFAULT_OBSERVACOES = "AAAAAAAAAA";
     private static final String UPDATED_OBSERVACOES = "BBBBBBBBBB";
+
+    private static final String ENTITY_API_URL = "/api/alunos";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private AlunoRepository alunoRepository;
@@ -89,6 +95,7 @@ public class AlunoResourceIT {
             .observacoes(DEFAULT_OBSERVACOES);
         return aluno;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -116,12 +123,11 @@ public class AlunoResourceIT {
 
     @Test
     @Transactional
-    public void createAluno() throws Exception {
+    void createAluno() throws Exception {
         int databaseSizeBeforeCreate = alunoRepository.findAll().size();
         // Create the Aluno
-        restAlunoMockMvc.perform(post("/api/alunos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(aluno)))
+        restAlunoMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(aluno)))
             .andExpect(status().isCreated());
 
         // Validate the Aluno in the database
@@ -141,16 +147,15 @@ public class AlunoResourceIT {
 
     @Test
     @Transactional
-    public void createAlunoWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = alunoRepository.findAll().size();
-
+    void createAlunoWithExistingId() throws Exception {
         // Create the Aluno with an existing ID
         aluno.setId(1L);
 
+        int databaseSizeBeforeCreate = alunoRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restAlunoMockMvc.perform(post("/api/alunos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(aluno)))
+        restAlunoMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(aluno)))
             .andExpect(status().isBadRequest());
 
         // Validate the Aluno in the database
@@ -158,15 +163,15 @@ public class AlunoResourceIT {
         assertThat(alunoList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void getAllAlunos() throws Exception {
+    void getAllAlunos() throws Exception {
         // Initialize the database
         alunoRepository.saveAndFlush(aluno);
 
         // Get all the alunoList
-        restAlunoMockMvc.perform(get("/api/alunos?sort=id,desc"))
+        restAlunoMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(aluno.getId().intValue())))
@@ -180,15 +185,16 @@ public class AlunoResourceIT {
             .andExpect(jsonPath("$.[*].cpfResponsavel").value(hasItem(DEFAULT_CPF_RESPONSAVEL)))
             .andExpect(jsonPath("$.[*].observacoes").value(hasItem(DEFAULT_OBSERVACOES)));
     }
-    
+
     @Test
     @Transactional
-    public void getAluno() throws Exception {
+    void getAluno() throws Exception {
         // Initialize the database
         alunoRepository.saveAndFlush(aluno);
 
         // Get the aluno
-        restAlunoMockMvc.perform(get("/api/alunos/{id}", aluno.getId()))
+        restAlunoMockMvc
+            .perform(get(ENTITY_API_URL_ID, aluno.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(aluno.getId().intValue()))
@@ -202,17 +208,17 @@ public class AlunoResourceIT {
             .andExpect(jsonPath("$.cpfResponsavel").value(DEFAULT_CPF_RESPONSAVEL))
             .andExpect(jsonPath("$.observacoes").value(DEFAULT_OBSERVACOES));
     }
+
     @Test
     @Transactional
-    public void getNonExistingAluno() throws Exception {
+    void getNonExistingAluno() throws Exception {
         // Get the aluno
-        restAlunoMockMvc.perform(get("/api/alunos/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restAlunoMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateAluno() throws Exception {
+    void putNewAluno() throws Exception {
         // Initialize the database
         alunoRepository.saveAndFlush(aluno);
 
@@ -233,9 +239,12 @@ public class AlunoResourceIT {
             .cpfResponsavel(UPDATED_CPF_RESPONSAVEL)
             .observacoes(UPDATED_OBSERVACOES);
 
-        restAlunoMockMvc.perform(put("/api/alunos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedAluno)))
+        restAlunoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedAluno.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedAluno))
+            )
             .andExpect(status().isOk());
 
         // Validate the Aluno in the database
@@ -255,13 +264,17 @@ public class AlunoResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingAluno() throws Exception {
+    void putNonExistingAluno() throws Exception {
         int databaseSizeBeforeUpdate = alunoRepository.findAll().size();
+        aluno.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restAlunoMockMvc.perform(put("/api/alunos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(aluno)))
+        restAlunoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, aluno.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(aluno))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Aluno in the database
@@ -271,15 +284,197 @@ public class AlunoResourceIT {
 
     @Test
     @Transactional
-    public void deleteAluno() throws Exception {
+    void putWithIdMismatchAluno() throws Exception {
+        int databaseSizeBeforeUpdate = alunoRepository.findAll().size();
+        aluno.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restAlunoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(aluno))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Aluno in the database
+        List<Aluno> alunoList = alunoRepository.findAll();
+        assertThat(alunoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamAluno() throws Exception {
+        int databaseSizeBeforeUpdate = alunoRepository.findAll().size();
+        aluno.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restAlunoMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(aluno)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Aluno in the database
+        List<Aluno> alunoList = alunoRepository.findAll();
+        assertThat(alunoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateAlunoWithPatch() throws Exception {
+        // Initialize the database
+        alunoRepository.saveAndFlush(aluno);
+
+        int databaseSizeBeforeUpdate = alunoRepository.findAll().size();
+
+        // Update the aluno using partial update
+        Aluno partialUpdatedAluno = new Aluno();
+        partialUpdatedAluno.setId(aluno.getId());
+
+        partialUpdatedAluno
+            .dataNascimento(UPDATED_DATA_NASCIMENTO)
+            .tipoSanguineo(UPDATED_TIPO_SANGUINEO)
+            .telefonePai(UPDATED_TELEFONE_PAI)
+            .nomeMae(UPDATED_NOME_MAE)
+            .telefoneMae(UPDATED_TELEFONE_MAE)
+            .nomeResponsavel(UPDATED_NOME_RESPONSAVEL)
+            .observacoes(UPDATED_OBSERVACOES);
+
+        restAlunoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedAluno.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedAluno))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Aluno in the database
+        List<Aluno> alunoList = alunoRepository.findAll();
+        assertThat(alunoList).hasSize(databaseSizeBeforeUpdate);
+        Aluno testAluno = alunoList.get(alunoList.size() - 1);
+        assertThat(testAluno.getDataNascimento()).isEqualTo(UPDATED_DATA_NASCIMENTO);
+        assertThat(testAluno.getTipoSanguineo()).isEqualTo(UPDATED_TIPO_SANGUINEO);
+        assertThat(testAluno.getNomePai()).isEqualTo(DEFAULT_NOME_PAI);
+        assertThat(testAluno.getTelefonePai()).isEqualTo(UPDATED_TELEFONE_PAI);
+        assertThat(testAluno.getNomeMae()).isEqualTo(UPDATED_NOME_MAE);
+        assertThat(testAluno.getTelefoneMae()).isEqualTo(UPDATED_TELEFONE_MAE);
+        assertThat(testAluno.getNomeResponsavel()).isEqualTo(UPDATED_NOME_RESPONSAVEL);
+        assertThat(testAluno.getCpfResponsavel()).isEqualTo(DEFAULT_CPF_RESPONSAVEL);
+        assertThat(testAluno.getObservacoes()).isEqualTo(UPDATED_OBSERVACOES);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateAlunoWithPatch() throws Exception {
+        // Initialize the database
+        alunoRepository.saveAndFlush(aluno);
+
+        int databaseSizeBeforeUpdate = alunoRepository.findAll().size();
+
+        // Update the aluno using partial update
+        Aluno partialUpdatedAluno = new Aluno();
+        partialUpdatedAluno.setId(aluno.getId());
+
+        partialUpdatedAluno
+            .dataNascimento(UPDATED_DATA_NASCIMENTO)
+            .tipoSanguineo(UPDATED_TIPO_SANGUINEO)
+            .nomePai(UPDATED_NOME_PAI)
+            .telefonePai(UPDATED_TELEFONE_PAI)
+            .nomeMae(UPDATED_NOME_MAE)
+            .telefoneMae(UPDATED_TELEFONE_MAE)
+            .nomeResponsavel(UPDATED_NOME_RESPONSAVEL)
+            .cpfResponsavel(UPDATED_CPF_RESPONSAVEL)
+            .observacoes(UPDATED_OBSERVACOES);
+
+        restAlunoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedAluno.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedAluno))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Aluno in the database
+        List<Aluno> alunoList = alunoRepository.findAll();
+        assertThat(alunoList).hasSize(databaseSizeBeforeUpdate);
+        Aluno testAluno = alunoList.get(alunoList.size() - 1);
+        assertThat(testAluno.getDataNascimento()).isEqualTo(UPDATED_DATA_NASCIMENTO);
+        assertThat(testAluno.getTipoSanguineo()).isEqualTo(UPDATED_TIPO_SANGUINEO);
+        assertThat(testAluno.getNomePai()).isEqualTo(UPDATED_NOME_PAI);
+        assertThat(testAluno.getTelefonePai()).isEqualTo(UPDATED_TELEFONE_PAI);
+        assertThat(testAluno.getNomeMae()).isEqualTo(UPDATED_NOME_MAE);
+        assertThat(testAluno.getTelefoneMae()).isEqualTo(UPDATED_TELEFONE_MAE);
+        assertThat(testAluno.getNomeResponsavel()).isEqualTo(UPDATED_NOME_RESPONSAVEL);
+        assertThat(testAluno.getCpfResponsavel()).isEqualTo(UPDATED_CPF_RESPONSAVEL);
+        assertThat(testAluno.getObservacoes()).isEqualTo(UPDATED_OBSERVACOES);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingAluno() throws Exception {
+        int databaseSizeBeforeUpdate = alunoRepository.findAll().size();
+        aluno.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restAlunoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, aluno.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(aluno))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Aluno in the database
+        List<Aluno> alunoList = alunoRepository.findAll();
+        assertThat(alunoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchAluno() throws Exception {
+        int databaseSizeBeforeUpdate = alunoRepository.findAll().size();
+        aluno.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restAlunoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(aluno))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Aluno in the database
+        List<Aluno> alunoList = alunoRepository.findAll();
+        assertThat(alunoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamAluno() throws Exception {
+        int databaseSizeBeforeUpdate = alunoRepository.findAll().size();
+        aluno.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restAlunoMockMvc
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(aluno)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Aluno in the database
+        List<Aluno> alunoList = alunoRepository.findAll();
+        assertThat(alunoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteAluno() throws Exception {
         // Initialize the database
         alunoRepository.saveAndFlush(aluno);
 
         int databaseSizeBeforeDelete = alunoRepository.findAll().size();
 
         // Delete the aluno
-        restAlunoMockMvc.perform(delete("/api/alunos/{id}", aluno.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restAlunoMockMvc
+            .perform(delete(ENTITY_API_URL_ID, aluno.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

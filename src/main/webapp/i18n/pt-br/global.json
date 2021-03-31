@@ -1,31 +1,31 @@
 {
   "global": {
-    "title": "Passinhos do Saber",
+    "title": "EscolaOnline",
     "browsehappy": "Você está usando um navegador <strong>desatualizado</strong>. Favor <a href=\"http://browsehappy.com/?locale=pt_BR\">atualize o seu navegador</a> para ter uma experiência melhor.",
     "menu": {
       "home": "Início",
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
       "entities": {
-        "main": "Cadastros",
-        "cidade": "Cidades",
-        "escola": "Escolas",
-        "pessoa": "Pessoas",
-        "diretor": "Diretores",
-        "unidade": "Unidades",
-        "serie": "Series",
-        "materia": "Matérias",
-        "grade": "Grades",
-        "turma": "Turmas",
-        "professor": "Professores",
+        "main": "Entidades",
+        "cidade": "Cidade",
+        "escola": "Escola",
+        "pessoa": "Pessoa",
+        "diretor": "Diretor",
+        "unidade": "Unidade",
+        "serie": "Serie",
+        "materia": "Materia",
+        "grade": "Grade",
+        "turma": "Turma",
+        "professor": "Professor",
         "chamada": "Chamada",
-        "conteudo": "Conteúdo",
-        "aluno": "Alunos",
-        "matricula": "Matriculas",
-        "debito": "Debitos",
-        "historicoDebito": "Historico de Debitos",
-        "detalheUsuario": "Detalhes do Usuario",
-        "tipoSolicitacao": "Tipos de Solicitacões",
-        "solicitacao": "Solicitações",
+        "conteudo": "Conteudo",
+        "aluno": "Aluno",
+        "matricula": "Matricula",
+        "debito": "Debito",
+        "historicoDebito": "Historico Debito",
+        "detalheUsuario": "Detalhe Usuario",
+        "tipoSolicitacao": "Tipo Solicitacao",
+        "solicitacao": "Solicitacao",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
@@ -45,7 +45,6 @@
         "health": "Estado do Sistema",
         "configuration": "Configuração",
         "logs": "Logs",
-        "audits": "Auditorias",
         "apidocs": "API",
         "database": "Banco de dados",
         "jhipster-needle-menu-add-admin-element": "JHipster will add additional menu entries here (do not translate!)"
@@ -150,10 +149,12 @@
     "emailexists": "E-mail já está cadastrado!",
     "idexists": "Novo(a) {{entityName}} não pode ter um identificador",
     "idnull": "Identificador inválido",
+    "idinvalid": "Invalid Id",
+    "idnotfound": "ID cannot be found",
     "file": {
       "could.not.extract": "Could not extract file",
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
     }
   },
-  "footer": "Escola Online - SWRJ Atividades de Internet Ltda"
+  "footer": "Este é o rodapé da página"
 }

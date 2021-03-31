@@ -1,4 +1,4 @@
-export const enum SituacaoSolicitacao {
+export enum SituacaoSolicitacao {
   AGUARDANDO = 'AGUARDANDO',
 
   EM_ANDAMENTO = 'EM_ANDAMENTO',

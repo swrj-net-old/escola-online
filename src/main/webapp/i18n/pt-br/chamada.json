@@ -3,6 +3,7 @@
     "chamada": {
       "home": {
         "title": "Chamadas",
+        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo Chamada",
         "createOrEditLabel": "Criar ou editar Chamada",
         "notFound": "Nenhum Chamada encontrado"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Chamada"
       },
+      "id": "ID",
       "dataAula": "Data Aula",
       "observacoes": "Observacoes",
       "alunoChamada": "Aluno Chamada",

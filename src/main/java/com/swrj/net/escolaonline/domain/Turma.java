@@ -1,14 +1,12 @@
 package com.swrj.net.escolaonline.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Turma.
@@ -30,22 +28,25 @@ public class Turma implements Serializable {
 
     @OneToMany(mappedBy = "turmaChamada")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "alunoChamada", "turmaChamada", "professorChamada" }, allowSetters = true)
     private Set<Chamada> chamadas = new HashSet<>();
 
     @OneToMany(mappedBy = "turmaConteudo")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "turmaConteudo", "professorConteudo", "materiaConteudo" }, allowSetters = true)
     private Set<Conteudo> conteudos = new HashSet<>();
 
     @OneToMany(mappedBy = "turmaMatricula")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "turmaMatricula", "alunoMatricula" }, allowSetters = true)
     private Set<Matricula> matriculas = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "turmas", allowSetters = true)
+    @JsonIgnoreProperties(value = { "grades", "turmas" }, allowSetters = true)
     private Serie serieTurma;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "turmas", allowSetters = true)
+    @JsonIgnoreProperties(value = { "diretors", "professors", "turmas", "escolaUnidade" }, allowSetters = true)
     private Unidade unidadeTurma;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -57,8 +58,13 @@ public class Turma implements Serializable {
         this.id = id;
     }
 
+    public Turma id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getNome() {
-        return nome;
+        return this.nome;
     }
 
     public Turma nome(String nome) {
@@ -71,11 +77,11 @@ public class Turma implements Serializable {
     }
 
     public Set<Chamada> getChamadas() {
-        return chamadas;
+        return this.chamadas;
     }
 
     public Turma chamadas(Set<Chamada> chamadas) {
-        this.chamadas = chamadas;
+        this.setChamadas(chamadas);
         return this;
     }
 
@@ -92,15 +98,21 @@ public class Turma implements Serializable {
     }
 
     public void setChamadas(Set<Chamada> chamadas) {
+        if (this.chamadas != null) {
+            this.chamadas.forEach(i -> i.setTurmaChamada(null));
+        }
+        if (chamadas != null) {
+            chamadas.forEach(i -> i.setTurmaChamada(this));
+        }
         this.chamadas = chamadas;
     }
 
     public Set<Conteudo> getConteudos() {
-        return conteudos;
+        return this.conteudos;
     }
 
     public Turma conteudos(Set<Conteudo> conteudos) {
-        this.conteudos = conteudos;
+        this.setConteudos(conteudos);
         return this;
     }
 
@@ -117,15 +129,21 @@ public class Turma implements Serializable {
     }
 
     public void setConteudos(Set<Conteudo> conteudos) {
+        if (this.conteudos != null) {
+            this.conteudos.forEach(i -> i.setTurmaConteudo(null));
+        }
+        if (conteudos != null) {
+            conteudos.forEach(i -> i.setTurmaConteudo(this));
+        }
         this.conteudos = conteudos;
     }
 
     public Set<Matricula> getMatriculas() {
-        return matriculas;
+        return this.matriculas;
     }
 
     public Turma matriculas(Set<Matricula> matriculas) {
-        this.matriculas = matriculas;
+        this.setMatriculas(matriculas);
         return this;
     }
 
@@ -142,15 +160,21 @@ public class Turma implements Serializable {
     }
 
     public void setMatriculas(Set<Matricula> matriculas) {
+        if (this.matriculas != null) {
+            this.matriculas.forEach(i -> i.setTurmaMatricula(null));
+        }
+        if (matriculas != null) {
+            matriculas.forEach(i -> i.setTurmaMatricula(this));
+        }
         this.matriculas = matriculas;
     }
 
     public Serie getSerieTurma() {
-        return serieTurma;
+        return this.serieTurma;
     }
 
     public Turma serieTurma(Serie serie) {
-        this.serieTurma = serie;
+        this.setSerieTurma(serie);
         return this;
     }
 
@@ -159,17 +183,18 @@ public class Turma implements Serializable {
     }
 
     public Unidade getUnidadeTurma() {
-        return unidadeTurma;
+        return this.unidadeTurma;
     }
 
     public Turma unidadeTurma(Unidade unidade) {
-        this.unidadeTurma = unidade;
+        this.setUnidadeTurma(unidade);
         return this;
     }
 
     public void setUnidadeTurma(Unidade unidade) {
         this.unidadeTurma = unidade;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -185,7 +210,8 @@ public class Turma implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

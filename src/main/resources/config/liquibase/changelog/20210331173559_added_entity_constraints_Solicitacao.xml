@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <!--
+        Added the constraints for entity Solicitacao.
+    -->
+    <changeSet id="20210331173559-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="tipo_solicitacao_solicitacao_id"
+                                 baseTableName="solicitacao"
+                                 constraintName="fk_solicitacao__tipo_solicitacao_solicitacao_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tipo_solicitacao"/>
+
+        <addForeignKeyConstraint baseColumnNames="aluno_solicitacao_id"
+                                 baseTableName="solicitacao"
+                                 constraintName="fk_solicitacao__aluno_solicitacao_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="aluno"/>
+
+    </changeSet>
+</databaseChangeLog>

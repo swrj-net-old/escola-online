@@ -1,13 +1,12 @@
 package com.swrj.net.escolaonline.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A DetalheUsuario.
@@ -36,6 +35,7 @@ public class DetalheUsuario implements Serializable {
 
     @OneToMany(mappedBy = "detalheUsuarioLancamento")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "debitoHistoricoDebito", "detalheUsuarioLancamento" }, allowSetters = true)
     private Set<HistoricoDebito> historicoDebitos = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -47,8 +47,13 @@ public class DetalheUsuario implements Serializable {
         this.id = id;
     }
 
+    public DetalheUsuario id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getCpf() {
-        return cpf;
+        return this.cpf;
     }
 
     public DetalheUsuario cpf(String cpf) {
@@ -61,7 +66,7 @@ public class DetalheUsuario implements Serializable {
     }
 
     public String getCelular() {
-        return celular;
+        return this.celular;
     }
 
     public DetalheUsuario celular(String celular) {
@@ -74,11 +79,11 @@ public class DetalheUsuario implements Serializable {
     }
 
     public User getUsuario() {
-        return usuario;
+        return this.usuario;
     }
 
     public DetalheUsuario usuario(User user) {
-        this.usuario = user;
+        this.setUsuario(user);
         return this;
     }
 
@@ -87,11 +92,11 @@ public class DetalheUsuario implements Serializable {
     }
 
     public Set<HistoricoDebito> getHistoricoDebitos() {
-        return historicoDebitos;
+        return this.historicoDebitos;
     }
 
     public DetalheUsuario historicoDebitos(Set<HistoricoDebito> historicoDebitos) {
-        this.historicoDebitos = historicoDebitos;
+        this.setHistoricoDebitos(historicoDebitos);
         return this;
     }
 
@@ -108,8 +113,15 @@ public class DetalheUsuario implements Serializable {
     }
 
     public void setHistoricoDebitos(Set<HistoricoDebito> historicoDebitos) {
+        if (this.historicoDebitos != null) {
+            this.historicoDebitos.forEach(i -> i.setDetalheUsuarioLancamento(null));
+        }
+        if (historicoDebitos != null) {
+            historicoDebitos.forEach(i -> i.setDetalheUsuarioLancamento(this));
+        }
         this.historicoDebitos = historicoDebitos;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -125,7 +137,8 @@ public class DetalheUsuario implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

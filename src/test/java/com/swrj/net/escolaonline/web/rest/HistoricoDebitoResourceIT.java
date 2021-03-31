@@ -1,37 +1,38 @@
 package com.swrj.net.escolaonline.web.rest;
 
-import com.swrj.net.escolaonline.EscolaOnlineApp;
-import com.swrj.net.escolaonline.domain.HistoricoDebito;
-import com.swrj.net.escolaonline.repository.HistoricoDebitoRepository;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
-
+import static com.swrj.net.escolaonline.web.rest.TestUtil.sameNumber;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.swrj.net.escolaonline.IntegrationTest;
+import com.swrj.net.escolaonline.domain.HistoricoDebito;
 import com.swrj.net.escolaonline.domain.enumeration.SituacaoDebito;
+import com.swrj.net.escolaonline.repository.HistoricoDebitoRepository;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * Integration tests for the {@link HistoricoDebitoResource} REST controller.
  */
-@SpringBootTest(classes = EscolaOnlineApp.class)
+@IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-public class HistoricoDebitoResourceIT {
+class HistoricoDebitoResourceIT {
 
     private static final LocalDate DEFAULT_DATA_LANCAMENTO = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DATA_LANCAMENTO = LocalDate.now(ZoneId.systemDefault());
@@ -59,6 +60,12 @@ public class HistoricoDebitoResourceIT {
 
     private static final String DEFAULT_OBSERVACOES = "AAAAAAAAAA";
     private static final String UPDATED_OBSERVACOES = "BBBBBBBBBB";
+
+    private static final String ENTITY_API_URL = "/api/historico-debitos";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private HistoricoDebitoRepository historicoDebitoRepository;
@@ -90,6 +97,7 @@ public class HistoricoDebitoResourceIT {
             .observacoes(DEFAULT_OBSERVACOES);
         return historicoDebito;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -117,12 +125,13 @@ public class HistoricoDebitoResourceIT {
 
     @Test
     @Transactional
-    public void createHistoricoDebito() throws Exception {
+    void createHistoricoDebito() throws Exception {
         int databaseSizeBeforeCreate = historicoDebitoRepository.findAll().size();
         // Create the HistoricoDebito
-        restHistoricoDebitoMockMvc.perform(post("/api/historico-debitos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(historicoDebito)))
+        restHistoricoDebitoMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(historicoDebito))
+            )
             .andExpect(status().isCreated());
 
         // Validate the HistoricoDebito in the database
@@ -133,25 +142,26 @@ public class HistoricoDebitoResourceIT {
         assertThat(testHistoricoDebito.getSituacaoDebito()).isEqualTo(DEFAULT_SITUACAO_DEBITO);
         assertThat(testHistoricoDebito.getDataVencimento()).isEqualTo(DEFAULT_DATA_VENCIMENTO);
         assertThat(testHistoricoDebito.getDataPagamento()).isEqualTo(DEFAULT_DATA_PAGAMENTO);
-        assertThat(testHistoricoDebito.getValorOriginal()).isEqualTo(DEFAULT_VALOR_ORIGINAL);
-        assertThat(testHistoricoDebito.getTotalPago()).isEqualTo(DEFAULT_TOTAL_PAGO);
-        assertThat(testHistoricoDebito.getTotalDesconto()).isEqualTo(DEFAULT_TOTAL_DESCONTO);
-        assertThat(testHistoricoDebito.getTotalDevido()).isEqualTo(DEFAULT_TOTAL_DEVIDO);
+        assertThat(testHistoricoDebito.getValorOriginal()).isEqualByComparingTo(DEFAULT_VALOR_ORIGINAL);
+        assertThat(testHistoricoDebito.getTotalPago()).isEqualByComparingTo(DEFAULT_TOTAL_PAGO);
+        assertThat(testHistoricoDebito.getTotalDesconto()).isEqualByComparingTo(DEFAULT_TOTAL_DESCONTO);
+        assertThat(testHistoricoDebito.getTotalDevido()).isEqualByComparingTo(DEFAULT_TOTAL_DEVIDO);
         assertThat(testHistoricoDebito.getObservacoes()).isEqualTo(DEFAULT_OBSERVACOES);
     }
 
     @Test
     @Transactional
-    public void createHistoricoDebitoWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = historicoDebitoRepository.findAll().size();
-
+    void createHistoricoDebitoWithExistingId() throws Exception {
         // Create the HistoricoDebito with an existing ID
         historicoDebito.setId(1L);
 
+        int databaseSizeBeforeCreate = historicoDebitoRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restHistoricoDebitoMockMvc.perform(post("/api/historico-debitos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(historicoDebito)))
+        restHistoricoDebitoMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(historicoDebito))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the HistoricoDebito in the database
@@ -159,15 +169,15 @@ public class HistoricoDebitoResourceIT {
         assertThat(historicoDebitoList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void getAllHistoricoDebitos() throws Exception {
+    void getAllHistoricoDebitos() throws Exception {
         // Initialize the database
         historicoDebitoRepository.saveAndFlush(historicoDebito);
 
         // Get all the historicoDebitoList
-        restHistoricoDebitoMockMvc.perform(get("/api/historico-debitos?sort=id,desc"))
+        restHistoricoDebitoMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(historicoDebito.getId().intValue())))
@@ -175,21 +185,22 @@ public class HistoricoDebitoResourceIT {
             .andExpect(jsonPath("$.[*].situacaoDebito").value(hasItem(DEFAULT_SITUACAO_DEBITO.toString())))
             .andExpect(jsonPath("$.[*].dataVencimento").value(hasItem(DEFAULT_DATA_VENCIMENTO.toString())))
             .andExpect(jsonPath("$.[*].dataPagamento").value(hasItem(DEFAULT_DATA_PAGAMENTO.toString())))
-            .andExpect(jsonPath("$.[*].valorOriginal").value(hasItem(DEFAULT_VALOR_ORIGINAL.intValue())))
-            .andExpect(jsonPath("$.[*].totalPago").value(hasItem(DEFAULT_TOTAL_PAGO.intValue())))
-            .andExpect(jsonPath("$.[*].totalDesconto").value(hasItem(DEFAULT_TOTAL_DESCONTO.intValue())))
-            .andExpect(jsonPath("$.[*].totalDevido").value(hasItem(DEFAULT_TOTAL_DEVIDO.intValue())))
+            .andExpect(jsonPath("$.[*].valorOriginal").value(hasItem(sameNumber(DEFAULT_VALOR_ORIGINAL))))
+            .andExpect(jsonPath("$.[*].totalPago").value(hasItem(sameNumber(DEFAULT_TOTAL_PAGO))))
+            .andExpect(jsonPath("$.[*].totalDesconto").value(hasItem(sameNumber(DEFAULT_TOTAL_DESCONTO))))
+            .andExpect(jsonPath("$.[*].totalDevido").value(hasItem(sameNumber(DEFAULT_TOTAL_DEVIDO))))
             .andExpect(jsonPath("$.[*].observacoes").value(hasItem(DEFAULT_OBSERVACOES)));
     }
-    
+
     @Test
     @Transactional
-    public void getHistoricoDebito() throws Exception {
+    void getHistoricoDebito() throws Exception {
         // Initialize the database
         historicoDebitoRepository.saveAndFlush(historicoDebito);
 
         // Get the historicoDebito
-        restHistoricoDebitoMockMvc.perform(get("/api/historico-debitos/{id}", historicoDebito.getId()))
+        restHistoricoDebitoMockMvc
+            .perform(get(ENTITY_API_URL_ID, historicoDebito.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(historicoDebito.getId().intValue()))
@@ -197,23 +208,23 @@ public class HistoricoDebitoResourceIT {
             .andExpect(jsonPath("$.situacaoDebito").value(DEFAULT_SITUACAO_DEBITO.toString()))
             .andExpect(jsonPath("$.dataVencimento").value(DEFAULT_DATA_VENCIMENTO.toString()))
             .andExpect(jsonPath("$.dataPagamento").value(DEFAULT_DATA_PAGAMENTO.toString()))
-            .andExpect(jsonPath("$.valorOriginal").value(DEFAULT_VALOR_ORIGINAL.intValue()))
-            .andExpect(jsonPath("$.totalPago").value(DEFAULT_TOTAL_PAGO.intValue()))
-            .andExpect(jsonPath("$.totalDesconto").value(DEFAULT_TOTAL_DESCONTO.intValue()))
-            .andExpect(jsonPath("$.totalDevido").value(DEFAULT_TOTAL_DEVIDO.intValue()))
+            .andExpect(jsonPath("$.valorOriginal").value(sameNumber(DEFAULT_VALOR_ORIGINAL)))
+            .andExpect(jsonPath("$.totalPago").value(sameNumber(DEFAULT_TOTAL_PAGO)))
+            .andExpect(jsonPath("$.totalDesconto").value(sameNumber(DEFAULT_TOTAL_DESCONTO)))
+            .andExpect(jsonPath("$.totalDevido").value(sameNumber(DEFAULT_TOTAL_DEVIDO)))
             .andExpect(jsonPath("$.observacoes").value(DEFAULT_OBSERVACOES));
-    }
-    @Test
-    @Transactional
-    public void getNonExistingHistoricoDebito() throws Exception {
-        // Get the historicoDebito
-        restHistoricoDebitoMockMvc.perform(get("/api/historico-debitos/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateHistoricoDebito() throws Exception {
+    void getNonExistingHistoricoDebito() throws Exception {
+        // Get the historicoDebito
+        restHistoricoDebitoMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional
+    void putNewHistoricoDebito() throws Exception {
         // Initialize the database
         historicoDebitoRepository.saveAndFlush(historicoDebito);
 
@@ -234,9 +245,12 @@ public class HistoricoDebitoResourceIT {
             .totalDevido(UPDATED_TOTAL_DEVIDO)
             .observacoes(UPDATED_OBSERVACOES);
 
-        restHistoricoDebitoMockMvc.perform(put("/api/historico-debitos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedHistoricoDebito)))
+        restHistoricoDebitoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedHistoricoDebito.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedHistoricoDebito))
+            )
             .andExpect(status().isOk());
 
         // Validate the HistoricoDebito in the database
@@ -256,13 +270,17 @@ public class HistoricoDebitoResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingHistoricoDebito() throws Exception {
+    void putNonExistingHistoricoDebito() throws Exception {
         int databaseSizeBeforeUpdate = historicoDebitoRepository.findAll().size();
+        historicoDebito.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restHistoricoDebitoMockMvc.perform(put("/api/historico-debitos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(historicoDebito)))
+        restHistoricoDebitoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, historicoDebito.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(historicoDebito))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the HistoricoDebito in the database
@@ -272,15 +290,200 @@ public class HistoricoDebitoResourceIT {
 
     @Test
     @Transactional
-    public void deleteHistoricoDebito() throws Exception {
+    void putWithIdMismatchHistoricoDebito() throws Exception {
+        int databaseSizeBeforeUpdate = historicoDebitoRepository.findAll().size();
+        historicoDebito.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restHistoricoDebitoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(historicoDebito))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the HistoricoDebito in the database
+        List<HistoricoDebito> historicoDebitoList = historicoDebitoRepository.findAll();
+        assertThat(historicoDebitoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamHistoricoDebito() throws Exception {
+        int databaseSizeBeforeUpdate = historicoDebitoRepository.findAll().size();
+        historicoDebito.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restHistoricoDebitoMockMvc
+            .perform(
+                put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(historicoDebito))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the HistoricoDebito in the database
+        List<HistoricoDebito> historicoDebitoList = historicoDebitoRepository.findAll();
+        assertThat(historicoDebitoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateHistoricoDebitoWithPatch() throws Exception {
+        // Initialize the database
+        historicoDebitoRepository.saveAndFlush(historicoDebito);
+
+        int databaseSizeBeforeUpdate = historicoDebitoRepository.findAll().size();
+
+        // Update the historicoDebito using partial update
+        HistoricoDebito partialUpdatedHistoricoDebito = new HistoricoDebito();
+        partialUpdatedHistoricoDebito.setId(historicoDebito.getId());
+
+        partialUpdatedHistoricoDebito
+            .situacaoDebito(UPDATED_SITUACAO_DEBITO)
+            .dataVencimento(UPDATED_DATA_VENCIMENTO)
+            .valorOriginal(UPDATED_VALOR_ORIGINAL)
+            .observacoes(UPDATED_OBSERVACOES);
+
+        restHistoricoDebitoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedHistoricoDebito.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedHistoricoDebito))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the HistoricoDebito in the database
+        List<HistoricoDebito> historicoDebitoList = historicoDebitoRepository.findAll();
+        assertThat(historicoDebitoList).hasSize(databaseSizeBeforeUpdate);
+        HistoricoDebito testHistoricoDebito = historicoDebitoList.get(historicoDebitoList.size() - 1);
+        assertThat(testHistoricoDebito.getDataLancamento()).isEqualTo(DEFAULT_DATA_LANCAMENTO);
+        assertThat(testHistoricoDebito.getSituacaoDebito()).isEqualTo(UPDATED_SITUACAO_DEBITO);
+        assertThat(testHistoricoDebito.getDataVencimento()).isEqualTo(UPDATED_DATA_VENCIMENTO);
+        assertThat(testHistoricoDebito.getDataPagamento()).isEqualTo(DEFAULT_DATA_PAGAMENTO);
+        assertThat(testHistoricoDebito.getValorOriginal()).isEqualByComparingTo(UPDATED_VALOR_ORIGINAL);
+        assertThat(testHistoricoDebito.getTotalPago()).isEqualByComparingTo(DEFAULT_TOTAL_PAGO);
+        assertThat(testHistoricoDebito.getTotalDesconto()).isEqualByComparingTo(DEFAULT_TOTAL_DESCONTO);
+        assertThat(testHistoricoDebito.getTotalDevido()).isEqualByComparingTo(DEFAULT_TOTAL_DEVIDO);
+        assertThat(testHistoricoDebito.getObservacoes()).isEqualTo(UPDATED_OBSERVACOES);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateHistoricoDebitoWithPatch() throws Exception {
+        // Initialize the database
+        historicoDebitoRepository.saveAndFlush(historicoDebito);
+
+        int databaseSizeBeforeUpdate = historicoDebitoRepository.findAll().size();
+
+        // Update the historicoDebito using partial update
+        HistoricoDebito partialUpdatedHistoricoDebito = new HistoricoDebito();
+        partialUpdatedHistoricoDebito.setId(historicoDebito.getId());
+
+        partialUpdatedHistoricoDebito
+            .dataLancamento(UPDATED_DATA_LANCAMENTO)
+            .situacaoDebito(UPDATED_SITUACAO_DEBITO)
+            .dataVencimento(UPDATED_DATA_VENCIMENTO)
+            .dataPagamento(UPDATED_DATA_PAGAMENTO)
+            .valorOriginal(UPDATED_VALOR_ORIGINAL)
+            .totalPago(UPDATED_TOTAL_PAGO)
+            .totalDesconto(UPDATED_TOTAL_DESCONTO)
+            .totalDevido(UPDATED_TOTAL_DEVIDO)
+            .observacoes(UPDATED_OBSERVACOES);
+
+        restHistoricoDebitoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedHistoricoDebito.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedHistoricoDebito))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the HistoricoDebito in the database
+        List<HistoricoDebito> historicoDebitoList = historicoDebitoRepository.findAll();
+        assertThat(historicoDebitoList).hasSize(databaseSizeBeforeUpdate);
+        HistoricoDebito testHistoricoDebito = historicoDebitoList.get(historicoDebitoList.size() - 1);
+        assertThat(testHistoricoDebito.getDataLancamento()).isEqualTo(UPDATED_DATA_LANCAMENTO);
+        assertThat(testHistoricoDebito.getSituacaoDebito()).isEqualTo(UPDATED_SITUACAO_DEBITO);
+        assertThat(testHistoricoDebito.getDataVencimento()).isEqualTo(UPDATED_DATA_VENCIMENTO);
+        assertThat(testHistoricoDebito.getDataPagamento()).isEqualTo(UPDATED_DATA_PAGAMENTO);
+        assertThat(testHistoricoDebito.getValorOriginal()).isEqualByComparingTo(UPDATED_VALOR_ORIGINAL);
+        assertThat(testHistoricoDebito.getTotalPago()).isEqualByComparingTo(UPDATED_TOTAL_PAGO);
+        assertThat(testHistoricoDebito.getTotalDesconto()).isEqualByComparingTo(UPDATED_TOTAL_DESCONTO);
+        assertThat(testHistoricoDebito.getTotalDevido()).isEqualByComparingTo(UPDATED_TOTAL_DEVIDO);
+        assertThat(testHistoricoDebito.getObservacoes()).isEqualTo(UPDATED_OBSERVACOES);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingHistoricoDebito() throws Exception {
+        int databaseSizeBeforeUpdate = historicoDebitoRepository.findAll().size();
+        historicoDebito.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restHistoricoDebitoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, historicoDebito.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(historicoDebito))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the HistoricoDebito in the database
+        List<HistoricoDebito> historicoDebitoList = historicoDebitoRepository.findAll();
+        assertThat(historicoDebitoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchHistoricoDebito() throws Exception {
+        int databaseSizeBeforeUpdate = historicoDebitoRepository.findAll().size();
+        historicoDebito.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restHistoricoDebitoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(historicoDebito))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the HistoricoDebito in the database
+        List<HistoricoDebito> historicoDebitoList = historicoDebitoRepository.findAll();
+        assertThat(historicoDebitoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamHistoricoDebito() throws Exception {
+        int databaseSizeBeforeUpdate = historicoDebitoRepository.findAll().size();
+        historicoDebito.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restHistoricoDebitoMockMvc
+            .perform(
+                patch(ENTITY_API_URL)
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(historicoDebito))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the HistoricoDebito in the database
+        List<HistoricoDebito> historicoDebitoList = historicoDebitoRepository.findAll();
+        assertThat(historicoDebitoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteHistoricoDebito() throws Exception {
         // Initialize the database
         historicoDebitoRepository.saveAndFlush(historicoDebito);
 
         int databaseSizeBeforeDelete = historicoDebitoRepository.findAll().size();
 
         // Delete the historicoDebito
-        restHistoricoDebitoMockMvc.perform(delete("/api/historico-debitos/{id}", historicoDebito.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restHistoricoDebitoMockMvc
+            .perform(delete(ENTITY_API_URL_ID, historicoDebito.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

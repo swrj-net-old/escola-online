@@ -16,7 +16,6 @@
       "otherEntityName": "user",
       "otherEntityRelationshipName": "usuario",
       "relationshipName": "usuario",
-      "otherEntityField": "id",
       "ownerSide": true
     },
     {
@@ -26,15 +25,14 @@
       "relationshipName": "historicoDebito"
     }
   ],
-  "changelogDate": "20210329174528",
   "entityTableName": "detalhe_usuario",
   "dto": "no",
-  "pagination": "no",
-  "service": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "changelogDate": "20210331173557"
 }

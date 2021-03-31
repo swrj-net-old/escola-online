@@ -1,33 +1,33 @@
 package com.swrj.net.escolaonline.web.rest;
 
-import com.swrj.net.escolaonline.EscolaOnlineApp;
-import com.swrj.net.escolaonline.domain.Pessoa;
-import com.swrj.net.escolaonline.repository.PessoaRepository;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.swrj.net.escolaonline.IntegrationTest;
+import com.swrj.net.escolaonline.domain.Pessoa;
+import com.swrj.net.escolaonline.repository.PessoaRepository;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * Integration tests for the {@link PessoaResource} REST controller.
  */
-@SpringBootTest(classes = EscolaOnlineApp.class)
+@IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-public class PessoaResourceIT {
+class PessoaResourceIT {
 
     private static final String DEFAULT_NOME = "AAAAAAAAAA";
     private static final String UPDATED_NOME = "BBBBBBBBBB";
@@ -68,6 +68,12 @@ public class PessoaResourceIT {
     private static final String DEFAULT_OBSERVACOES = "AAAAAAAAAA";
     private static final String UPDATED_OBSERVACOES = "BBBBBBBBBB";
 
+    private static final String ENTITY_API_URL = "/api/pessoas";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+
     @Autowired
     private PessoaRepository pessoaRepository;
 
@@ -102,6 +108,7 @@ public class PessoaResourceIT {
             .observacoes(DEFAULT_OBSERVACOES);
         return pessoa;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -133,12 +140,11 @@ public class PessoaResourceIT {
 
     @Test
     @Transactional
-    public void createPessoa() throws Exception {
+    void createPessoa() throws Exception {
         int databaseSizeBeforeCreate = pessoaRepository.findAll().size();
         // Create the Pessoa
-        restPessoaMockMvc.perform(post("/api/pessoas")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(pessoa)))
+        restPessoaMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(pessoa)))
             .andExpect(status().isCreated());
 
         // Validate the Pessoa in the database
@@ -162,16 +168,15 @@ public class PessoaResourceIT {
 
     @Test
     @Transactional
-    public void createPessoaWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = pessoaRepository.findAll().size();
-
+    void createPessoaWithExistingId() throws Exception {
         // Create the Pessoa with an existing ID
         pessoa.setId(1L);
 
+        int databaseSizeBeforeCreate = pessoaRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restPessoaMockMvc.perform(post("/api/pessoas")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(pessoa)))
+        restPessoaMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(pessoa)))
             .andExpect(status().isBadRequest());
 
         // Validate the Pessoa in the database
@@ -179,15 +184,15 @@ public class PessoaResourceIT {
         assertThat(pessoaList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void getAllPessoas() throws Exception {
+    void getAllPessoas() throws Exception {
         // Initialize the database
         pessoaRepository.saveAndFlush(pessoa);
 
         // Get all the pessoaList
-        restPessoaMockMvc.perform(get("/api/pessoas?sort=id,desc"))
+        restPessoaMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(pessoa.getId().intValue())))
@@ -205,15 +210,16 @@ public class PessoaResourceIT {
             .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
             .andExpect(jsonPath("$.[*].observacoes").value(hasItem(DEFAULT_OBSERVACOES)));
     }
-    
+
     @Test
     @Transactional
-    public void getPessoa() throws Exception {
+    void getPessoa() throws Exception {
         // Initialize the database
         pessoaRepository.saveAndFlush(pessoa);
 
         // Get the pessoa
-        restPessoaMockMvc.perform(get("/api/pessoas/{id}", pessoa.getId()))
+        restPessoaMockMvc
+            .perform(get(ENTITY_API_URL_ID, pessoa.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(pessoa.getId().intValue()))
@@ -231,17 +237,17 @@ public class PessoaResourceIT {
             .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL))
             .andExpect(jsonPath("$.observacoes").value(DEFAULT_OBSERVACOES));
     }
+
     @Test
     @Transactional
-    public void getNonExistingPessoa() throws Exception {
+    void getNonExistingPessoa() throws Exception {
         // Get the pessoa
-        restPessoaMockMvc.perform(get("/api/pessoas/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restPessoaMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updatePessoa() throws Exception {
+    void putNewPessoa() throws Exception {
         // Initialize the database
         pessoaRepository.saveAndFlush(pessoa);
 
@@ -266,9 +272,12 @@ public class PessoaResourceIT {
             .email(UPDATED_EMAIL)
             .observacoes(UPDATED_OBSERVACOES);
 
-        restPessoaMockMvc.perform(put("/api/pessoas")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedPessoa)))
+        restPessoaMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedPessoa.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedPessoa))
+            )
             .andExpect(status().isOk());
 
         // Validate the Pessoa in the database
@@ -292,13 +301,17 @@ public class PessoaResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingPessoa() throws Exception {
+    void putNonExistingPessoa() throws Exception {
         int databaseSizeBeforeUpdate = pessoaRepository.findAll().size();
+        pessoa.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restPessoaMockMvc.perform(put("/api/pessoas")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(pessoa)))
+        restPessoaMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, pessoa.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(pessoa))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Pessoa in the database
@@ -308,15 +321,208 @@ public class PessoaResourceIT {
 
     @Test
     @Transactional
-    public void deletePessoa() throws Exception {
+    void putWithIdMismatchPessoa() throws Exception {
+        int databaseSizeBeforeUpdate = pessoaRepository.findAll().size();
+        pessoa.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPessoaMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(pessoa))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Pessoa in the database
+        List<Pessoa> pessoaList = pessoaRepository.findAll();
+        assertThat(pessoaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamPessoa() throws Exception {
+        int databaseSizeBeforeUpdate = pessoaRepository.findAll().size();
+        pessoa.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPessoaMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(pessoa)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Pessoa in the database
+        List<Pessoa> pessoaList = pessoaRepository.findAll();
+        assertThat(pessoaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdatePessoaWithPatch() throws Exception {
+        // Initialize the database
+        pessoaRepository.saveAndFlush(pessoa);
+
+        int databaseSizeBeforeUpdate = pessoaRepository.findAll().size();
+
+        // Update the pessoa using partial update
+        Pessoa partialUpdatedPessoa = new Pessoa();
+        partialUpdatedPessoa.setId(pessoa.getId());
+
+        partialUpdatedPessoa
+            .nome(UPDATED_NOME)
+            .endereco(UPDATED_ENDERECO)
+            .telefoneResidencial(UPDATED_TELEFONE_RESIDENCIAL)
+            .telefoneComercial(UPDATED_TELEFONE_COMERCIAL)
+            .email(UPDATED_EMAIL)
+            .observacoes(UPDATED_OBSERVACOES);
+
+        restPessoaMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedPessoa.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedPessoa))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Pessoa in the database
+        List<Pessoa> pessoaList = pessoaRepository.findAll();
+        assertThat(pessoaList).hasSize(databaseSizeBeforeUpdate);
+        Pessoa testPessoa = pessoaList.get(pessoaList.size() - 1);
+        assertThat(testPessoa.getNome()).isEqualTo(UPDATED_NOME);
+        assertThat(testPessoa.getCpf()).isEqualTo(DEFAULT_CPF);
+        assertThat(testPessoa.getRg()).isEqualTo(DEFAULT_RG);
+        assertThat(testPessoa.getEndereco()).isEqualTo(UPDATED_ENDERECO);
+        assertThat(testPessoa.getComplemento()).isEqualTo(DEFAULT_COMPLEMENTO);
+        assertThat(testPessoa.getBairro()).isEqualTo(DEFAULT_BAIRRO);
+        assertThat(testPessoa.getCidade()).isEqualTo(DEFAULT_CIDADE);
+        assertThat(testPessoa.getCep()).isEqualTo(DEFAULT_CEP);
+        assertThat(testPessoa.getTelefoneCelular()).isEqualTo(DEFAULT_TELEFONE_CELULAR);
+        assertThat(testPessoa.getTelefoneResidencial()).isEqualTo(UPDATED_TELEFONE_RESIDENCIAL);
+        assertThat(testPessoa.getTelefoneComercial()).isEqualTo(UPDATED_TELEFONE_COMERCIAL);
+        assertThat(testPessoa.getEmail()).isEqualTo(UPDATED_EMAIL);
+        assertThat(testPessoa.getObservacoes()).isEqualTo(UPDATED_OBSERVACOES);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdatePessoaWithPatch() throws Exception {
+        // Initialize the database
+        pessoaRepository.saveAndFlush(pessoa);
+
+        int databaseSizeBeforeUpdate = pessoaRepository.findAll().size();
+
+        // Update the pessoa using partial update
+        Pessoa partialUpdatedPessoa = new Pessoa();
+        partialUpdatedPessoa.setId(pessoa.getId());
+
+        partialUpdatedPessoa
+            .nome(UPDATED_NOME)
+            .cpf(UPDATED_CPF)
+            .rg(UPDATED_RG)
+            .endereco(UPDATED_ENDERECO)
+            .complemento(UPDATED_COMPLEMENTO)
+            .bairro(UPDATED_BAIRRO)
+            .cidade(UPDATED_CIDADE)
+            .cep(UPDATED_CEP)
+            .telefoneCelular(UPDATED_TELEFONE_CELULAR)
+            .telefoneResidencial(UPDATED_TELEFONE_RESIDENCIAL)
+            .telefoneComercial(UPDATED_TELEFONE_COMERCIAL)
+            .email(UPDATED_EMAIL)
+            .observacoes(UPDATED_OBSERVACOES);
+
+        restPessoaMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedPessoa.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedPessoa))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Pessoa in the database
+        List<Pessoa> pessoaList = pessoaRepository.findAll();
+        assertThat(pessoaList).hasSize(databaseSizeBeforeUpdate);
+        Pessoa testPessoa = pessoaList.get(pessoaList.size() - 1);
+        assertThat(testPessoa.getNome()).isEqualTo(UPDATED_NOME);
+        assertThat(testPessoa.getCpf()).isEqualTo(UPDATED_CPF);
+        assertThat(testPessoa.getRg()).isEqualTo(UPDATED_RG);
+        assertThat(testPessoa.getEndereco()).isEqualTo(UPDATED_ENDERECO);
+        assertThat(testPessoa.getComplemento()).isEqualTo(UPDATED_COMPLEMENTO);
+        assertThat(testPessoa.getBairro()).isEqualTo(UPDATED_BAIRRO);
+        assertThat(testPessoa.getCidade()).isEqualTo(UPDATED_CIDADE);
+        assertThat(testPessoa.getCep()).isEqualTo(UPDATED_CEP);
+        assertThat(testPessoa.getTelefoneCelular()).isEqualTo(UPDATED_TELEFONE_CELULAR);
+        assertThat(testPessoa.getTelefoneResidencial()).isEqualTo(UPDATED_TELEFONE_RESIDENCIAL);
+        assertThat(testPessoa.getTelefoneComercial()).isEqualTo(UPDATED_TELEFONE_COMERCIAL);
+        assertThat(testPessoa.getEmail()).isEqualTo(UPDATED_EMAIL);
+        assertThat(testPessoa.getObservacoes()).isEqualTo(UPDATED_OBSERVACOES);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingPessoa() throws Exception {
+        int databaseSizeBeforeUpdate = pessoaRepository.findAll().size();
+        pessoa.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restPessoaMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, pessoa.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(pessoa))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Pessoa in the database
+        List<Pessoa> pessoaList = pessoaRepository.findAll();
+        assertThat(pessoaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchPessoa() throws Exception {
+        int databaseSizeBeforeUpdate = pessoaRepository.findAll().size();
+        pessoa.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPessoaMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(pessoa))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Pessoa in the database
+        List<Pessoa> pessoaList = pessoaRepository.findAll();
+        assertThat(pessoaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamPessoa() throws Exception {
+        int databaseSizeBeforeUpdate = pessoaRepository.findAll().size();
+        pessoa.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPessoaMockMvc
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(pessoa)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Pessoa in the database
+        List<Pessoa> pessoaList = pessoaRepository.findAll();
+        assertThat(pessoaList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deletePessoa() throws Exception {
         // Initialize the database
         pessoaRepository.saveAndFlush(pessoa);
 
         int databaseSizeBeforeDelete = pessoaRepository.findAll().size();
 
         // Delete the pessoa
-        restPessoaMockMvc.perform(delete("/api/pessoas/{id}", pessoa.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restPessoaMockMvc
+            .perform(delete(ENTITY_API_URL_ID, pessoa.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

@@ -3,6 +3,7 @@
     "historicoDebito": {
       "home": {
         "title": "Historico Debitos",
+        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo Historico Debito",
         "createOrEditLabel": "Criar ou editar Historico Debito",
         "notFound": "Nenhum Historico Debito encontrado"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Historico Debito"
       },
+      "id": "ID",
       "dataLancamento": "Data Lancamento",
       "situacaoDebito": "Situacao Debito",
       "dataVencimento": "Data Vencimento",

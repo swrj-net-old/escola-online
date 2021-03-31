@@ -3,11 +3,9 @@ import { ITurma } from 'app/shared/model/turma.model';
 
 export interface ISerie {
   id?: number;
-  nome?: string;
-  grades?: IGrade[];
-  turmas?: ITurma[];
+  nome?: string | null;
+  grades?: IGrade[] | null;
+  turmas?: ITurma[] | null;
 }
 
-export class Serie implements ISerie {
-  constructor(public id?: number, public nome?: string, public grades?: IGrade[], public turmas?: ITurma[]) {}
-}
+export const defaultValue: Readonly<ISerie> = {};

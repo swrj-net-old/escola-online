@@ -1,13 +1,11 @@
 package com.swrj.net.escolaonline.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
 import java.io.Serializable;
 import java.time.LocalDate;
+import javax.persistence.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Chamada.
@@ -31,15 +29,18 @@ public class Chamada implements Serializable {
     private String observacoes;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "chamadas", allowSetters = true)
+    @JsonIgnoreProperties(
+        value = { "solicitacaos", "debitos", "chamadas", "matriculas", "pessoaAluno", "escolaAluno" },
+        allowSetters = true
+    )
     private Aluno alunoChamada;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "chamadas", allowSetters = true)
+    @JsonIgnoreProperties(value = { "chamadas", "conteudos", "matriculas", "serieTurma", "unidadeTurma" }, allowSetters = true)
     private Turma turmaChamada;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "chamadas", allowSetters = true)
+    @JsonIgnoreProperties(value = { "chamadas", "conteudos", "pessoaProfessor", "unidadeProfessor" }, allowSetters = true)
     private Professor professorChamada;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -51,8 +52,13 @@ public class Chamada implements Serializable {
         this.id = id;
     }
 
+    public Chamada id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public LocalDate getDataAula() {
-        return dataAula;
+        return this.dataAula;
     }
 
     public Chamada dataAula(LocalDate dataAula) {
@@ -65,7 +71,7 @@ public class Chamada implements Serializable {
     }
 
     public String getObservacoes() {
-        return observacoes;
+        return this.observacoes;
     }
 
     public Chamada observacoes(String observacoes) {
@@ -78,11 +84,11 @@ public class Chamada implements Serializable {
     }
 
     public Aluno getAlunoChamada() {
-        return alunoChamada;
+        return this.alunoChamada;
     }
 
     public Chamada alunoChamada(Aluno aluno) {
-        this.alunoChamada = aluno;
+        this.setAlunoChamada(aluno);
         return this;
     }
 
@@ -91,11 +97,11 @@ public class Chamada implements Serializable {
     }
 
     public Turma getTurmaChamada() {
-        return turmaChamada;
+        return this.turmaChamada;
     }
 
     public Chamada turmaChamada(Turma turma) {
-        this.turmaChamada = turma;
+        this.setTurmaChamada(turma);
         return this;
     }
 
@@ -104,17 +110,18 @@ public class Chamada implements Serializable {
     }
 
     public Professor getProfessorChamada() {
-        return professorChamada;
+        return this.professorChamada;
     }
 
     public Chamada professorChamada(Professor professor) {
-        this.professorChamada = professor;
+        this.setProfessorChamada(professor);
         return this;
     }
 
     public void setProfessorChamada(Professor professor) {
         this.professorChamada = professor;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -130,7 +137,8 @@ public class Chamada implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

@@ -1,12 +1,10 @@
 package com.swrj.net.escolaonline.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
-import java.io.Serializable;
 
 /**
  * A Grade.
@@ -27,12 +25,16 @@ public class Grade implements Serializable {
     private Integer anoLetivo;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "grades", allowSetters = true)
+    @JsonIgnoreProperties(value = { "grades", "turmas" }, allowSetters = true)
     private Serie serieGrade;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "grades", allowSetters = true)
+    @JsonIgnoreProperties(value = { "grades", "conteudos" }, allowSetters = true)
     private Materia materiaGrade;
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = { "pessoas", "alunos", "unidades", "grades", "tipoSolicitacaos" }, allowSetters = true)
+    private Escola escolaGrade;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -43,8 +45,13 @@ public class Grade implements Serializable {
         this.id = id;
     }
 
+    public Grade id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public Integer getAnoLetivo() {
-        return anoLetivo;
+        return this.anoLetivo;
     }
 
     public Grade anoLetivo(Integer anoLetivo) {
@@ -57,11 +64,11 @@ public class Grade implements Serializable {
     }
 
     public Serie getSerieGrade() {
-        return serieGrade;
+        return this.serieGrade;
     }
 
     public Grade serieGrade(Serie serie) {
-        this.serieGrade = serie;
+        this.setSerieGrade(serie);
         return this;
     }
 
@@ -70,17 +77,31 @@ public class Grade implements Serializable {
     }
 
     public Materia getMateriaGrade() {
-        return materiaGrade;
+        return this.materiaGrade;
     }
 
     public Grade materiaGrade(Materia materia) {
-        this.materiaGrade = materia;
+        this.setMateriaGrade(materia);
         return this;
     }
 
     public void setMateriaGrade(Materia materia) {
         this.materiaGrade = materia;
     }
+
+    public Escola getEscolaGrade() {
+        return this.escolaGrade;
+    }
+
+    public Grade escolaGrade(Escola escola) {
+        this.setEscolaGrade(escola);
+        return this;
+    }
+
+    public void setEscolaGrade(Escola escola) {
+        this.escolaGrade = escola;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -96,7 +117,8 @@ public class Grade implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

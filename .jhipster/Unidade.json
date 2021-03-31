@@ -73,19 +73,17 @@
       "relationshipType": "many-to-one",
       "otherEntityName": "escola",
       "otherEntityRelationshipName": "unidade",
-      "relationshipName": "escolaUnidade",
-      "otherEntityField": "id"
+      "relationshipName": "escolaUnidade"
     }
   ],
-  "changelogDate": "20210329173328",
   "entityTableName": "unidade",
   "dto": "no",
-  "pagination": "no",
-  "service": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "changelogDate": "20210331173545"
 }

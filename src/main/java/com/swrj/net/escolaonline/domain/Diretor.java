@@ -1,13 +1,11 @@
 package com.swrj.net.escolaonline.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
 import java.io.Serializable;
 import java.time.LocalDate;
+import javax.persistence.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Diretor.
@@ -34,11 +32,11 @@ public class Diretor implements Serializable {
     private LocalDate dataFim;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "diretors", allowSetters = true)
+    @JsonIgnoreProperties(value = { "diretors", "professors", "alunos", "cidadePessoa", "escolaPessoa" }, allowSetters = true)
     private Pessoa pessoaDiretor;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "diretors", allowSetters = true)
+    @JsonIgnoreProperties(value = { "diretors", "professors", "turmas", "escolaUnidade" }, allowSetters = true)
     private Unidade unidadeDiretor;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -50,8 +48,13 @@ public class Diretor implements Serializable {
         this.id = id;
     }
 
+    public Diretor id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public Integer getAnoLetivo() {
-        return anoLetivo;
+        return this.anoLetivo;
     }
 
     public Diretor anoLetivo(Integer anoLetivo) {
@@ -64,7 +67,7 @@ public class Diretor implements Serializable {
     }
 
     public LocalDate getDataInicio() {
-        return dataInicio;
+        return this.dataInicio;
     }
 
     public Diretor dataInicio(LocalDate dataInicio) {
@@ -77,7 +80,7 @@ public class Diretor implements Serializable {
     }
 
     public LocalDate getDataFim() {
-        return dataFim;
+        return this.dataFim;
     }
 
     public Diretor dataFim(LocalDate dataFim) {
@@ -90,11 +93,11 @@ public class Diretor implements Serializable {
     }
 
     public Pessoa getPessoaDiretor() {
-        return pessoaDiretor;
+        return this.pessoaDiretor;
     }
 
     public Diretor pessoaDiretor(Pessoa pessoa) {
-        this.pessoaDiretor = pessoa;
+        this.setPessoaDiretor(pessoa);
         return this;
     }
 
@@ -103,17 +106,18 @@ public class Diretor implements Serializable {
     }
 
     public Unidade getUnidadeDiretor() {
-        return unidadeDiretor;
+        return this.unidadeDiretor;
     }
 
     public Diretor unidadeDiretor(Unidade unidade) {
-        this.unidadeDiretor = unidade;
+        this.setUnidadeDiretor(unidade);
         return this;
     }
 
     public void setUnidadeDiretor(Unidade unidade) {
         this.unidadeDiretor = unidade;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -129,7 +133,8 @@ public class Diretor implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

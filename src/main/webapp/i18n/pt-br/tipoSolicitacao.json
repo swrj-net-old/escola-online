@@ -3,6 +3,7 @@
     "tipoSolicitacao": {
       "home": {
         "title": "Tipo Solicitacaos",
+        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo Tipo Solicitacao",
         "createOrEditLabel": "Criar ou editar Tipo Solicitacao",
         "notFound": "Nenhum Tipo Solicitacao encontrado"
@@ -16,10 +17,12 @@
       "detail": {
         "title": "Tipo Solicitacao"
       },
+      "id": "ID",
       "nome": "Nome",
       "prazoAtendimento": "Prazo Atendimento",
       "valorEmissao": "Valor Emissao",
-      "solicitacao": "Solicitacao"
+      "solicitacao": "Solicitacao",
+      "escolaTipoSolicitacao": "Escola Tipo Solicitacao"
     }
   }
 }

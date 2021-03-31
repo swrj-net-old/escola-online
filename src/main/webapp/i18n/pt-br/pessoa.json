@@ -3,6 +3,7 @@
     "pessoa": {
       "home": {
         "title": "Pessoas",
+        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo Pessoa",
         "createOrEditLabel": "Criar ou editar Pessoa",
         "notFound": "Nenhum Pessoa encontrado"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Pessoa"
       },
+      "id": "ID",
       "nome": "Nome",
       "cpf": "Cpf",
       "rg": "Rg",

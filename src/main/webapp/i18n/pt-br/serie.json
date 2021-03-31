@@ -3,6 +3,7 @@
     "serie": {
       "home": {
         "title": "Series",
+        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo Serie",
         "createOrEditLabel": "Criar ou editar Serie",
         "notFound": "Nenhum Serie encontrado"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Serie"
       },
+      "id": "ID",
       "nome": "Nome",
       "grade": "Grade",
       "turma": "Turma"

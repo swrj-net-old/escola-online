@@ -1,4 +1,4 @@
-export const enum UF {
+export enum UF {
   AC = 'AC',
 
   AL = 'AL',

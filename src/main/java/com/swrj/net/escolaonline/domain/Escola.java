@@ -1,13 +1,12 @@
 package com.swrj.net.escolaonline.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Escola.
@@ -53,15 +52,31 @@ public class Escola implements Serializable {
 
     @OneToMany(mappedBy = "escolaPessoa")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "diretors", "professors", "alunos", "cidadePessoa", "escolaPessoa" }, allowSetters = true)
     private Set<Pessoa> pessoas = new HashSet<>();
 
     @OneToMany(mappedBy = "escolaAluno")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(
+        value = { "solicitacaos", "debitos", "chamadas", "matriculas", "pessoaAluno", "escolaAluno" },
+        allowSetters = true
+    )
     private Set<Aluno> alunos = new HashSet<>();
 
     @OneToMany(mappedBy = "escolaUnidade")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "diretors", "professors", "turmas", "escolaUnidade" }, allowSetters = true)
     private Set<Unidade> unidades = new HashSet<>();
+
+    @OneToMany(mappedBy = "escolaGrade")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "serieGrade", "materiaGrade", "escolaGrade" }, allowSetters = true)
+    private Set<Grade> grades = new HashSet<>();
+
+    @OneToMany(mappedBy = "escolaTipoSolicitacao")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "solicitacaos", "escolaTipoSolicitacao" }, allowSetters = true)
+    private Set<TipoSolicitacao> tipoSolicitacaos = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -72,8 +87,13 @@ public class Escola implements Serializable {
         this.id = id;
     }
 
+    public Escola id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getNome() {
-        return nome;
+        return this.nome;
     }
 
     public Escola nome(String nome) {
@@ -86,7 +106,7 @@ public class Escola implements Serializable {
     }
 
     public String getRazaoSocial() {
-        return razaoSocial;
+        return this.razaoSocial;
     }
 
     public Escola razaoSocial(String razaoSocial) {
@@ -99,7 +119,7 @@ public class Escola implements Serializable {
     }
 
     public String getCnpjPrincipal() {
-        return cnpjPrincipal;
+        return this.cnpjPrincipal;
     }
 
     public Escola cnpjPrincipal(String cnpjPrincipal) {
@@ -112,7 +132,7 @@ public class Escola implements Serializable {
     }
 
     public String getUrl() {
-        return url;
+        return this.url;
     }
 
     public Escola url(String url) {
@@ -125,7 +145,7 @@ public class Escola implements Serializable {
     }
 
     public String getPrefixo() {
-        return prefixo;
+        return this.prefixo;
     }
 
     public Escola prefixo(String prefixo) {
@@ -138,7 +158,7 @@ public class Escola implements Serializable {
     }
 
     public String getResponsavelNome() {
-        return responsavelNome;
+        return this.responsavelNome;
     }
 
     public Escola responsavelNome(String responsavelNome) {
@@ -151,7 +171,7 @@ public class Escola implements Serializable {
     }
 
     public String getResponsavelCpf() {
-        return responsavelCpf;
+        return this.responsavelCpf;
     }
 
     public Escola responsavelCpf(String responsavelCpf) {
@@ -164,7 +184,7 @@ public class Escola implements Serializable {
     }
 
     public String getResponsavelEmail() {
-        return responsavelEmail;
+        return this.responsavelEmail;
     }
 
     public Escola responsavelEmail(String responsavelEmail) {
@@ -177,7 +197,7 @@ public class Escola implements Serializable {
     }
 
     public String getResponsavelCelular() {
-        return responsavelCelular;
+        return this.responsavelCelular;
     }
 
     public Escola responsavelCelular(String responsavelCelular) {
@@ -190,11 +210,11 @@ public class Escola implements Serializable {
     }
 
     public Set<Pessoa> getPessoas() {
-        return pessoas;
+        return this.pessoas;
     }
 
     public Escola pessoas(Set<Pessoa> pessoas) {
-        this.pessoas = pessoas;
+        this.setPessoas(pessoas);
         return this;
     }
 
@@ -211,15 +231,21 @@ public class Escola implements Serializable {
     }
 
     public void setPessoas(Set<Pessoa> pessoas) {
+        if (this.pessoas != null) {
+            this.pessoas.forEach(i -> i.setEscolaPessoa(null));
+        }
+        if (pessoas != null) {
+            pessoas.forEach(i -> i.setEscolaPessoa(this));
+        }
         this.pessoas = pessoas;
     }
 
     public Set<Aluno> getAlunos() {
-        return alunos;
+        return this.alunos;
     }
 
     public Escola alunos(Set<Aluno> alunos) {
-        this.alunos = alunos;
+        this.setAlunos(alunos);
         return this;
     }
 
@@ -236,15 +262,21 @@ public class Escola implements Serializable {
     }
 
     public void setAlunos(Set<Aluno> alunos) {
+        if (this.alunos != null) {
+            this.alunos.forEach(i -> i.setEscolaAluno(null));
+        }
+        if (alunos != null) {
+            alunos.forEach(i -> i.setEscolaAluno(this));
+        }
         this.alunos = alunos;
     }
 
     public Set<Unidade> getUnidades() {
-        return unidades;
+        return this.unidades;
     }
 
     public Escola unidades(Set<Unidade> unidades) {
-        this.unidades = unidades;
+        this.setUnidades(unidades);
         return this;
     }
 
@@ -261,8 +293,77 @@ public class Escola implements Serializable {
     }
 
     public void setUnidades(Set<Unidade> unidades) {
+        if (this.unidades != null) {
+            this.unidades.forEach(i -> i.setEscolaUnidade(null));
+        }
+        if (unidades != null) {
+            unidades.forEach(i -> i.setEscolaUnidade(this));
+        }
         this.unidades = unidades;
     }
+
+    public Set<Grade> getGrades() {
+        return this.grades;
+    }
+
+    public Escola grades(Set<Grade> grades) {
+        this.setGrades(grades);
+        return this;
+    }
+
+    public Escola addGrade(Grade grade) {
+        this.grades.add(grade);
+        grade.setEscolaGrade(this);
+        return this;
+    }
+
+    public Escola removeGrade(Grade grade) {
+        this.grades.remove(grade);
+        grade.setEscolaGrade(null);
+        return this;
+    }
+
+    public void setGrades(Set<Grade> grades) {
+        if (this.grades != null) {
+            this.grades.forEach(i -> i.setEscolaGrade(null));
+        }
+        if (grades != null) {
+            grades.forEach(i -> i.setEscolaGrade(this));
+        }
+        this.grades = grades;
+    }
+
+    public Set<TipoSolicitacao> getTipoSolicitacaos() {
+        return this.tipoSolicitacaos;
+    }
+
+    public Escola tipoSolicitacaos(Set<TipoSolicitacao> tipoSolicitacaos) {
+        this.setTipoSolicitacaos(tipoSolicitacaos);
+        return this;
+    }
+
+    public Escola addTipoSolicitacao(TipoSolicitacao tipoSolicitacao) {
+        this.tipoSolicitacaos.add(tipoSolicitacao);
+        tipoSolicitacao.setEscolaTipoSolicitacao(this);
+        return this;
+    }
+
+    public Escola removeTipoSolicitacao(TipoSolicitacao tipoSolicitacao) {
+        this.tipoSolicitacaos.remove(tipoSolicitacao);
+        tipoSolicitacao.setEscolaTipoSolicitacao(null);
+        return this;
+    }
+
+    public void setTipoSolicitacaos(Set<TipoSolicitacao> tipoSolicitacaos) {
+        if (this.tipoSolicitacaos != null) {
+            this.tipoSolicitacaos.forEach(i -> i.setEscolaTipoSolicitacao(null));
+        }
+        if (tipoSolicitacaos != null) {
+            tipoSolicitacaos.forEach(i -> i.setEscolaTipoSolicitacao(this));
+        }
+        this.tipoSolicitacaos = tipoSolicitacaos;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -278,7 +379,8 @@ public class Escola implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

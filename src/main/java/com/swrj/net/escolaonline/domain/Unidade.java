@@ -1,14 +1,12 @@
 package com.swrj.net.escolaonline.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Unidade.
@@ -63,18 +61,21 @@ public class Unidade implements Serializable {
 
     @OneToMany(mappedBy = "unidadeDiretor")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "pessoaDiretor", "unidadeDiretor" }, allowSetters = true)
     private Set<Diretor> diretors = new HashSet<>();
 
     @OneToMany(mappedBy = "unidadeProfessor")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "chamadas", "conteudos", "pessoaProfessor", "unidadeProfessor" }, allowSetters = true)
     private Set<Professor> professors = new HashSet<>();
 
     @OneToMany(mappedBy = "unidadeTurma")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "chamadas", "conteudos", "matriculas", "serieTurma", "unidadeTurma" }, allowSetters = true)
     private Set<Turma> turmas = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "unidades", allowSetters = true)
+    @JsonIgnoreProperties(value = { "pessoas", "alunos", "unidades", "grades", "tipoSolicitacaos" }, allowSetters = true)
     private Escola escolaUnidade;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -86,8 +87,13 @@ public class Unidade implements Serializable {
         this.id = id;
     }
 
+    public Unidade id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getNome() {
-        return nome;
+        return this.nome;
     }
 
     public Unidade nome(String nome) {
@@ -100,7 +106,7 @@ public class Unidade implements Serializable {
     }
 
     public String getCnpj() {
-        return cnpj;
+        return this.cnpj;
     }
 
     public Unidade cnpj(String cnpj) {
@@ -113,7 +119,7 @@ public class Unidade implements Serializable {
     }
 
     public String getEndereco() {
-        return endereco;
+        return this.endereco;
     }
 
     public Unidade endereco(String endereco) {
@@ -126,7 +132,7 @@ public class Unidade implements Serializable {
     }
 
     public String getComplemento() {
-        return complemento;
+        return this.complemento;
     }
 
     public Unidade complemento(String complemento) {
@@ -139,7 +145,7 @@ public class Unidade implements Serializable {
     }
 
     public String getBairro() {
-        return bairro;
+        return this.bairro;
     }
 
     public Unidade bairro(String bairro) {
@@ -152,7 +158,7 @@ public class Unidade implements Serializable {
     }
 
     public String getCidade() {
-        return cidade;
+        return this.cidade;
     }
 
     public Unidade cidade(String cidade) {
@@ -165,7 +171,7 @@ public class Unidade implements Serializable {
     }
 
     public String getCep() {
-        return cep;
+        return this.cep;
     }
 
     public Unidade cep(String cep) {
@@ -178,7 +184,7 @@ public class Unidade implements Serializable {
     }
 
     public String getTelefoneComercial() {
-        return telefoneComercial;
+        return this.telefoneComercial;
     }
 
     public Unidade telefoneComercial(String telefoneComercial) {
@@ -191,7 +197,7 @@ public class Unidade implements Serializable {
     }
 
     public String getTelefoneWhatsapp() {
-        return telefoneWhatsapp;
+        return this.telefoneWhatsapp;
     }
 
     public Unidade telefoneWhatsapp(String telefoneWhatsapp) {
@@ -204,7 +210,7 @@ public class Unidade implements Serializable {
     }
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     public Unidade email(String email) {
@@ -217,7 +223,7 @@ public class Unidade implements Serializable {
     }
 
     public String getFacebook() {
-        return facebook;
+        return this.facebook;
     }
 
     public Unidade facebook(String facebook) {
@@ -230,7 +236,7 @@ public class Unidade implements Serializable {
     }
 
     public String getObservacoes() {
-        return observacoes;
+        return this.observacoes;
     }
 
     public Unidade observacoes(String observacoes) {
@@ -243,11 +249,11 @@ public class Unidade implements Serializable {
     }
 
     public Set<Diretor> getDiretors() {
-        return diretors;
+        return this.diretors;
     }
 
     public Unidade diretors(Set<Diretor> diretors) {
-        this.diretors = diretors;
+        this.setDiretors(diretors);
         return this;
     }
 
@@ -264,15 +270,21 @@ public class Unidade implements Serializable {
     }
 
     public void setDiretors(Set<Diretor> diretors) {
+        if (this.diretors != null) {
+            this.diretors.forEach(i -> i.setUnidadeDiretor(null));
+        }
+        if (diretors != null) {
+            diretors.forEach(i -> i.setUnidadeDiretor(this));
+        }
         this.diretors = diretors;
     }
 
     public Set<Professor> getProfessors() {
-        return professors;
+        return this.professors;
     }
 
     public Unidade professors(Set<Professor> professors) {
-        this.professors = professors;
+        this.setProfessors(professors);
         return this;
     }
 
@@ -289,15 +301,21 @@ public class Unidade implements Serializable {
     }
 
     public void setProfessors(Set<Professor> professors) {
+        if (this.professors != null) {
+            this.professors.forEach(i -> i.setUnidadeProfessor(null));
+        }
+        if (professors != null) {
+            professors.forEach(i -> i.setUnidadeProfessor(this));
+        }
         this.professors = professors;
     }
 
     public Set<Turma> getTurmas() {
-        return turmas;
+        return this.turmas;
     }
 
     public Unidade turmas(Set<Turma> turmas) {
-        this.turmas = turmas;
+        this.setTurmas(turmas);
         return this;
     }
 
@@ -314,21 +332,28 @@ public class Unidade implements Serializable {
     }
 
     public void setTurmas(Set<Turma> turmas) {
+        if (this.turmas != null) {
+            this.turmas.forEach(i -> i.setUnidadeTurma(null));
+        }
+        if (turmas != null) {
+            turmas.forEach(i -> i.setUnidadeTurma(this));
+        }
         this.turmas = turmas;
     }
 
     public Escola getEscolaUnidade() {
-        return escolaUnidade;
+        return this.escolaUnidade;
     }
 
     public Unidade escolaUnidade(Escola escola) {
-        this.escolaUnidade = escola;
+        this.setEscolaUnidade(escola);
         return this;
     }
 
     public void setEscolaUnidade(Escola escola) {
         this.escolaUnidade = escola;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -344,7 +369,8 @@ public class Unidade implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

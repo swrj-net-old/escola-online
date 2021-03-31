@@ -19,26 +19,23 @@
       "relationshipType": "many-to-one",
       "otherEntityName": "pessoa",
       "otherEntityRelationshipName": "diretor",
-      "relationshipName": "pessoaDiretor",
-      "otherEntityField": "id"
+      "relationshipName": "pessoaDiretor"
     },
     {
       "relationshipType": "many-to-one",
       "otherEntityName": "unidade",
       "otherEntityRelationshipName": "diretor",
-      "relationshipName": "unidadeDiretor",
-      "otherEntityField": "id"
+      "relationshipName": "unidadeDiretor"
     }
   ],
-  "changelogDate": "20210329173228",
   "entityTableName": "diretor",
   "dto": "no",
-  "pagination": "no",
-  "service": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "changelogDate": "20210331173544"
 }

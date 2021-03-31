@@ -3,6 +3,7 @@
     "cidade": {
       "home": {
         "title": "Cidades",
+        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo Cidade",
         "createOrEditLabel": "Criar ou editar Cidade",
         "notFound": "Nenhum Cidade encontrado"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Cidade"
       },
+      "id": "ID",
       "nome": "Nome",
       "uf": "Uf",
       "pessoa": "Pessoa"

@@ -3,6 +3,7 @@
     "matricula": {
       "home": {
         "title": "Matriculas",
+        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo Matricula",
         "createOrEditLabel": "Criar ou editar Matricula",
         "notFound": "Nenhum Matricula encontrado"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Matricula"
       },
+      "id": "ID",
       "anoLetivo": "Ano Letivo",
       "dataInicio": "Data Inicio",
       "dataFim": "Data Fim",

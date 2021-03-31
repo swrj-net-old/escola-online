@@ -6,22 +6,12 @@ import { IUnidade } from 'app/shared/model/unidade.model';
 
 export interface ITurma {
   id?: number;
-  nome?: string;
-  chamadas?: IChamada[];
-  conteudos?: IConteudo[];
-  matriculas?: IMatricula[];
-  serieTurma?: ISerie;
-  unidadeTurma?: IUnidade;
+  nome?: string | null;
+  chamadas?: IChamada[] | null;
+  conteudos?: IConteudo[] | null;
+  matriculas?: IMatricula[] | null;
+  serieTurma?: ISerie | null;
+  unidadeTurma?: IUnidade | null;
 }
 
-export class Turma implements ITurma {
-  constructor(
-    public id?: number,
-    public nome?: string,
-    public chamadas?: IChamada[],
-    public conteudos?: IConteudo[],
-    public matriculas?: IMatricula[],
-    public serieTurma?: ISerie,
-    public unidadeTurma?: IUnidade
-  ) {}
-}
+export const defaultValue: Readonly<ITurma> = {};

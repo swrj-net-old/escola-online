@@ -1,4 +1,4 @@
-export const enum TipoSanguineo {
+export enum TipoSanguineo {
   NI = 'NI',
 
   AP = 'AP',

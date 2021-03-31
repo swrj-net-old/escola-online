@@ -1,35 +1,35 @@
 package com.swrj.net.escolaonline.web.rest;
 
-import com.swrj.net.escolaonline.EscolaOnlineApp;
-import com.swrj.net.escolaonline.domain.Conteudo;
-import com.swrj.net.escolaonline.repository.ConteudoRepository;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.swrj.net.escolaonline.IntegrationTest;
+import com.swrj.net.escolaonline.domain.Conteudo;
+import com.swrj.net.escolaonline.repository.ConteudoRepository;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * Integration tests for the {@link ConteudoResource} REST controller.
  */
-@SpringBootTest(classes = EscolaOnlineApp.class)
+@IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-public class ConteudoResourceIT {
+class ConteudoResourceIT {
 
     private static final LocalDate DEFAULT_DATA_AULA = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DATA_AULA = LocalDate.now(ZoneId.systemDefault());
@@ -39,6 +39,12 @@ public class ConteudoResourceIT {
 
     private static final String DEFAULT_OBSERVACOES = "AAAAAAAAAA";
     private static final String UPDATED_OBSERVACOES = "BBBBBBBBBB";
+
+    private static final String ENTITY_API_URL = "/api/conteudos";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private ConteudoRepository conteudoRepository;
@@ -64,6 +70,7 @@ public class ConteudoResourceIT {
             .observacoes(DEFAULT_OBSERVACOES);
         return conteudo;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -85,12 +92,11 @@ public class ConteudoResourceIT {
 
     @Test
     @Transactional
-    public void createConteudo() throws Exception {
+    void createConteudo() throws Exception {
         int databaseSizeBeforeCreate = conteudoRepository.findAll().size();
         // Create the Conteudo
-        restConteudoMockMvc.perform(post("/api/conteudos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(conteudo)))
+        restConteudoMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(conteudo)))
             .andExpect(status().isCreated());
 
         // Validate the Conteudo in the database
@@ -104,16 +110,15 @@ public class ConteudoResourceIT {
 
     @Test
     @Transactional
-    public void createConteudoWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = conteudoRepository.findAll().size();
-
+    void createConteudoWithExistingId() throws Exception {
         // Create the Conteudo with an existing ID
         conteudo.setId(1L);
 
+        int databaseSizeBeforeCreate = conteudoRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restConteudoMockMvc.perform(post("/api/conteudos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(conteudo)))
+        restConteudoMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(conteudo)))
             .andExpect(status().isBadRequest());
 
         // Validate the Conteudo in the database
@@ -121,15 +126,15 @@ public class ConteudoResourceIT {
         assertThat(conteudoList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void getAllConteudos() throws Exception {
+    void getAllConteudos() throws Exception {
         // Initialize the database
         conteudoRepository.saveAndFlush(conteudo);
 
         // Get all the conteudoList
-        restConteudoMockMvc.perform(get("/api/conteudos?sort=id,desc"))
+        restConteudoMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(conteudo.getId().intValue())))
@@ -137,15 +142,16 @@ public class ConteudoResourceIT {
             .andExpect(jsonPath("$.[*].habilidadesCompetencias").value(hasItem(DEFAULT_HABILIDADES_COMPETENCIAS)))
             .andExpect(jsonPath("$.[*].observacoes").value(hasItem(DEFAULT_OBSERVACOES)));
     }
-    
+
     @Test
     @Transactional
-    public void getConteudo() throws Exception {
+    void getConteudo() throws Exception {
         // Initialize the database
         conteudoRepository.saveAndFlush(conteudo);
 
         // Get the conteudo
-        restConteudoMockMvc.perform(get("/api/conteudos/{id}", conteudo.getId()))
+        restConteudoMockMvc
+            .perform(get(ENTITY_API_URL_ID, conteudo.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(conteudo.getId().intValue()))
@@ -153,17 +159,17 @@ public class ConteudoResourceIT {
             .andExpect(jsonPath("$.habilidadesCompetencias").value(DEFAULT_HABILIDADES_COMPETENCIAS))
             .andExpect(jsonPath("$.observacoes").value(DEFAULT_OBSERVACOES));
     }
+
     @Test
     @Transactional
-    public void getNonExistingConteudo() throws Exception {
+    void getNonExistingConteudo() throws Exception {
         // Get the conteudo
-        restConteudoMockMvc.perform(get("/api/conteudos/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restConteudoMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateConteudo() throws Exception {
+    void putNewConteudo() throws Exception {
         // Initialize the database
         conteudoRepository.saveAndFlush(conteudo);
 
@@ -178,9 +184,12 @@ public class ConteudoResourceIT {
             .habilidadesCompetencias(UPDATED_HABILIDADES_COMPETENCIAS)
             .observacoes(UPDATED_OBSERVACOES);
 
-        restConteudoMockMvc.perform(put("/api/conteudos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedConteudo)))
+        restConteudoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedConteudo.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedConteudo))
+            )
             .andExpect(status().isOk());
 
         // Validate the Conteudo in the database
@@ -194,13 +203,17 @@ public class ConteudoResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingConteudo() throws Exception {
+    void putNonExistingConteudo() throws Exception {
         int databaseSizeBeforeUpdate = conteudoRepository.findAll().size();
+        conteudo.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restConteudoMockMvc.perform(put("/api/conteudos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(conteudo)))
+        restConteudoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, conteudo.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(conteudo))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Conteudo in the database
@@ -210,15 +223,170 @@ public class ConteudoResourceIT {
 
     @Test
     @Transactional
-    public void deleteConteudo() throws Exception {
+    void putWithIdMismatchConteudo() throws Exception {
+        int databaseSizeBeforeUpdate = conteudoRepository.findAll().size();
+        conteudo.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restConteudoMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(conteudo))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Conteudo in the database
+        List<Conteudo> conteudoList = conteudoRepository.findAll();
+        assertThat(conteudoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamConteudo() throws Exception {
+        int databaseSizeBeforeUpdate = conteudoRepository.findAll().size();
+        conteudo.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restConteudoMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(conteudo)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Conteudo in the database
+        List<Conteudo> conteudoList = conteudoRepository.findAll();
+        assertThat(conteudoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateConteudoWithPatch() throws Exception {
+        // Initialize the database
+        conteudoRepository.saveAndFlush(conteudo);
+
+        int databaseSizeBeforeUpdate = conteudoRepository.findAll().size();
+
+        // Update the conteudo using partial update
+        Conteudo partialUpdatedConteudo = new Conteudo();
+        partialUpdatedConteudo.setId(conteudo.getId());
+
+        restConteudoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedConteudo.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedConteudo))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Conteudo in the database
+        List<Conteudo> conteudoList = conteudoRepository.findAll();
+        assertThat(conteudoList).hasSize(databaseSizeBeforeUpdate);
+        Conteudo testConteudo = conteudoList.get(conteudoList.size() - 1);
+        assertThat(testConteudo.getDataAula()).isEqualTo(DEFAULT_DATA_AULA);
+        assertThat(testConteudo.getHabilidadesCompetencias()).isEqualTo(DEFAULT_HABILIDADES_COMPETENCIAS);
+        assertThat(testConteudo.getObservacoes()).isEqualTo(DEFAULT_OBSERVACOES);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateConteudoWithPatch() throws Exception {
+        // Initialize the database
+        conteudoRepository.saveAndFlush(conteudo);
+
+        int databaseSizeBeforeUpdate = conteudoRepository.findAll().size();
+
+        // Update the conteudo using partial update
+        Conteudo partialUpdatedConteudo = new Conteudo();
+        partialUpdatedConteudo.setId(conteudo.getId());
+
+        partialUpdatedConteudo
+            .dataAula(UPDATED_DATA_AULA)
+            .habilidadesCompetencias(UPDATED_HABILIDADES_COMPETENCIAS)
+            .observacoes(UPDATED_OBSERVACOES);
+
+        restConteudoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedConteudo.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedConteudo))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Conteudo in the database
+        List<Conteudo> conteudoList = conteudoRepository.findAll();
+        assertThat(conteudoList).hasSize(databaseSizeBeforeUpdate);
+        Conteudo testConteudo = conteudoList.get(conteudoList.size() - 1);
+        assertThat(testConteudo.getDataAula()).isEqualTo(UPDATED_DATA_AULA);
+        assertThat(testConteudo.getHabilidadesCompetencias()).isEqualTo(UPDATED_HABILIDADES_COMPETENCIAS);
+        assertThat(testConteudo.getObservacoes()).isEqualTo(UPDATED_OBSERVACOES);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingConteudo() throws Exception {
+        int databaseSizeBeforeUpdate = conteudoRepository.findAll().size();
+        conteudo.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restConteudoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, conteudo.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(conteudo))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Conteudo in the database
+        List<Conteudo> conteudoList = conteudoRepository.findAll();
+        assertThat(conteudoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchConteudo() throws Exception {
+        int databaseSizeBeforeUpdate = conteudoRepository.findAll().size();
+        conteudo.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restConteudoMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(conteudo))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Conteudo in the database
+        List<Conteudo> conteudoList = conteudoRepository.findAll();
+        assertThat(conteudoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamConteudo() throws Exception {
+        int databaseSizeBeforeUpdate = conteudoRepository.findAll().size();
+        conteudo.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restConteudoMockMvc
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(conteudo)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Conteudo in the database
+        List<Conteudo> conteudoList = conteudoRepository.findAll();
+        assertThat(conteudoList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteConteudo() throws Exception {
         // Initialize the database
         conteudoRepository.saveAndFlush(conteudo);
 
         int databaseSizeBeforeDelete = conteudoRepository.findAll().size();
 
         // Delete the conteudo
-        restConteudoMockMvc.perform(delete("/api/conteudos/{id}", conteudo.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restConteudoMockMvc
+            .perform(delete(ENTITY_API_URL_ID, conteudo.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

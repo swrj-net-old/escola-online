@@ -3,6 +3,7 @@
     "conteudo": {
       "home": {
         "title": "Conteudos",
+        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo Conteudo",
         "createOrEditLabel": "Criar ou editar Conteudo",
         "notFound": "Nenhum Conteudo encontrado"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Conteudo"
       },
+      "id": "ID",
       "dataAula": "Data Aula",
       "habilidadesCompetencias": "Habilidades Competencias",
       "observacoes": "Observacoes",

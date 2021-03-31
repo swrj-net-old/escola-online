@@ -1,23 +1,14 @@
-import { Moment } from 'moment';
+import dayjs from 'dayjs';
 import { IPessoa } from 'app/shared/model/pessoa.model';
 import { IUnidade } from 'app/shared/model/unidade.model';
 
 export interface IDiretor {
   id?: number;
-  anoLetivo?: number;
-  dataInicio?: Moment;
-  dataFim?: Moment;
-  pessoaDiretor?: IPessoa;
-  unidadeDiretor?: IUnidade;
+  anoLetivo?: number | null;
+  dataInicio?: string | null;
+  dataFim?: string | null;
+  pessoaDiretor?: IPessoa | null;
+  unidadeDiretor?: IUnidade | null;
 }
 
-export class Diretor implements IDiretor {
-  constructor(
-    public id?: number,
-    public anoLetivo?: number,
-    public dataInicio?: Moment,
-    public dataFim?: Moment,
-    public pessoaDiretor?: IPessoa,
-    public unidadeDiretor?: IUnidade
-  ) {}
-}
+export const defaultValue: Readonly<IDiretor> = {};

@@ -19,15 +19,14 @@
       "relationshipName": "pessoa"
     }
   ],
-  "changelogDate": "20210329172928",
   "entityTableName": "cidade",
   "dto": "no",
-  "pagination": "no",
-  "service": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "changelogDate": "20210331173541"
 }

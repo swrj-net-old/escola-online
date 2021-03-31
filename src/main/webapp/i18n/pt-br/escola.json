@@ -3,6 +3,7 @@
     "escola": {
       "home": {
         "title": "Escolas",
+        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo Escola",
         "createOrEditLabel": "Criar ou editar Escola",
         "notFound": "Nenhum Escola encontrado"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Escola"
       },
+      "id": "ID",
       "nome": "Nome",
       "razaoSocial": "Razao Social",
       "cnpjPrincipal": "Cnpj Principal",
@@ -27,7 +29,9 @@
       "responsavelCelular": "Responsavel Celular",
       "pessoa": "Pessoa",
       "aluno": "Aluno",
-      "unidade": "Unidade"
+      "unidade": "Unidade",
+      "grade": "Grade",
+      "tipoSolicitacao": "Tipo Solicitacao"
     }
   }
 }
