@@ -1,0 +1,37 @@
+{
+  "escolaOnlineApp": {
+    "escola": {
+      "home": {
+        "title": "Escolas",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Escola",
+        "createOrEditLabel": "Criar ou editar Escola",
+        "notFound": "Nenhum Escola encontrado"
+      },
+      "created": "Um novo Escola foi criado com o identificador {{ param }}",
+      "updated": "Um Escola foi atualizado com o identificador {{ param }}",
+      "deleted": "Um Escola foi excluído com o identificador {{ param }}",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Escola {{ id }}?"
+      },
+      "detail": {
+        "title": "Escola"
+      },
+      "id": "ID",
+      "nome": "Nome",
+      "razaoSocial": "Razao Social",
+      "cnpjPrincipal": "Cnpj Principal",
+      "url": "Url",
+      "prefixo": "Prefixo",
+      "responsavelNome": "Responsavel Nome",
+      "responsavelCpf": "Responsavel Cpf",
+      "responsavelEmail": "Responsavel Email",
+      "responsavelCelular": "Responsavel Celular",
+      "pessoa": "Pessoa",
+      "aluno": "Aluno",
+      "unidade": "Unidade",
+      "grade": "Grade",
+      "tipoSolicitacao": "Tipo Solicitacao"
+    }
+  }
+}

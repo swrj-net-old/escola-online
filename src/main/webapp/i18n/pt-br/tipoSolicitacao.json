@@ -1,0 +1,28 @@
+{
+  "escolaOnlineApp": {
+    "tipoSolicitacao": {
+      "home": {
+        "title": "Tipo Solicitacaos",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Tipo Solicitacao",
+        "createOrEditLabel": "Criar ou editar Tipo Solicitacao",
+        "notFound": "Nenhum Tipo Solicitacao encontrado"
+      },
+      "created": "Um novo Tipo Solicitacao foi criado com o identificador {{ param }}",
+      "updated": "Um Tipo Solicitacao foi atualizado com o identificador {{ param }}",
+      "deleted": "Um Tipo Solicitacao foi excluído com o identificador {{ param }}",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Tipo Solicitacao {{ id }}?"
+      },
+      "detail": {
+        "title": "Tipo Solicitacao"
+      },
+      "id": "ID",
+      "nome": "Nome",
+      "prazoAtendimento": "Prazo Atendimento",
+      "valorEmissao": "Valor Emissao",
+      "solicitacao": "Solicitacao",
+      "escolaTipoSolicitacao": "Escola Tipo Solicitacao"
+    }
+  }
+}

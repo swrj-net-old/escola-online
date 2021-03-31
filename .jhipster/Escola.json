@@ -1,0 +1,83 @@
+{
+  "name": "Escola",
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "razaoSocial",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "cnpjPrincipal",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "url",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "prefixo",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "responsavelNome",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "responsavelCpf",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "responsavelEmail",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "responsavelCelular",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "pessoa",
+      "otherEntityRelationshipName": "escolaPessoa",
+      "relationshipName": "pessoa"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "aluno",
+      "otherEntityRelationshipName": "escolaAluno",
+      "relationshipName": "aluno"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "unidade",
+      "otherEntityRelationshipName": "escolaUnidade",
+      "relationshipName": "unidade"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "grade",
+      "otherEntityRelationshipName": "escolaGrade",
+      "relationshipName": "grade"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "tipoSolicitacao",
+      "otherEntityRelationshipName": "escolaTipoSolicitacao",
+      "relationshipName": "tipoSolicitacao"
+    }
+  ],
+  "entityTableName": "escola",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210331173542"
+}

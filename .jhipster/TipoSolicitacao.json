@@ -1,0 +1,41 @@
+{
+  "name": "TipoSolicitacao",
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "prazoAtendimento",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "valorEmissao",
+      "fieldType": "BigDecimal"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "solicitacao",
+      "otherEntityRelationshipName": "tipoSolicitacaoSolicitacao",
+      "relationshipName": "solicitacao"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "escola",
+      "otherEntityRelationshipName": "tipoSolicitacao",
+      "relationshipName": "escolaTipoSolicitacao"
+    }
+  ],
+  "entityTableName": "tipo_solicitacao",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210331173558"
+}

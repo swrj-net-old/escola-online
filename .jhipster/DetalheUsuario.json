@@ -1,0 +1,38 @@
+{
+  "name": "DetalheUsuario",
+  "fields": [
+    {
+      "fieldName": "cpf",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "celular",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "usuario",
+      "relationshipName": "usuario",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "historicoDebito",
+      "otherEntityRelationshipName": "detalheUsuarioLancamento",
+      "relationshipName": "historicoDebito"
+    }
+  ],
+  "entityTableName": "detalhe_usuario",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210331173557"
+}

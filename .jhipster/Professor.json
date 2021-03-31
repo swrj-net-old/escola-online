@@ -1,0 +1,53 @@
+{
+  "name": "Professor",
+  "fields": [
+    {
+      "fieldName": "anoLetivo",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "dataInicio",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "dataFim",
+      "fieldType": "LocalDate"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "chamada",
+      "otherEntityRelationshipName": "professorChamada",
+      "relationshipName": "chamada"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "conteudo",
+      "otherEntityRelationshipName": "professorConteudo",
+      "relationshipName": "conteudo"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "pessoa",
+      "otherEntityRelationshipName": "professor",
+      "relationshipName": "pessoaProfessor"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "unidade",
+      "otherEntityRelationshipName": "professor",
+      "relationshipName": "unidadeProfessor"
+    }
+  ],
+  "entityTableName": "professor",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210331173550"
+}

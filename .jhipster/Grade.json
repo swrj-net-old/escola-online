@@ -1,0 +1,39 @@
+{
+  "name": "Grade",
+  "fields": [
+    {
+      "fieldName": "anoLetivo",
+      "fieldType": "Integer"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "serie",
+      "otherEntityRelationshipName": "grade",
+      "relationshipName": "serieGrade"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "materia",
+      "otherEntityRelationshipName": "grade",
+      "relationshipName": "materiaGrade"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "escola",
+      "otherEntityRelationshipName": "grade",
+      "relationshipName": "escolaGrade"
+    }
+  ],
+  "entityTableName": "grade",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210331173548"
+}

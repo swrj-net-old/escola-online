@@ -1,0 +1,41 @@
+{
+  "name": "Matricula",
+  "fields": [
+    {
+      "fieldName": "anoLetivo",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "dataInicio",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "dataFim",
+      "fieldType": "LocalDate"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "turma",
+      "otherEntityRelationshipName": "matricula",
+      "relationshipName": "turmaMatricula"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "aluno",
+      "otherEntityRelationshipName": "matricula",
+      "relationshipName": "alunoMatricula"
+    }
+  ],
+  "entityTableName": "matricula",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210331173554"
+}
