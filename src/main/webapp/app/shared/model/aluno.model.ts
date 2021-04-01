@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import { Moment } from 'moment';
 import { ISolicitacao } from 'app/shared/model/solicitacao.model';
 import { IDebito } from 'app/shared/model/debito.model';
 import { IChamada } from 'app/shared/model/chamada.model';
@@ -9,21 +9,40 @@ import { TipoSanguineo } from 'app/shared/model/enumerations/tipo-sanguineo.mode
 
 export interface IAluno {
   id?: number;
-  dataNascimento?: string | null;
-  tipoSanguineo?: TipoSanguineo | null;
-  nomePai?: string | null;
-  telefonePai?: string | null;
-  nomeMae?: string | null;
-  telefoneMae?: string | null;
-  nomeResponsavel?: string | null;
-  cpfResponsavel?: string | null;
-  observacoes?: string | null;
-  solicitacaos?: ISolicitacao[] | null;
-  debitos?: IDebito[] | null;
-  chamadas?: IChamada[] | null;
-  matriculas?: IMatricula[] | null;
-  pessoaAluno?: IPessoa | null;
-  escolaAluno?: IEscola | null;
+  dataNascimento?: Moment;
+  tipoSanguineo?: TipoSanguineo;
+  nomePai?: string;
+  telefonePai?: string;
+  nomeMae?: string;
+  telefoneMae?: string;
+  nomeResponsavel?: string;
+  cpfResponsavel?: string;
+  observacoes?: string;
+  solicitacaos?: ISolicitacao[];
+  debitos?: IDebito[];
+  chamadas?: IChamada[];
+  matriculas?: IMatricula[];
+  pessoaAluno?: IPessoa;
+  escolaAluno?: IEscola;
 }
 
-export const defaultValue: Readonly<IAluno> = {};
+export class Aluno implements IAluno {
+  constructor(
+    public id?: number,
+    public dataNascimento?: Moment,
+    public tipoSanguineo?: TipoSanguineo,
+    public nomePai?: string,
+    public telefonePai?: string,
+    public nomeMae?: string,
+    public telefoneMae?: string,
+    public nomeResponsavel?: string,
+    public cpfResponsavel?: string,
+    public observacoes?: string,
+    public solicitacaos?: ISolicitacao[],
+    public debitos?: IDebito[],
+    public chamadas?: IChamada[],
+    public matriculas?: IMatricula[],
+    public pessoaAluno?: IPessoa,
+    public escolaAluno?: IEscola
+  ) {}
+}

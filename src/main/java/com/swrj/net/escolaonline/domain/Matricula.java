@@ -1,11 +1,13 @@
 package com.swrj.net.escolaonline.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.io.Serializable;
-import java.time.LocalDate;
-import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+
+import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  * A Matricula.
@@ -32,14 +34,11 @@ public class Matricula implements Serializable {
     private LocalDate dataFim;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "chamadas", "conteudos", "matriculas", "serieTurma", "unidadeTurma" }, allowSetters = true)
+    @JsonIgnoreProperties(value = "matriculas", allowSetters = true)
     private Turma turmaMatricula;
 
     @ManyToOne
-    @JsonIgnoreProperties(
-        value = { "solicitacaos", "debitos", "chamadas", "matriculas", "pessoaAluno", "escolaAluno" },
-        allowSetters = true
-    )
+    @JsonIgnoreProperties(value = "matriculas", allowSetters = true)
     private Aluno alunoMatricula;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -51,13 +50,8 @@ public class Matricula implements Serializable {
         this.id = id;
     }
 
-    public Matricula id(Long id) {
-        this.id = id;
-        return this;
-    }
-
     public Integer getAnoLetivo() {
-        return this.anoLetivo;
+        return anoLetivo;
     }
 
     public Matricula anoLetivo(Integer anoLetivo) {
@@ -70,7 +64,7 @@ public class Matricula implements Serializable {
     }
 
     public LocalDate getDataInicio() {
-        return this.dataInicio;
+        return dataInicio;
     }
 
     public Matricula dataInicio(LocalDate dataInicio) {
@@ -83,7 +77,7 @@ public class Matricula implements Serializable {
     }
 
     public LocalDate getDataFim() {
-        return this.dataFim;
+        return dataFim;
     }
 
     public Matricula dataFim(LocalDate dataFim) {
@@ -96,11 +90,11 @@ public class Matricula implements Serializable {
     }
 
     public Turma getTurmaMatricula() {
-        return this.turmaMatricula;
+        return turmaMatricula;
     }
 
     public Matricula turmaMatricula(Turma turma) {
-        this.setTurmaMatricula(turma);
+        this.turmaMatricula = turma;
         return this;
     }
 
@@ -109,18 +103,17 @@ public class Matricula implements Serializable {
     }
 
     public Aluno getAlunoMatricula() {
-        return this.alunoMatricula;
+        return alunoMatricula;
     }
 
     public Matricula alunoMatricula(Aluno aluno) {
-        this.setAlunoMatricula(aluno);
+        this.alunoMatricula = aluno;
         return this;
     }
 
     public void setAlunoMatricula(Aluno aluno) {
         this.alunoMatricula = aluno;
     }
-
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -136,8 +129,7 @@ public class Matricula implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
-        return getClass().hashCode();
+        return 31;
     }
 
     // prettier-ignore

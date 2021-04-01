@@ -4,7 +4,6 @@ package com.swrj.net.escolaonline.web.rest.vm;
  * View Model object for storing the user's key and password.
  */
 public class KeyAndPasswordVM {
-
     private String key;
 
     private String newPassword;

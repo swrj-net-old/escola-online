@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class NoOpMailConfiguration {
-
     private final MailService mockMailService;
 
     public NoOpMailConfiguration() {

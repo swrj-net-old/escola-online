@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.swrj.net.escolaonline.IntegrationTest;
+import com.swrj.net.escolaonline.EscolaOnlineApp;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,14 +20,13 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @WithMockUser
 @AutoConfigureMockMvc
-@IntegrationTest
-class ExceptionTranslatorIT {
-
+@SpringBootTest(classes = EscolaOnlineApp.class)
+public class ExceptionTranslatorIT {
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    void testConcurrencyFailure() throws Exception {
+    public void testConcurrencyFailure() throws Exception {
         mockMvc
             .perform(get("/api/exception-translator-test/concurrency-failure"))
             .andExpect(status().isConflict())
@@ -36,7 +35,7 @@ class ExceptionTranslatorIT {
     }
 
     @Test
-    void testMethodArgumentNotValid() throws Exception {
+    public void testMethodArgumentNotValid() throws Exception {
         mockMvc
             .perform(post("/api/exception-translator-test/method-argument").content("{}").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
@@ -44,11 +43,11 @@ class ExceptionTranslatorIT {
             .andExpect(jsonPath("$.message").value(ErrorConstants.ERR_VALIDATION))
             .andExpect(jsonPath("$.fieldErrors.[0].objectName").value("test"))
             .andExpect(jsonPath("$.fieldErrors.[0].field").value("test"))
-            .andExpect(jsonPath("$.fieldErrors.[0].message").value("must not be null"));
+            .andExpect(jsonPath("$.fieldErrors.[0].message").value("NotNull"));
     }
 
     @Test
-    void testMissingServletRequestPartException() throws Exception {
+    public void testMissingServletRequestPartException() throws Exception {
         mockMvc
             .perform(get("/api/exception-translator-test/missing-servlet-request-part"))
             .andExpect(status().isBadRequest())
@@ -57,7 +56,7 @@ class ExceptionTranslatorIT {
     }
 
     @Test
-    void testMissingServletRequestParameterException() throws Exception {
+    public void testMissingServletRequestParameterException() throws Exception {
         mockMvc
             .perform(get("/api/exception-translator-test/missing-servlet-request-parameter"))
             .andExpect(status().isBadRequest())
@@ -66,7 +65,7 @@ class ExceptionTranslatorIT {
     }
 
     @Test
-    void testAccessDenied() throws Exception {
+    public void testAccessDenied() throws Exception {
         mockMvc
             .perform(get("/api/exception-translator-test/access-denied"))
             .andExpect(status().isForbidden())
@@ -76,7 +75,7 @@ class ExceptionTranslatorIT {
     }
 
     @Test
-    void testUnauthorized() throws Exception {
+    public void testUnauthorized() throws Exception {
         mockMvc
             .perform(get("/api/exception-translator-test/unauthorized"))
             .andExpect(status().isUnauthorized())
@@ -87,7 +86,7 @@ class ExceptionTranslatorIT {
     }
 
     @Test
-    void testMethodNotSupported() throws Exception {
+    public void testMethodNotSupported() throws Exception {
         mockMvc
             .perform(post("/api/exception-translator-test/access-denied"))
             .andExpect(status().isMethodNotAllowed())
@@ -97,7 +96,7 @@ class ExceptionTranslatorIT {
     }
 
     @Test
-    void testExceptionWithResponseStatus() throws Exception {
+    public void testExceptionWithResponseStatus() throws Exception {
         mockMvc
             .perform(get("/api/exception-translator-test/response-status"))
             .andExpect(status().isBadRequest())
@@ -107,7 +106,7 @@ class ExceptionTranslatorIT {
     }
 
     @Test
-    void testInternalServerError() throws Exception {
+    public void testInternalServerError() throws Exception {
         mockMvc
             .perform(get("/api/exception-translator-test/internal-server-error"))
             .andExpect(status().isInternalServerError())

@@ -1,5 +1,7 @@
 package com.swrj.net.escolaonline.config;
 
+import io.github.jhipster.config.JHipsterProperties;
+import io.github.jhipster.config.cache.PrefixedKeyGenerator;
 import java.time.Duration;
 import org.ehcache.config.builders.*;
 import org.ehcache.jsr107.Eh107Configuration;
@@ -12,13 +14,10 @@ import org.springframework.boot.info.GitProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.*;
-import tech.jhipster.config.JHipsterProperties;
-import tech.jhipster.config.cache.PrefixedKeyGenerator;
 
 @Configuration
 @EnableCaching
 public class CacheConfiguration {
-
     private GitProperties gitProperties;
     private BuildProperties buildProperties;
     private final javax.cache.configuration.Configuration<Object, Object> jcacheConfiguration;
@@ -54,8 +53,6 @@ public class CacheConfiguration {
             createCache(cm, com.swrj.net.escolaonline.domain.Escola.class.getName() + ".pessoas");
             createCache(cm, com.swrj.net.escolaonline.domain.Escola.class.getName() + ".alunos");
             createCache(cm, com.swrj.net.escolaonline.domain.Escola.class.getName() + ".unidades");
-            createCache(cm, com.swrj.net.escolaonline.domain.Escola.class.getName() + ".grades");
-            createCache(cm, com.swrj.net.escolaonline.domain.Escola.class.getName() + ".tipoSolicitacaos");
             createCache(cm, com.swrj.net.escolaonline.domain.Pessoa.class.getName());
             createCache(cm, com.swrj.net.escolaonline.domain.Pessoa.class.getName() + ".diretors");
             createCache(cm, com.swrj.net.escolaonline.domain.Pessoa.class.getName() + ".professors");
@@ -101,9 +98,7 @@ public class CacheConfiguration {
 
     private void createCache(javax.cache.CacheManager cm, String cacheName) {
         javax.cache.Cache<Object, Object> cache = cm.getCache(cacheName);
-        if (cache != null) {
-            cache.clear();
-        } else {
+        if (cache == null) {
             cm.createCache(cacheName, jcacheConfiguration);
         }
     }

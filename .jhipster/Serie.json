@@ -20,14 +20,15 @@
       "relationshipName": "turma"
     }
   ],
+  "changelogDate": "20210329173428",
   "entityTableName": "serie",
   "dto": "no",
-  "pagination": "pagination",
-  "service": "serviceClass",
+  "pagination": "no",
+  "service": "no",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "applications": "*",
-  "changelogDate": "20210331173546"
+  "clientRootFolder": "",
+  "applications": "*"
 }

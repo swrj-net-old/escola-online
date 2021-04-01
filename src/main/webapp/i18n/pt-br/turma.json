@@ -3,7 +3,6 @@
     "turma": {
       "home": {
         "title": "Turmas",
-        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo Turma",
         "createOrEditLabel": "Criar ou editar Turma",
         "notFound": "Nenhum Turma encontrado"
@@ -17,7 +16,6 @@
       "detail": {
         "title": "Turma"
       },
-      "id": "ID",
       "nome": "Nome",
       "chamada": "Chamada",
       "conteudo": "Conteudo",

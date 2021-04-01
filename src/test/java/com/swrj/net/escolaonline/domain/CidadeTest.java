@@ -1,14 +1,13 @@
 package com.swrj.net.escolaonline.domain;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.swrj.net.escolaonline.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import com.swrj.net.escolaonline.web.rest.TestUtil;
 
-class CidadeTest {
+public class CidadeTest {
 
     @Test
-    void equalsVerifier() throws Exception {
+    public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Cidade.class);
         Cidade cidade1 = new Cidade();
         cidade1.setId(1L);

@@ -68,23 +68,26 @@
       "relationshipType": "many-to-one",
       "otherEntityName": "pessoa",
       "otherEntityRelationshipName": "aluno",
-      "relationshipName": "pessoaAluno"
+      "relationshipName": "pessoaAluno",
+      "otherEntityField": "id"
     },
     {
       "relationshipType": "many-to-one",
       "otherEntityName": "escola",
       "otherEntityRelationshipName": "aluno",
-      "relationshipName": "escolaAluno"
+      "relationshipName": "escolaAluno",
+      "otherEntityField": "id"
     }
   ],
+  "changelogDate": "20210329174128",
   "entityTableName": "aluno",
   "dto": "no",
-  "pagination": "pagination",
-  "service": "serviceClass",
+  "pagination": "no",
+  "service": "no",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "applications": "*",
-  "changelogDate": "20210331173553"
+  "clientRootFolder": "",
+  "applications": "*"
 }

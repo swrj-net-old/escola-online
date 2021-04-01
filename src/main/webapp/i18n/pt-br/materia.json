@@ -3,7 +3,6 @@
     "materia": {
       "home": {
         "title": "Materias",
-        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo Materia",
         "createOrEditLabel": "Criar ou editar Materia",
         "notFound": "Nenhum Materia encontrado"
@@ -17,7 +16,6 @@
       "detail": {
         "title": "Materia"
       },
-      "id": "ID",
       "nome": "Nome",
       "sigla": "Sigla",
       "grade": "Grade",

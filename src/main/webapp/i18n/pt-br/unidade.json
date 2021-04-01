@@ -3,7 +3,6 @@
     "unidade": {
       "home": {
         "title": "Unidades",
-        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo Unidade",
         "createOrEditLabel": "Criar ou editar Unidade",
         "notFound": "Nenhum Unidade encontrado"
@@ -17,7 +16,6 @@
       "detail": {
         "title": "Unidade"
       },
-      "id": "ID",
       "nome": "Nome",
       "cnpj": "Cnpj",
       "endereco": "Endereco",

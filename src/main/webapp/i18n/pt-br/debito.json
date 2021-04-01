@@ -3,7 +3,6 @@
     "debito": {
       "home": {
         "title": "Debitos",
-        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo Debito",
         "createOrEditLabel": "Criar ou editar Debito",
         "notFound": "Nenhum Debito encontrado"
@@ -17,7 +16,6 @@
       "detail": {
         "title": "Debito"
       },
-      "id": "ID",
       "tipoDebito": "Tipo Debito",
       "situacaoDebito": "Situacao Debito",
       "dataVencimento": "Data Vencimento",

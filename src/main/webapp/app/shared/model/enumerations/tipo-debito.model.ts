@@ -1,4 +1,4 @@
-export enum TipoDebito {
+export const enum TipoDebito {
   MENSALIDADE = 'MENSALIDADE',
 
   TAXA_MATERIAL = 'TAXA_MATERIAL',

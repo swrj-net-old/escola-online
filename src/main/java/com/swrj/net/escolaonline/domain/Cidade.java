@@ -1,13 +1,15 @@
 package com.swrj.net.escolaonline.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.swrj.net.escolaonline.domain.enumeration.UF;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import com.swrj.net.escolaonline.domain.enumeration.UF;
 
 /**
  * A Cidade.
@@ -33,7 +35,6 @@ public class Cidade implements Serializable {
 
     @OneToMany(mappedBy = "cidadePessoa")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "diretors", "professors", "alunos", "cidadePessoa", "escolaPessoa" }, allowSetters = true)
     private Set<Pessoa> pessoas = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -45,13 +46,8 @@ public class Cidade implements Serializable {
         this.id = id;
     }
 
-    public Cidade id(Long id) {
-        this.id = id;
-        return this;
-    }
-
     public String getNome() {
-        return this.nome;
+        return nome;
     }
 
     public Cidade nome(String nome) {
@@ -64,7 +60,7 @@ public class Cidade implements Serializable {
     }
 
     public UF getUf() {
-        return this.uf;
+        return uf;
     }
 
     public Cidade uf(UF uf) {
@@ -77,11 +73,11 @@ public class Cidade implements Serializable {
     }
 
     public Set<Pessoa> getPessoas() {
-        return this.pessoas;
+        return pessoas;
     }
 
     public Cidade pessoas(Set<Pessoa> pessoas) {
-        this.setPessoas(pessoas);
+        this.pessoas = pessoas;
         return this;
     }
 
@@ -98,15 +94,8 @@ public class Cidade implements Serializable {
     }
 
     public void setPessoas(Set<Pessoa> pessoas) {
-        if (this.pessoas != null) {
-            this.pessoas.forEach(i -> i.setCidadePessoa(null));
-        }
-        if (pessoas != null) {
-            pessoas.forEach(i -> i.setCidadePessoa(this));
-        }
         this.pessoas = pessoas;
     }
-
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -122,8 +111,7 @@ public class Cidade implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
-        return getClass().hashCode();
+        return 31;
     }
 
     // prettier-ignore

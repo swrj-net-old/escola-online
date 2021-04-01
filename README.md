@@ -1,6 +1,13 @@
 # EscolaOnline
 
-This application was generated using JHipster 7.0.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.0.0](https://www.jhipster.tech/documentation-archive/v7.0.0).
+This application was generated using JHipster 6.10.5, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v6.10.5](https://www.jhipster.tech/documentation-archive/v6.10.5).
+
+## Ambiente de Produção
+
+O ambiente de produção pode ser acessado em:
+https://escolaonline.swrj.net
+
+
 
 ## Development
 
@@ -22,7 +29,10 @@ Run the following commands in two separate terminals to create a blissful develo
 auto-refreshes when files change on your hard drive.
 
 ```
+
 ./mvnw
+
+
 npm start
 ```
 
@@ -65,9 +75,39 @@ npm install --save-dev --save-exact @types/leaflet
 ```
 
 Then you would import the JS and CSS files specified in library's installation instructions so that [Webpack][] knows about them:
+Edit [src/main/webapp/app/vendor.ts](src/main/webapp/app/vendor.ts) file:
+
+```
+import 'leaflet/dist/leaflet.js';
+```
+
+Edit [src/main/webapp/content/scss/vendor.scss](src/main/webapp/content/scss/vendor.scss) file:
+
+```
+@import '~leaflet/dist/leaflet.css';
+```
+
 Note: There are still a few other things remaining to do for Leaflet that we won't detail here.
 
 For further instructions on how to develop with JHipster, have a look at [Using JHipster in development][].
+
+### Using Angular CLI
+
+You can also use [Angular CLI][] to generate some custom client code.
+
+For example, the following command:
+
+```
+ng generate component my-component
+```
+
+will generate few files:
+
+```
+create src/main/webapp/app/my-component/my-component.component.html
+create src/main/webapp/app/my-component/my-component.component.ts
+update src/main/webapp/app/app.module.ts
+```
 
 ## Building for production
 
@@ -76,14 +116,20 @@ For further instructions on how to develop with JHipster, have a look at [Using 
 To build the final jar and optimize the EscolaOnline application for production, run:
 
 ```
+
 ./mvnw -Pprod clean verify
+
+
 ```
 
 This will concatenate and minify the client CSS and JavaScript files. It will also modify `index.html` so it references these new files.
 To ensure everything worked, run:
 
 ```
+
 java -jar target/*.jar
+
+
 ```
 
 Then navigate to [http://localhost:8080](http://localhost:8080) in your browser.
@@ -95,7 +141,10 @@ Refer to [Using JHipster in production][] for more details.
 To package your application as a war in order to deploy it to an application server, run:
 
 ```
+
 ./mvnw -Pprod,war clean verify
+
+
 ```
 
 ## Testing
@@ -108,7 +157,7 @@ To launch your application's tests, run:
 
 ### Client tests
 
-Unit tests are run by [Jest][]. They're located in [src/test/javascript/](src/test/javascript/) and can be run with:
+Unit tests are run by [Jest][] and written with [Jasmine][]. They're located in [src/test/javascript/](src/test/javascript/) and can be run with:
 
 ```
 npm test
@@ -123,8 +172,6 @@ Sonar is used to analyse code quality. You can start a local Sonar server (acces
 ```
 docker-compose -f src/main/docker/sonar.yml up -d
 ```
-
-Note: we have turned off authentication in [src/main/docker/sonar.yml](src/main/docker/sonar.yml) for out of the box experience while trying out SonarQube, for real use cases turn it back on.
 
 You can run a Sonar analysis with using the [sonar-scanner](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner) or by using the maven plugin.
 
@@ -178,15 +225,17 @@ For more information refer to [Using Docker and Docker-Compose][], this page als
 To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
 
 [jhipster homepage and latest documentation]: https://www.jhipster.tech
-[jhipster 7.0.0 archive]: https://www.jhipster.tech/documentation-archive/v7.0.0
-[using jhipster in development]: https://www.jhipster.tech/documentation-archive/v7.0.0/development/
-[using docker and docker-compose]: https://www.jhipster.tech/documentation-archive/v7.0.0/docker-compose
-[using jhipster in production]: https://www.jhipster.tech/documentation-archive/v7.0.0/production/
-[running tests page]: https://www.jhipster.tech/documentation-archive/v7.0.0/running-tests/
-[code quality page]: https://www.jhipster.tech/documentation-archive/v7.0.0/code-quality/
-[setting up continuous integration]: https://www.jhipster.tech/documentation-archive/v7.0.0/setting-up-ci/
+[jhipster 6.10.5 archive]: https://www.jhipster.tech/documentation-archive/v6.10.5
+[using jhipster in development]: https://www.jhipster.tech/documentation-archive/v6.10.5/development/
+[using docker and docker-compose]: https://www.jhipster.tech/documentation-archive/v6.10.5/docker-compose
+[using jhipster in production]: https://www.jhipster.tech/documentation-archive/v6.10.5/production/
+[running tests page]: https://www.jhipster.tech/documentation-archive/v6.10.5/running-tests/
+[code quality page]: https://www.jhipster.tech/documentation-archive/v6.10.5/code-quality/
+[setting up continuous integration]: https://www.jhipster.tech/documentation-archive/v6.10.5/setting-up-ci/
 [node.js]: https://nodejs.org/
+[yarn]: https://yarnpkg.org/
 [webpack]: https://webpack.github.io/
+[angular cli]: https://cli.angular.io/
 [browsersync]: https://www.browsersync.io/
 [jest]: https://facebook.github.io/jest/
 [jasmine]: https://jasmine.github.io/2.0/introduction.html

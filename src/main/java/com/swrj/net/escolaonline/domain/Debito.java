@@ -1,16 +1,20 @@
 package com.swrj.net.escolaonline.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.swrj.net.escolaonline.domain.enumeration.SituacaoDebito;
-import com.swrj.net.escolaonline.domain.enumeration.TipoDebito;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import com.swrj.net.escolaonline.domain.enumeration.TipoDebito;
+
+import com.swrj.net.escolaonline.domain.enumeration.SituacaoDebito;
 
 /**
  * A Debito.
@@ -58,14 +62,10 @@ public class Debito implements Serializable {
 
     @OneToMany(mappedBy = "debitoHistoricoDebito")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "debitoHistoricoDebito", "detalheUsuarioLancamento" }, allowSetters = true)
     private Set<HistoricoDebito> historicoDebitos = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties(
-        value = { "solicitacaos", "debitos", "chamadas", "matriculas", "pessoaAluno", "escolaAluno" },
-        allowSetters = true
-    )
+    @JsonIgnoreProperties(value = "debitos", allowSetters = true)
     private Aluno alunoDebito;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -77,13 +77,8 @@ public class Debito implements Serializable {
         this.id = id;
     }
 
-    public Debito id(Long id) {
-        this.id = id;
-        return this;
-    }
-
     public TipoDebito getTipoDebito() {
-        return this.tipoDebito;
+        return tipoDebito;
     }
 
     public Debito tipoDebito(TipoDebito tipoDebito) {
@@ -96,7 +91,7 @@ public class Debito implements Serializable {
     }
 
     public SituacaoDebito getSituacaoDebito() {
-        return this.situacaoDebito;
+        return situacaoDebito;
     }
 
     public Debito situacaoDebito(SituacaoDebito situacaoDebito) {
@@ -109,7 +104,7 @@ public class Debito implements Serializable {
     }
 
     public LocalDate getDataVencimento() {
-        return this.dataVencimento;
+        return dataVencimento;
     }
 
     public Debito dataVencimento(LocalDate dataVencimento) {
@@ -122,7 +117,7 @@ public class Debito implements Serializable {
     }
 
     public LocalDate getDataPagamento() {
-        return this.dataPagamento;
+        return dataPagamento;
     }
 
     public Debito dataPagamento(LocalDate dataPagamento) {
@@ -135,7 +130,7 @@ public class Debito implements Serializable {
     }
 
     public BigDecimal getValorOriginal() {
-        return this.valorOriginal;
+        return valorOriginal;
     }
 
     public Debito valorOriginal(BigDecimal valorOriginal) {
@@ -148,7 +143,7 @@ public class Debito implements Serializable {
     }
 
     public BigDecimal getTotalPago() {
-        return this.totalPago;
+        return totalPago;
     }
 
     public Debito totalPago(BigDecimal totalPago) {
@@ -161,7 +156,7 @@ public class Debito implements Serializable {
     }
 
     public BigDecimal getTotalDesconto() {
-        return this.totalDesconto;
+        return totalDesconto;
     }
 
     public Debito totalDesconto(BigDecimal totalDesconto) {
@@ -174,7 +169,7 @@ public class Debito implements Serializable {
     }
 
     public BigDecimal getTotalDevido() {
-        return this.totalDevido;
+        return totalDevido;
     }
 
     public Debito totalDevido(BigDecimal totalDevido) {
@@ -187,7 +182,7 @@ public class Debito implements Serializable {
     }
 
     public String getObservacoes() {
-        return this.observacoes;
+        return observacoes;
     }
 
     public Debito observacoes(String observacoes) {
@@ -200,11 +195,11 @@ public class Debito implements Serializable {
     }
 
     public Set<HistoricoDebito> getHistoricoDebitos() {
-        return this.historicoDebitos;
+        return historicoDebitos;
     }
 
     public Debito historicoDebitos(Set<HistoricoDebito> historicoDebitos) {
-        this.setHistoricoDebitos(historicoDebitos);
+        this.historicoDebitos = historicoDebitos;
         return this;
     }
 
@@ -221,28 +216,21 @@ public class Debito implements Serializable {
     }
 
     public void setHistoricoDebitos(Set<HistoricoDebito> historicoDebitos) {
-        if (this.historicoDebitos != null) {
-            this.historicoDebitos.forEach(i -> i.setDebitoHistoricoDebito(null));
-        }
-        if (historicoDebitos != null) {
-            historicoDebitos.forEach(i -> i.setDebitoHistoricoDebito(this));
-        }
         this.historicoDebitos = historicoDebitos;
     }
 
     public Aluno getAlunoDebito() {
-        return this.alunoDebito;
+        return alunoDebito;
     }
 
     public Debito alunoDebito(Aluno aluno) {
-        this.setAlunoDebito(aluno);
+        this.alunoDebito = aluno;
         return this;
     }
 
     public void setAlunoDebito(Aluno aluno) {
         this.alunoDebito = aluno;
     }
-
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -258,8 +246,7 @@ public class Debito implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
-        return getClass().hashCode();
+        return 31;
     }
 
     // prettier-ignore

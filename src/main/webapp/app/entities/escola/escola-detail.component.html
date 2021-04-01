@@ -1,0 +1,62 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="escola">
+            <h2><span jhiTranslate="escolaOnlineApp.escola.detail.title">Escola</span> {{ escola.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="escolaOnlineApp.escola.nome">Nome</span></dt>
+                <dd>
+                    <span>{{ escola.nome }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.escola.razaoSocial">Razao Social</span></dt>
+                <dd>
+                    <span>{{ escola.razaoSocial }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.escola.cnpjPrincipal">Cnpj Principal</span></dt>
+                <dd>
+                    <span>{{ escola.cnpjPrincipal }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.escola.url">Url</span></dt>
+                <dd>
+                    <span>{{ escola.url }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.escola.prefixo">Prefixo</span></dt>
+                <dd>
+                    <span>{{ escola.prefixo }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.escola.responsavelNome">Responsavel Nome</span></dt>
+                <dd>
+                    <span>{{ escola.responsavelNome }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.escola.responsavelCpf">Responsavel Cpf</span></dt>
+                <dd>
+                    <span>{{ escola.responsavelCpf }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.escola.responsavelEmail">Responsavel Email</span></dt>
+                <dd>
+                    <span>{{ escola.responsavelEmail }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.escola.responsavelCelular">Responsavel Celular</span></dt>
+                <dd>
+                    <span>{{ escola.responsavelCelular }}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/escola', escola.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

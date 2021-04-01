@@ -1,13 +1,14 @@
 package com.swrj.net.escolaonline.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A TipoSolicitacao.
@@ -35,12 +36,7 @@ public class TipoSolicitacao implements Serializable {
 
     @OneToMany(mappedBy = "tipoSolicitacaoSolicitacao")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "tipoSolicitacaoSolicitacao", "alunoSolicitacao" }, allowSetters = true)
     private Set<Solicitacao> solicitacaos = new HashSet<>();
-
-    @ManyToOne
-    @JsonIgnoreProperties(value = { "pessoas", "alunos", "unidades", "grades", "tipoSolicitacaos" }, allowSetters = true)
-    private Escola escolaTipoSolicitacao;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -51,13 +47,8 @@ public class TipoSolicitacao implements Serializable {
         this.id = id;
     }
 
-    public TipoSolicitacao id(Long id) {
-        this.id = id;
-        return this;
-    }
-
     public String getNome() {
-        return this.nome;
+        return nome;
     }
 
     public TipoSolicitacao nome(String nome) {
@@ -70,7 +61,7 @@ public class TipoSolicitacao implements Serializable {
     }
 
     public Integer getPrazoAtendimento() {
-        return this.prazoAtendimento;
+        return prazoAtendimento;
     }
 
     public TipoSolicitacao prazoAtendimento(Integer prazoAtendimento) {
@@ -83,7 +74,7 @@ public class TipoSolicitacao implements Serializable {
     }
 
     public BigDecimal getValorEmissao() {
-        return this.valorEmissao;
+        return valorEmissao;
     }
 
     public TipoSolicitacao valorEmissao(BigDecimal valorEmissao) {
@@ -96,11 +87,11 @@ public class TipoSolicitacao implements Serializable {
     }
 
     public Set<Solicitacao> getSolicitacaos() {
-        return this.solicitacaos;
+        return solicitacaos;
     }
 
     public TipoSolicitacao solicitacaos(Set<Solicitacao> solicitacaos) {
-        this.setSolicitacaos(solicitacaos);
+        this.solicitacaos = solicitacaos;
         return this;
     }
 
@@ -117,28 +108,8 @@ public class TipoSolicitacao implements Serializable {
     }
 
     public void setSolicitacaos(Set<Solicitacao> solicitacaos) {
-        if (this.solicitacaos != null) {
-            this.solicitacaos.forEach(i -> i.setTipoSolicitacaoSolicitacao(null));
-        }
-        if (solicitacaos != null) {
-            solicitacaos.forEach(i -> i.setTipoSolicitacaoSolicitacao(this));
-        }
         this.solicitacaos = solicitacaos;
     }
-
-    public Escola getEscolaTipoSolicitacao() {
-        return this.escolaTipoSolicitacao;
-    }
-
-    public TipoSolicitacao escolaTipoSolicitacao(Escola escola) {
-        this.setEscolaTipoSolicitacao(escola);
-        return this;
-    }
-
-    public void setEscolaTipoSolicitacao(Escola escola) {
-        this.escolaTipoSolicitacao = escola;
-    }
-
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -154,8 +125,7 @@ public class TipoSolicitacao implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
-        return getClass().hashCode();
+        return 31;
     }
 
     // prettier-ignore

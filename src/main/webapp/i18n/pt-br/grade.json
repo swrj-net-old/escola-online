@@ -3,7 +3,6 @@
     "grade": {
       "home": {
         "title": "Grades",
-        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo Grade",
         "createOrEditLabel": "Criar ou editar Grade",
         "notFound": "Nenhum Grade encontrado"
@@ -17,11 +16,9 @@
       "detail": {
         "title": "Grade"
       },
-      "id": "ID",
       "anoLetivo": "Ano Letivo",
       "serieGrade": "Serie Grade",
-      "materiaGrade": "Materia Grade",
-      "escolaGrade": "Escola Grade"
+      "materiaGrade": "Materia Grade"
     }
   }
 }

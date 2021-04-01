@@ -3,7 +3,6 @@
     "aluno": {
       "home": {
         "title": "Alunos",
-        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo Aluno",
         "createOrEditLabel": "Criar ou editar Aluno",
         "notFound": "Nenhum Aluno encontrado"
@@ -17,7 +16,6 @@
       "detail": {
         "title": "Aluno"
       },
-      "id": "ID",
       "dataNascimento": "Data Nascimento",
       "tipoSanguineo": "Tipo Sanguineo",
       "nomePai": "Nome Pai",

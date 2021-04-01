@@ -4,7 +4,6 @@ package com.swrj.net.escolaonline.service.dto;
  * A DTO representing a password change required data - current and new password.
  */
 public class PasswordChangeDTO {
-
     private String currentPassword;
     private String newPassword;
 

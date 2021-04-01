@@ -20,22 +20,17 @@
       "otherEntityName": "solicitacao",
       "otherEntityRelationshipName": "tipoSolicitacaoSolicitacao",
       "relationshipName": "solicitacao"
-    },
-    {
-      "relationshipType": "many-to-one",
-      "otherEntityName": "escola",
-      "otherEntityRelationshipName": "tipoSolicitacao",
-      "relationshipName": "escolaTipoSolicitacao"
     }
   ],
+  "changelogDate": "20210329174628",
   "entityTableName": "tipo_solicitacao",
   "dto": "no",
-  "pagination": "pagination",
-  "service": "serviceClass",
+  "pagination": "no",
+  "service": "no",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "applications": "*",
-  "changelogDate": "20210331173558"
+  "clientRootFolder": "",
+  "applications": "*"
 }

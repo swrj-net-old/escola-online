@@ -1,0 +1,112 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-historico-debito-heading" jhiTranslate="escolaOnlineApp.historicoDebito.home.createOrEditLabel">Create or edit a Historico Debito</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.historicoDebito.dataLancamento" for="field_dataLancamento">Data Lancamento</label>
+                    <div class="input-group">
+                        <input id="field_dataLancamento" type="text" class="form-control" name="dataLancamento" ngbDatepicker #dataLancamentoDp="ngbDatepicker" formControlName="dataLancamento"/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="dataLancamentoDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.historicoDebito.situacaoDebito" for="field_situacaoDebito">Situacao Debito</label>
+                    <select class="form-control" name="situacaoDebito" formControlName="situacaoDebito" id="field_situacaoDebito">
+                        <option value="NAO_PAGO">{{ 'escolaOnlineApp.SituacaoDebito.NAO_PAGO' | translate }}</option>
+                        <option value="PAGO_PARCIAL">{{ 'escolaOnlineApp.SituacaoDebito.PAGO_PARCIAL' | translate }}</option>
+                        <option value="PAGO">{{ 'escolaOnlineApp.SituacaoDebito.PAGO' | translate }}</option>
+                        <option value="CANCELADO">{{ 'escolaOnlineApp.SituacaoDebito.CANCELADO' | translate }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.historicoDebito.dataVencimento" for="field_dataVencimento">Data Vencimento</label>
+                    <div class="input-group">
+                        <input id="field_dataVencimento" type="text" class="form-control" name="dataVencimento" ngbDatepicker #dataVencimentoDp="ngbDatepicker" formControlName="dataVencimento"/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="dataVencimentoDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.historicoDebito.dataPagamento" for="field_dataPagamento">Data Pagamento</label>
+                    <div class="input-group">
+                        <input id="field_dataPagamento" type="text" class="form-control" name="dataPagamento" ngbDatepicker #dataPagamentoDp="ngbDatepicker" formControlName="dataPagamento"/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="dataPagamentoDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.historicoDebito.valorOriginal" for="field_valorOriginal">Valor Original</label>
+                    <input type="number" class="form-control" name="valorOriginal" id="field_valorOriginal"
+                           formControlName="valorOriginal"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.historicoDebito.totalPago" for="field_totalPago">Total Pago</label>
+                    <input type="number" class="form-control" name="totalPago" id="field_totalPago"
+                           formControlName="totalPago"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.historicoDebito.totalDesconto" for="field_totalDesconto">Total Desconto</label>
+                    <input type="number" class="form-control" name="totalDesconto" id="field_totalDesconto"
+                           formControlName="totalDesconto"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.historicoDebito.totalDevido" for="field_totalDevido">Total Devido</label>
+                    <input type="number" class="form-control" name="totalDevido" id="field_totalDevido"
+                           formControlName="totalDevido"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.historicoDebito.observacoes" for="field_observacoes">Observacoes</label>
+                    <input type="text" class="form-control" name="observacoes" id="field_observacoes"
+                           formControlName="observacoes"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.historicoDebito.debitoHistoricoDebito" for="field_debitoHistoricoDebito">Debito Historico Debito</label>
+                    <select class="form-control" id="field_debitoHistoricoDebito" name="debitoHistoricoDebito" formControlName="debitoHistoricoDebito">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="debitoOption.id === editForm.get('debitoHistoricoDebito')!.value?.id ? editForm.get('debitoHistoricoDebito')!.value : debitoOption" *ngFor="let debitoOption of debitos; trackBy: trackById">{{ debitoOption.id }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.historicoDebito.detalheUsuarioLancamento" for="field_detalheUsuarioLancamento">Detalhe Usuario Lancamento</label>
+                    <select class="form-control" id="field_detalheUsuarioLancamento" name="detalheUsuarioLancamento" formControlName="detalheUsuarioLancamento">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="detalheUsuarioOption.id === editForm.get('detalheUsuarioLancamento')!.value?.id ? editForm.get('detalheUsuarioLancamento')!.value : detalheUsuarioOption" *ngFor="let detalheUsuarioOption of detalheusuarios; trackBy: trackById">{{ detalheUsuarioOption.id }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

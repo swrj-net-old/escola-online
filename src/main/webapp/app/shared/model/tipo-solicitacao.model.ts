@@ -1,13 +1,19 @@
 import { ISolicitacao } from 'app/shared/model/solicitacao.model';
-import { IEscola } from 'app/shared/model/escola.model';
 
 export interface ITipoSolicitacao {
   id?: number;
-  nome?: string | null;
-  prazoAtendimento?: number | null;
-  valorEmissao?: number | null;
-  solicitacaos?: ISolicitacao[] | null;
-  escolaTipoSolicitacao?: IEscola | null;
+  nome?: string;
+  prazoAtendimento?: number;
+  valorEmissao?: number;
+  solicitacaos?: ISolicitacao[];
 }
 
-export const defaultValue: Readonly<ITipoSolicitacao> = {};
+export class TipoSolicitacao implements ITipoSolicitacao {
+  constructor(
+    public id?: number,
+    public nome?: string,
+    public prazoAtendimento?: number,
+    public valorEmissao?: number,
+    public solicitacaos?: ISolicitacao[]
+  ) {}
+}

@@ -29,23 +29,26 @@
       "relationshipType": "many-to-one",
       "otherEntityName": "serie",
       "otherEntityRelationshipName": "turma",
-      "relationshipName": "serieTurma"
+      "relationshipName": "serieTurma",
+      "otherEntityField": "id"
     },
     {
       "relationshipType": "many-to-one",
       "otherEntityName": "unidade",
       "otherEntityRelationshipName": "turma",
-      "relationshipName": "unidadeTurma"
+      "relationshipName": "unidadeTurma",
+      "otherEntityField": "id"
     }
   ],
+  "changelogDate": "20210329173728",
   "entityTableName": "turma",
   "dto": "no",
-  "pagination": "pagination",
-  "service": "serviceClass",
+  "pagination": "no",
+  "service": "no",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "applications": "*",
-  "changelogDate": "20210331173549"
+  "clientRootFolder": "",
+  "applications": "*"
 }

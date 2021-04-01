@@ -1,13 +1,15 @@
 package com.swrj.net.escolaonline.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Professor.
@@ -35,20 +37,18 @@ public class Professor implements Serializable {
 
     @OneToMany(mappedBy = "professorChamada")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "alunoChamada", "turmaChamada", "professorChamada" }, allowSetters = true)
     private Set<Chamada> chamadas = new HashSet<>();
 
     @OneToMany(mappedBy = "professorConteudo")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "turmaConteudo", "professorConteudo", "materiaConteudo" }, allowSetters = true)
     private Set<Conteudo> conteudos = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "diretors", "professors", "alunos", "cidadePessoa", "escolaPessoa" }, allowSetters = true)
+    @JsonIgnoreProperties(value = "professors", allowSetters = true)
     private Pessoa pessoaProfessor;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "diretors", "professors", "turmas", "escolaUnidade" }, allowSetters = true)
+    @JsonIgnoreProperties(value = "professors", allowSetters = true)
     private Unidade unidadeProfessor;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -60,13 +60,8 @@ public class Professor implements Serializable {
         this.id = id;
     }
 
-    public Professor id(Long id) {
-        this.id = id;
-        return this;
-    }
-
     public Integer getAnoLetivo() {
-        return this.anoLetivo;
+        return anoLetivo;
     }
 
     public Professor anoLetivo(Integer anoLetivo) {
@@ -79,7 +74,7 @@ public class Professor implements Serializable {
     }
 
     public LocalDate getDataInicio() {
-        return this.dataInicio;
+        return dataInicio;
     }
 
     public Professor dataInicio(LocalDate dataInicio) {
@@ -92,7 +87,7 @@ public class Professor implements Serializable {
     }
 
     public LocalDate getDataFim() {
-        return this.dataFim;
+        return dataFim;
     }
 
     public Professor dataFim(LocalDate dataFim) {
@@ -105,11 +100,11 @@ public class Professor implements Serializable {
     }
 
     public Set<Chamada> getChamadas() {
-        return this.chamadas;
+        return chamadas;
     }
 
     public Professor chamadas(Set<Chamada> chamadas) {
-        this.setChamadas(chamadas);
+        this.chamadas = chamadas;
         return this;
     }
 
@@ -126,21 +121,15 @@ public class Professor implements Serializable {
     }
 
     public void setChamadas(Set<Chamada> chamadas) {
-        if (this.chamadas != null) {
-            this.chamadas.forEach(i -> i.setProfessorChamada(null));
-        }
-        if (chamadas != null) {
-            chamadas.forEach(i -> i.setProfessorChamada(this));
-        }
         this.chamadas = chamadas;
     }
 
     public Set<Conteudo> getConteudos() {
-        return this.conteudos;
+        return conteudos;
     }
 
     public Professor conteudos(Set<Conteudo> conteudos) {
-        this.setConteudos(conteudos);
+        this.conteudos = conteudos;
         return this;
     }
 
@@ -157,21 +146,15 @@ public class Professor implements Serializable {
     }
 
     public void setConteudos(Set<Conteudo> conteudos) {
-        if (this.conteudos != null) {
-            this.conteudos.forEach(i -> i.setProfessorConteudo(null));
-        }
-        if (conteudos != null) {
-            conteudos.forEach(i -> i.setProfessorConteudo(this));
-        }
         this.conteudos = conteudos;
     }
 
     public Pessoa getPessoaProfessor() {
-        return this.pessoaProfessor;
+        return pessoaProfessor;
     }
 
     public Professor pessoaProfessor(Pessoa pessoa) {
-        this.setPessoaProfessor(pessoa);
+        this.pessoaProfessor = pessoa;
         return this;
     }
 
@@ -180,18 +163,17 @@ public class Professor implements Serializable {
     }
 
     public Unidade getUnidadeProfessor() {
-        return this.unidadeProfessor;
+        return unidadeProfessor;
     }
 
     public Professor unidadeProfessor(Unidade unidade) {
-        this.setUnidadeProfessor(unidade);
+        this.unidadeProfessor = unidade;
         return this;
     }
 
     public void setUnidadeProfessor(Unidade unidade) {
         this.unidadeProfessor = unidade;
     }
-
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -207,8 +189,7 @@ public class Professor implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
-        return getClass().hashCode();
+        return 31;
     }
 
     // prettier-ignore

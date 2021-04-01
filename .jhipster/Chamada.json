@@ -15,29 +15,33 @@
       "relationshipType": "many-to-one",
       "otherEntityName": "aluno",
       "otherEntityRelationshipName": "chamada",
-      "relationshipName": "alunoChamada"
+      "relationshipName": "alunoChamada",
+      "otherEntityField": "id"
     },
     {
       "relationshipType": "many-to-one",
       "otherEntityName": "turma",
       "otherEntityRelationshipName": "chamada",
-      "relationshipName": "turmaChamada"
+      "relationshipName": "turmaChamada",
+      "otherEntityField": "id"
     },
     {
       "relationshipType": "many-to-one",
       "otherEntityName": "professor",
       "otherEntityRelationshipName": "chamada",
-      "relationshipName": "professorChamada"
+      "relationshipName": "professorChamada",
+      "otherEntityField": "id"
     }
   ],
+  "changelogDate": "20210329173928",
   "entityTableName": "chamada",
   "dto": "no",
-  "pagination": "pagination",
-  "service": "serviceClass",
+  "pagination": "no",
+  "service": "no",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "applications": "*",
-  "changelogDate": "20210331173551"
+  "clientRootFolder": "",
+  "applications": "*"
 }

@@ -1,10 +1,10 @@
 const path = require('path');
 
-const tsconfig = require('../tsconfig.json');
+const tsconfig = require('../tsconfig.base.json');
 
 module.exports = {
   root,
-  mapTypescriptAliasToWebpackAlias,
+  mapTypescriptAliasToWebpackAlias
 };
 
 const _root = path.resolve(__dirname, '..');
@@ -22,7 +22,7 @@ function mapTypescriptAliasToWebpackAlias(alias = {}) {
   Object.entries(tsconfig.compilerOptions.paths)
     .filter(([key, value]) => {
       // use Typescript alias in Webpack only if this has value
-      return !!value.length;
+      return Boolean(value.length);
     })
     .map(([key, value]) => {
       // if Typescript alias ends with /* then remove this for Webpack

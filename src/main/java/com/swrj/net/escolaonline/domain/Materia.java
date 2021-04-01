@@ -1,12 +1,13 @@
 package com.swrj.net.escolaonline.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Materia.
@@ -31,12 +32,10 @@ public class Materia implements Serializable {
 
     @OneToMany(mappedBy = "materiaGrade")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "serieGrade", "materiaGrade", "escolaGrade" }, allowSetters = true)
     private Set<Grade> grades = new HashSet<>();
 
     @OneToMany(mappedBy = "materiaConteudo")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "turmaConteudo", "professorConteudo", "materiaConteudo" }, allowSetters = true)
     private Set<Conteudo> conteudos = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -48,13 +47,8 @@ public class Materia implements Serializable {
         this.id = id;
     }
 
-    public Materia id(Long id) {
-        this.id = id;
-        return this;
-    }
-
     public String getNome() {
-        return this.nome;
+        return nome;
     }
 
     public Materia nome(String nome) {
@@ -67,7 +61,7 @@ public class Materia implements Serializable {
     }
 
     public String getSigla() {
-        return this.sigla;
+        return sigla;
     }
 
     public Materia sigla(String sigla) {
@@ -80,11 +74,11 @@ public class Materia implements Serializable {
     }
 
     public Set<Grade> getGrades() {
-        return this.grades;
+        return grades;
     }
 
     public Materia grades(Set<Grade> grades) {
-        this.setGrades(grades);
+        this.grades = grades;
         return this;
     }
 
@@ -101,21 +95,15 @@ public class Materia implements Serializable {
     }
 
     public void setGrades(Set<Grade> grades) {
-        if (this.grades != null) {
-            this.grades.forEach(i -> i.setMateriaGrade(null));
-        }
-        if (grades != null) {
-            grades.forEach(i -> i.setMateriaGrade(this));
-        }
         this.grades = grades;
     }
 
     public Set<Conteudo> getConteudos() {
-        return this.conteudos;
+        return conteudos;
     }
 
     public Materia conteudos(Set<Conteudo> conteudos) {
-        this.setConteudos(conteudos);
+        this.conteudos = conteudos;
         return this;
     }
 
@@ -132,15 +120,8 @@ public class Materia implements Serializable {
     }
 
     public void setConteudos(Set<Conteudo> conteudos) {
-        if (this.conteudos != null) {
-            this.conteudos.forEach(i -> i.setMateriaConteudo(null));
-        }
-        if (conteudos != null) {
-            conteudos.forEach(i -> i.setMateriaConteudo(this));
-        }
         this.conteudos = conteudos;
     }
-
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -156,8 +137,7 @@ public class Materia implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
-        return getClass().hashCode();
+        return 31;
     }
 
     // prettier-ignore
