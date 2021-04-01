@@ -1,11 +1,13 @@
 package com.swrj.net.escolaonline.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.io.Serializable;
-import java.time.LocalDate;
-import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+
+import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  * A Conteudo.
@@ -32,15 +34,15 @@ public class Conteudo implements Serializable {
     private String observacoes;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "chamadas", "conteudos", "matriculas", "serieTurma", "unidadeTurma" }, allowSetters = true)
+    @JsonIgnoreProperties(value = "conteudos", allowSetters = true)
     private Turma turmaConteudo;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "chamadas", "conteudos", "pessoaProfessor", "unidadeProfessor" }, allowSetters = true)
+    @JsonIgnoreProperties(value = "conteudos", allowSetters = true)
     private Professor professorConteudo;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "grades", "conteudos" }, allowSetters = true)
+    @JsonIgnoreProperties(value = "conteudos", allowSetters = true)
     private Materia materiaConteudo;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -52,13 +54,8 @@ public class Conteudo implements Serializable {
         this.id = id;
     }
 
-    public Conteudo id(Long id) {
-        this.id = id;
-        return this;
-    }
-
     public LocalDate getDataAula() {
-        return this.dataAula;
+        return dataAula;
     }
 
     public Conteudo dataAula(LocalDate dataAula) {
@@ -71,7 +68,7 @@ public class Conteudo implements Serializable {
     }
 
     public String getHabilidadesCompetencias() {
-        return this.habilidadesCompetencias;
+        return habilidadesCompetencias;
     }
 
     public Conteudo habilidadesCompetencias(String habilidadesCompetencias) {
@@ -84,7 +81,7 @@ public class Conteudo implements Serializable {
     }
 
     public String getObservacoes() {
-        return this.observacoes;
+        return observacoes;
     }
 
     public Conteudo observacoes(String observacoes) {
@@ -97,11 +94,11 @@ public class Conteudo implements Serializable {
     }
 
     public Turma getTurmaConteudo() {
-        return this.turmaConteudo;
+        return turmaConteudo;
     }
 
     public Conteudo turmaConteudo(Turma turma) {
-        this.setTurmaConteudo(turma);
+        this.turmaConteudo = turma;
         return this;
     }
 
@@ -110,11 +107,11 @@ public class Conteudo implements Serializable {
     }
 
     public Professor getProfessorConteudo() {
-        return this.professorConteudo;
+        return professorConteudo;
     }
 
     public Conteudo professorConteudo(Professor professor) {
-        this.setProfessorConteudo(professor);
+        this.professorConteudo = professor;
         return this;
     }
 
@@ -123,18 +120,17 @@ public class Conteudo implements Serializable {
     }
 
     public Materia getMateriaConteudo() {
-        return this.materiaConteudo;
+        return materiaConteudo;
     }
 
     public Conteudo materiaConteudo(Materia materia) {
-        this.setMateriaConteudo(materia);
+        this.materiaConteudo = materia;
         return this;
     }
 
     public void setMateriaConteudo(Materia materia) {
         this.materiaConteudo = materia;
     }
-
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -150,8 +146,7 @@ public class Conteudo implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
-        return getClass().hashCode();
+        return 31;
     }
 
     // prettier-ignore

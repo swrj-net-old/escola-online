@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 public class UserJWTController {
-
     private final TokenProvider tokenProvider;
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -39,7 +38,8 @@ public class UserJWTController {
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.createToken(authentication, loginVM.isRememberMe());
+        boolean rememberMe = (loginVM.isRememberMe() == null) ? false : loginVM.isRememberMe();
+        String jwt = tokenProvider.createToken(authentication, rememberMe);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
         return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
@@ -49,7 +49,6 @@ public class UserJWTController {
      * Object to return as body in JWT Authentication.
      */
     static class JWTToken {
-
         private String idToken;
 
         JWTToken(String idToken) {

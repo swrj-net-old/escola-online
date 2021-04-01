@@ -44,23 +44,26 @@
       "relationshipType": "many-to-one",
       "otherEntityName": "debito",
       "otherEntityRelationshipName": "historicoDebito",
-      "relationshipName": "debitoHistoricoDebito"
+      "relationshipName": "debitoHistoricoDebito",
+      "otherEntityField": "id"
     },
     {
       "relationshipType": "many-to-one",
       "otherEntityName": "detalheUsuario",
       "otherEntityRelationshipName": "historicoDebito",
-      "relationshipName": "detalheUsuarioLancamento"
+      "relationshipName": "detalheUsuarioLancamento",
+      "otherEntityField": "id"
     }
   ],
+  "changelogDate": "20210329174428",
   "entityTableName": "historico_debito",
   "dto": "no",
-  "pagination": "pagination",
-  "service": "serviceClass",
+  "pagination": "no",
+  "service": "no",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "applications": "*",
-  "changelogDate": "20210331173556"
+  "clientRootFolder": "",
+  "applications": "*"
 }

@@ -1,4 +1,4 @@
-export enum SituacaoDebito {
+export const enum SituacaoDebito {
   NAO_PAGO = 'NAO_PAGO',
 
   PAGO_PARCIAL = 'PAGO_PARCIAL',

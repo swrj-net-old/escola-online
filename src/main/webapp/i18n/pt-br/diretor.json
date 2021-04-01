@@ -3,7 +3,6 @@
     "diretor": {
       "home": {
         "title": "Diretors",
-        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo Diretor",
         "createOrEditLabel": "Criar ou editar Diretor",
         "notFound": "Nenhum Diretor encontrado"
@@ -17,7 +16,6 @@
       "detail": {
         "title": "Diretor"
       },
-      "id": "ID",
       "anoLetivo": "Ano Letivo",
       "dataInicio": "Data Inicio",
       "dataFim": "Data Fim",

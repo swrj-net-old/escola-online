@@ -16,7 +16,6 @@ import org.springframework.web.filter.GenericFilterBean;
  * found.
  */
 public class JWTFilter extends GenericFilterBean {
-
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
     private final TokenProvider tokenProvider;

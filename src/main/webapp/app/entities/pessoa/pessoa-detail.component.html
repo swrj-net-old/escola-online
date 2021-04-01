@@ -1,0 +1,90 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="pessoa">
+            <h2><span jhiTranslate="escolaOnlineApp.pessoa.detail.title">Pessoa</span> {{ pessoa.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="escolaOnlineApp.pessoa.nome">Nome</span></dt>
+                <dd>
+                    <span>{{ pessoa.nome }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.pessoa.cpf">Cpf</span></dt>
+                <dd>
+                    <span>{{ pessoa.cpf }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.pessoa.rg">Rg</span></dt>
+                <dd>
+                    <span>{{ pessoa.rg }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.pessoa.endereco">Endereco</span></dt>
+                <dd>
+                    <span>{{ pessoa.endereco }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.pessoa.complemento">Complemento</span></dt>
+                <dd>
+                    <span>{{ pessoa.complemento }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.pessoa.bairro">Bairro</span></dt>
+                <dd>
+                    <span>{{ pessoa.bairro }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.pessoa.cidade">Cidade</span></dt>
+                <dd>
+                    <span>{{ pessoa.cidade }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.pessoa.cep">Cep</span></dt>
+                <dd>
+                    <span>{{ pessoa.cep }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.pessoa.telefoneCelular">Telefone Celular</span></dt>
+                <dd>
+                    <span>{{ pessoa.telefoneCelular }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.pessoa.telefoneResidencial">Telefone Residencial</span></dt>
+                <dd>
+                    <span>{{ pessoa.telefoneResidencial }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.pessoa.telefoneComercial">Telefone Comercial</span></dt>
+                <dd>
+                    <span>{{ pessoa.telefoneComercial }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.pessoa.email">Email</span></dt>
+                <dd>
+                    <span>{{ pessoa.email }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.pessoa.observacoes">Observacoes</span></dt>
+                <dd>
+                    <span>{{ pessoa.observacoes }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.pessoa.cidadePessoa">Cidade Pessoa</span></dt>
+                <dd>
+                    <div *ngIf="pessoa.cidadePessoa">
+                        <a [routerLink]="['/cidade', pessoa.cidadePessoa?.id, 'view']">{{ pessoa.cidadePessoa?.id }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.pessoa.escolaPessoa">Escola Pessoa</span></dt>
+                <dd>
+                    <div *ngIf="pessoa.escolaPessoa">
+                        <a [routerLink]="['/escola', pessoa.escolaPessoa?.id, 'view']">{{ pessoa.escolaPessoa?.id }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/pessoa', pessoa.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

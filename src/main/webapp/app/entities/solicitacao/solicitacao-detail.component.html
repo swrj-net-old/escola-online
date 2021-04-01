@@ -1,0 +1,54 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="solicitacao">
+            <h2><span jhiTranslate="escolaOnlineApp.solicitacao.detail.title">Solicitacao</span> {{ solicitacao.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="escolaOnlineApp.solicitacao.situacaoSolicitacao">Situacao Solicitacao</span></dt>
+                <dd>
+                    <span jhiTranslate="{{ 'escolaOnlineApp.SituacaoSolicitacao.' + solicitacao.situacaoSolicitacao }}">{{ solicitacao.situacaoSolicitacao }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.solicitacao.dataSolicitacao">Data Solicitacao</span></dt>
+                <dd>
+                    <span>{{ solicitacao.dataSolicitacao }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.solicitacao.observacoesSolicitante">Observacoes Solicitante</span></dt>
+                <dd>
+                    <span>{{ solicitacao.observacoesSolicitante }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.solicitacao.observacoesAtendimento">Observacoes Atendimento</span></dt>
+                <dd>
+                    <span>{{ solicitacao.observacoesAtendimento }}</span>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.solicitacao.tipoSolicitacaoSolicitacao">Tipo Solicitacao Solicitacao</span></dt>
+                <dd>
+                    <div *ngIf="solicitacao.tipoSolicitacaoSolicitacao">
+                        <a [routerLink]="['/tipo-solicitacao', solicitacao.tipoSolicitacaoSolicitacao?.id, 'view']">{{ solicitacao.tipoSolicitacaoSolicitacao?.id }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.solicitacao.alunoSolicitacao">Aluno Solicitacao</span></dt>
+                <dd>
+                    <div *ngIf="solicitacao.alunoSolicitacao">
+                        <a [routerLink]="['/aluno', solicitacao.alunoSolicitacao?.id, 'view']">{{ solicitacao.alunoSolicitacao?.id }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/solicitacao', solicitacao.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

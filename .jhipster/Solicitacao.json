@@ -24,23 +24,26 @@
       "relationshipType": "many-to-one",
       "otherEntityName": "tipoSolicitacao",
       "otherEntityRelationshipName": "solicitacao",
-      "relationshipName": "tipoSolicitacaoSolicitacao"
+      "relationshipName": "tipoSolicitacaoSolicitacao",
+      "otherEntityField": "id"
     },
     {
       "relationshipType": "many-to-one",
       "otherEntityName": "aluno",
       "otherEntityRelationshipName": "solicitacao",
-      "relationshipName": "alunoSolicitacao"
+      "relationshipName": "alunoSolicitacao",
+      "otherEntityField": "id"
     }
   ],
+  "changelogDate": "20210329174728",
   "entityTableName": "solicitacao",
   "dto": "no",
-  "pagination": "pagination",
-  "service": "serviceClass",
+  "pagination": "no",
+  "service": "no",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "applications": "*",
-  "changelogDate": "20210331173559"
+  "clientRootFolder": "",
+  "applications": "*"
 }

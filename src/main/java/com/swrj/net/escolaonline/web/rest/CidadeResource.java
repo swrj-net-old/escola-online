@@ -2,32 +2,28 @@ package com.swrj.net.escolaonline.web.rest;
 
 import com.swrj.net.escolaonline.domain.Cidade;
 import com.swrj.net.escolaonline.repository.CidadeRepository;
-import com.swrj.net.escolaonline.service.CidadeService;
 import com.swrj.net.escolaonline.web.rest.errors.BadRequestAlertException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+
+import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import tech.jhipster.web.util.HeaderUtil;
-import tech.jhipster.web.util.PaginationUtil;
-import tech.jhipster.web.util.ResponseUtil;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * REST controller for managing {@link com.swrj.net.escolaonline.domain.Cidade}.
  */
 @RestController
 @RequestMapping("/api")
+@Transactional
 public class CidadeResource {
 
     private final Logger log = LoggerFactory.getLogger(CidadeResource.class);
@@ -37,12 +33,9 @@ public class CidadeResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final CidadeService cidadeService;
-
     private final CidadeRepository cidadeRepository;
 
-    public CidadeResource(CidadeService cidadeService, CidadeRepository cidadeRepository) {
-        this.cidadeService = cidadeService;
+    public CidadeResource(CidadeRepository cidadeRepository) {
         this.cidadeRepository = cidadeRepository;
     }
 
@@ -59,93 +52,42 @@ public class CidadeResource {
         if (cidade.getId() != null) {
             throw new BadRequestAlertException("A new cidade cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Cidade result = cidadeService.save(cidade);
-        return ResponseEntity
-            .created(new URI("/api/cidades/" + result.getId()))
+        Cidade result = cidadeRepository.save(cidade);
+        return ResponseEntity.created(new URI("/api/cidades/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /cidades/:id} : Updates an existing cidade.
+     * {@code PUT  /cidades} : Updates an existing cidade.
      *
-     * @param id the id of the cidade to save.
      * @param cidade the cidade to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated cidade,
      * or with status {@code 400 (Bad Request)} if the cidade is not valid,
      * or with status {@code 500 (Internal Server Error)} if the cidade couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/cidades/{id}")
-    public ResponseEntity<Cidade> updateCidade(@PathVariable(value = "id", required = false) final Long id, @RequestBody Cidade cidade)
-        throws URISyntaxException {
-        log.debug("REST request to update Cidade : {}, {}", id, cidade);
+    @PutMapping("/cidades")
+    public ResponseEntity<Cidade> updateCidade(@RequestBody Cidade cidade) throws URISyntaxException {
+        log.debug("REST request to update Cidade : {}", cidade);
         if (cidade.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, cidade.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
-        }
-
-        if (!cidadeRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
-
-        Cidade result = cidadeService.save(cidade);
-        return ResponseEntity
-            .ok()
+        Cidade result = cidadeRepository.save(cidade);
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, cidade.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PATCH  /cidades/:id} : Partial updates given fields of an existing cidade, field will ignore if it is null
-     *
-     * @param id the id of the cidade to save.
-     * @param cidade the cidade to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated cidade,
-     * or with status {@code 400 (Bad Request)} if the cidade is not valid,
-     * or with status {@code 404 (Not Found)} if the cidade is not found,
-     * or with status {@code 500 (Internal Server Error)} if the cidade couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
-    @PatchMapping(value = "/cidades/{id}", consumes = "application/merge-patch+json")
-    public ResponseEntity<Cidade> partialUpdateCidade(
-        @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody Cidade cidade
-    ) throws URISyntaxException {
-        log.debug("REST request to partial update Cidade partially : {}, {}", id, cidade);
-        if (cidade.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-        if (!Objects.equals(id, cidade.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
-        }
-
-        if (!cidadeRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
-
-        Optional<Cidade> result = cidadeService.partialUpdate(cidade);
-
-        return ResponseUtil.wrapOrNotFound(
-            result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, cidade.getId().toString())
-        );
-    }
-
-    /**
      * {@code GET  /cidades} : get all the cidades.
      *
-     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of cidades in body.
      */
     @GetMapping("/cidades")
-    public ResponseEntity<List<Cidade>> getAllCidades(Pageable pageable) {
-        log.debug("REST request to get a page of Cidades");
-        Page<Cidade> page = cidadeService.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    public List<Cidade> getAllCidades() {
+        log.debug("REST request to get all Cidades");
+        return cidadeRepository.findAll();
     }
 
     /**
@@ -157,7 +99,7 @@ public class CidadeResource {
     @GetMapping("/cidades/{id}")
     public ResponseEntity<Cidade> getCidade(@PathVariable Long id) {
         log.debug("REST request to get Cidade : {}", id);
-        Optional<Cidade> cidade = cidadeService.findOne(id);
+        Optional<Cidade> cidade = cidadeRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(cidade);
     }
 
@@ -170,10 +112,7 @@ public class CidadeResource {
     @DeleteMapping("/cidades/{id}")
     public ResponseEntity<Void> deleteCidade(@PathVariable Long id) {
         log.debug("REST request to delete Cidade : {}", id);
-        cidadeService.delete(id);
-        return ResponseEntity
-            .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
-            .build();
+        cidadeRepository.deleteById(id);
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
 }

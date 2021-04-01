@@ -1,14 +1,17 @@
 package com.swrj.net.escolaonline.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.swrj.net.escolaonline.domain.enumeration.TipoSanguineo;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import com.swrj.net.escolaonline.domain.enumeration.TipoSanguineo;
 
 /**
  * A Aluno.
@@ -55,30 +58,26 @@ public class Aluno implements Serializable {
 
     @OneToMany(mappedBy = "alunoSolicitacao")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "tipoSolicitacaoSolicitacao", "alunoSolicitacao" }, allowSetters = true)
     private Set<Solicitacao> solicitacaos = new HashSet<>();
 
     @OneToMany(mappedBy = "alunoDebito")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "historicoDebitos", "alunoDebito" }, allowSetters = true)
     private Set<Debito> debitos = new HashSet<>();
 
     @OneToMany(mappedBy = "alunoChamada")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "alunoChamada", "turmaChamada", "professorChamada" }, allowSetters = true)
     private Set<Chamada> chamadas = new HashSet<>();
 
     @OneToMany(mappedBy = "alunoMatricula")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "turmaMatricula", "alunoMatricula" }, allowSetters = true)
     private Set<Matricula> matriculas = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "diretors", "professors", "alunos", "cidadePessoa", "escolaPessoa" }, allowSetters = true)
+    @JsonIgnoreProperties(value = "alunos", allowSetters = true)
     private Pessoa pessoaAluno;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "pessoas", "alunos", "unidades", "grades", "tipoSolicitacaos" }, allowSetters = true)
+    @JsonIgnoreProperties(value = "alunos", allowSetters = true)
     private Escola escolaAluno;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -90,13 +89,8 @@ public class Aluno implements Serializable {
         this.id = id;
     }
 
-    public Aluno id(Long id) {
-        this.id = id;
-        return this;
-    }
-
     public LocalDate getDataNascimento() {
-        return this.dataNascimento;
+        return dataNascimento;
     }
 
     public Aluno dataNascimento(LocalDate dataNascimento) {
@@ -109,7 +103,7 @@ public class Aluno implements Serializable {
     }
 
     public TipoSanguineo getTipoSanguineo() {
-        return this.tipoSanguineo;
+        return tipoSanguineo;
     }
 
     public Aluno tipoSanguineo(TipoSanguineo tipoSanguineo) {
@@ -122,7 +116,7 @@ public class Aluno implements Serializable {
     }
 
     public String getNomePai() {
-        return this.nomePai;
+        return nomePai;
     }
 
     public Aluno nomePai(String nomePai) {
@@ -135,7 +129,7 @@ public class Aluno implements Serializable {
     }
 
     public String getTelefonePai() {
-        return this.telefonePai;
+        return telefonePai;
     }
 
     public Aluno telefonePai(String telefonePai) {
@@ -148,7 +142,7 @@ public class Aluno implements Serializable {
     }
 
     public String getNomeMae() {
-        return this.nomeMae;
+        return nomeMae;
     }
 
     public Aluno nomeMae(String nomeMae) {
@@ -161,7 +155,7 @@ public class Aluno implements Serializable {
     }
 
     public String getTelefoneMae() {
-        return this.telefoneMae;
+        return telefoneMae;
     }
 
     public Aluno telefoneMae(String telefoneMae) {
@@ -174,7 +168,7 @@ public class Aluno implements Serializable {
     }
 
     public String getNomeResponsavel() {
-        return this.nomeResponsavel;
+        return nomeResponsavel;
     }
 
     public Aluno nomeResponsavel(String nomeResponsavel) {
@@ -187,7 +181,7 @@ public class Aluno implements Serializable {
     }
 
     public String getCpfResponsavel() {
-        return this.cpfResponsavel;
+        return cpfResponsavel;
     }
 
     public Aluno cpfResponsavel(String cpfResponsavel) {
@@ -200,7 +194,7 @@ public class Aluno implements Serializable {
     }
 
     public String getObservacoes() {
-        return this.observacoes;
+        return observacoes;
     }
 
     public Aluno observacoes(String observacoes) {
@@ -213,11 +207,11 @@ public class Aluno implements Serializable {
     }
 
     public Set<Solicitacao> getSolicitacaos() {
-        return this.solicitacaos;
+        return solicitacaos;
     }
 
     public Aluno solicitacaos(Set<Solicitacao> solicitacaos) {
-        this.setSolicitacaos(solicitacaos);
+        this.solicitacaos = solicitacaos;
         return this;
     }
 
@@ -234,21 +228,15 @@ public class Aluno implements Serializable {
     }
 
     public void setSolicitacaos(Set<Solicitacao> solicitacaos) {
-        if (this.solicitacaos != null) {
-            this.solicitacaos.forEach(i -> i.setAlunoSolicitacao(null));
-        }
-        if (solicitacaos != null) {
-            solicitacaos.forEach(i -> i.setAlunoSolicitacao(this));
-        }
         this.solicitacaos = solicitacaos;
     }
 
     public Set<Debito> getDebitos() {
-        return this.debitos;
+        return debitos;
     }
 
     public Aluno debitos(Set<Debito> debitos) {
-        this.setDebitos(debitos);
+        this.debitos = debitos;
         return this;
     }
 
@@ -265,21 +253,15 @@ public class Aluno implements Serializable {
     }
 
     public void setDebitos(Set<Debito> debitos) {
-        if (this.debitos != null) {
-            this.debitos.forEach(i -> i.setAlunoDebito(null));
-        }
-        if (debitos != null) {
-            debitos.forEach(i -> i.setAlunoDebito(this));
-        }
         this.debitos = debitos;
     }
 
     public Set<Chamada> getChamadas() {
-        return this.chamadas;
+        return chamadas;
     }
 
     public Aluno chamadas(Set<Chamada> chamadas) {
-        this.setChamadas(chamadas);
+        this.chamadas = chamadas;
         return this;
     }
 
@@ -296,21 +278,15 @@ public class Aluno implements Serializable {
     }
 
     public void setChamadas(Set<Chamada> chamadas) {
-        if (this.chamadas != null) {
-            this.chamadas.forEach(i -> i.setAlunoChamada(null));
-        }
-        if (chamadas != null) {
-            chamadas.forEach(i -> i.setAlunoChamada(this));
-        }
         this.chamadas = chamadas;
     }
 
     public Set<Matricula> getMatriculas() {
-        return this.matriculas;
+        return matriculas;
     }
 
     public Aluno matriculas(Set<Matricula> matriculas) {
-        this.setMatriculas(matriculas);
+        this.matriculas = matriculas;
         return this;
     }
 
@@ -327,21 +303,15 @@ public class Aluno implements Serializable {
     }
 
     public void setMatriculas(Set<Matricula> matriculas) {
-        if (this.matriculas != null) {
-            this.matriculas.forEach(i -> i.setAlunoMatricula(null));
-        }
-        if (matriculas != null) {
-            matriculas.forEach(i -> i.setAlunoMatricula(this));
-        }
         this.matriculas = matriculas;
     }
 
     public Pessoa getPessoaAluno() {
-        return this.pessoaAluno;
+        return pessoaAluno;
     }
 
     public Aluno pessoaAluno(Pessoa pessoa) {
-        this.setPessoaAluno(pessoa);
+        this.pessoaAluno = pessoa;
         return this;
     }
 
@@ -350,18 +320,17 @@ public class Aluno implements Serializable {
     }
 
     public Escola getEscolaAluno() {
-        return this.escolaAluno;
+        return escolaAluno;
     }
 
     public Aluno escolaAluno(Escola escola) {
-        this.setEscolaAluno(escola);
+        this.escolaAluno = escola;
         return this;
     }
 
     public void setEscolaAluno(Escola escola) {
         this.escolaAluno = escola;
     }
-
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -377,8 +346,7 @@ public class Aluno implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
-        return getClass().hashCode();
+        return 31;
     }
 
     // prettier-ignore

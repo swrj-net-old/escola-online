@@ -2,32 +2,28 @@ package com.swrj.net.escolaonline.web.rest;
 
 import com.swrj.net.escolaonline.domain.Serie;
 import com.swrj.net.escolaonline.repository.SerieRepository;
-import com.swrj.net.escolaonline.service.SerieService;
 import com.swrj.net.escolaonline.web.rest.errors.BadRequestAlertException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+
+import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import tech.jhipster.web.util.HeaderUtil;
-import tech.jhipster.web.util.PaginationUtil;
-import tech.jhipster.web.util.ResponseUtil;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * REST controller for managing {@link com.swrj.net.escolaonline.domain.Serie}.
  */
 @RestController
 @RequestMapping("/api")
+@Transactional
 public class SerieResource {
 
     private final Logger log = LoggerFactory.getLogger(SerieResource.class);
@@ -37,12 +33,9 @@ public class SerieResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final SerieService serieService;
-
     private final SerieRepository serieRepository;
 
-    public SerieResource(SerieService serieService, SerieRepository serieRepository) {
-        this.serieService = serieService;
+    public SerieResource(SerieRepository serieRepository) {
         this.serieRepository = serieRepository;
     }
 
@@ -59,91 +52,42 @@ public class SerieResource {
         if (serie.getId() != null) {
             throw new BadRequestAlertException("A new serie cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Serie result = serieService.save(serie);
-        return ResponseEntity
-            .created(new URI("/api/series/" + result.getId()))
+        Serie result = serieRepository.save(serie);
+        return ResponseEntity.created(new URI("/api/series/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /series/:id} : Updates an existing serie.
+     * {@code PUT  /series} : Updates an existing serie.
      *
-     * @param id the id of the serie to save.
      * @param serie the serie to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated serie,
      * or with status {@code 400 (Bad Request)} if the serie is not valid,
      * or with status {@code 500 (Internal Server Error)} if the serie couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/series/{id}")
-    public ResponseEntity<Serie> updateSerie(@PathVariable(value = "id", required = false) final Long id, @RequestBody Serie serie)
-        throws URISyntaxException {
-        log.debug("REST request to update Serie : {}, {}", id, serie);
+    @PutMapping("/series")
+    public ResponseEntity<Serie> updateSerie(@RequestBody Serie serie) throws URISyntaxException {
+        log.debug("REST request to update Serie : {}", serie);
         if (serie.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, serie.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
-        }
-
-        if (!serieRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
-
-        Serie result = serieService.save(serie);
-        return ResponseEntity
-            .ok()
+        Serie result = serieRepository.save(serie);
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, serie.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PATCH  /series/:id} : Partial updates given fields of an existing serie, field will ignore if it is null
-     *
-     * @param id the id of the serie to save.
-     * @param serie the serie to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated serie,
-     * or with status {@code 400 (Bad Request)} if the serie is not valid,
-     * or with status {@code 404 (Not Found)} if the serie is not found,
-     * or with status {@code 500 (Internal Server Error)} if the serie couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
-    @PatchMapping(value = "/series/{id}", consumes = "application/merge-patch+json")
-    public ResponseEntity<Serie> partialUpdateSerie(@PathVariable(value = "id", required = false) final Long id, @RequestBody Serie serie)
-        throws URISyntaxException {
-        log.debug("REST request to partial update Serie partially : {}, {}", id, serie);
-        if (serie.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-        if (!Objects.equals(id, serie.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
-        }
-
-        if (!serieRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
-
-        Optional<Serie> result = serieService.partialUpdate(serie);
-
-        return ResponseUtil.wrapOrNotFound(
-            result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, serie.getId().toString())
-        );
-    }
-
-    /**
      * {@code GET  /series} : get all the series.
      *
-     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of series in body.
      */
     @GetMapping("/series")
-    public ResponseEntity<List<Serie>> getAllSeries(Pageable pageable) {
-        log.debug("REST request to get a page of Series");
-        Page<Serie> page = serieService.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    public List<Serie> getAllSeries() {
+        log.debug("REST request to get all Series");
+        return serieRepository.findAll();
     }
 
     /**
@@ -155,7 +99,7 @@ public class SerieResource {
     @GetMapping("/series/{id}")
     public ResponseEntity<Serie> getSerie(@PathVariable Long id) {
         log.debug("REST request to get Serie : {}", id);
-        Optional<Serie> serie = serieService.findOne(id);
+        Optional<Serie> serie = serieRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(serie);
     }
 
@@ -168,10 +112,7 @@ public class SerieResource {
     @DeleteMapping("/series/{id}")
     public ResponseEntity<Void> deleteSerie(@PathVariable Long id) {
         log.debug("REST request to delete Serie : {}", id);
-        serieService.delete(id);
-        return ResponseEntity
-            .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
-            .build();
+        serieRepository.deleteById(id);
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
 }

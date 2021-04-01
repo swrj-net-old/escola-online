@@ -1,12 +1,13 @@
 package com.swrj.net.escolaonline.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Serie.
@@ -28,12 +29,10 @@ public class Serie implements Serializable {
 
     @OneToMany(mappedBy = "serieGrade")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "serieGrade", "materiaGrade", "escolaGrade" }, allowSetters = true)
     private Set<Grade> grades = new HashSet<>();
 
     @OneToMany(mappedBy = "serieTurma")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "chamadas", "conteudos", "matriculas", "serieTurma", "unidadeTurma" }, allowSetters = true)
     private Set<Turma> turmas = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -45,13 +44,8 @@ public class Serie implements Serializable {
         this.id = id;
     }
 
-    public Serie id(Long id) {
-        this.id = id;
-        return this;
-    }
-
     public String getNome() {
-        return this.nome;
+        return nome;
     }
 
     public Serie nome(String nome) {
@@ -64,11 +58,11 @@ public class Serie implements Serializable {
     }
 
     public Set<Grade> getGrades() {
-        return this.grades;
+        return grades;
     }
 
     public Serie grades(Set<Grade> grades) {
-        this.setGrades(grades);
+        this.grades = grades;
         return this;
     }
 
@@ -85,21 +79,15 @@ public class Serie implements Serializable {
     }
 
     public void setGrades(Set<Grade> grades) {
-        if (this.grades != null) {
-            this.grades.forEach(i -> i.setSerieGrade(null));
-        }
-        if (grades != null) {
-            grades.forEach(i -> i.setSerieGrade(this));
-        }
         this.grades = grades;
     }
 
     public Set<Turma> getTurmas() {
-        return this.turmas;
+        return turmas;
     }
 
     public Serie turmas(Set<Turma> turmas) {
-        this.setTurmas(turmas);
+        this.turmas = turmas;
         return this;
     }
 
@@ -116,15 +104,8 @@ public class Serie implements Serializable {
     }
 
     public void setTurmas(Set<Turma> turmas) {
-        if (this.turmas != null) {
-            this.turmas.forEach(i -> i.setSerieTurma(null));
-        }
-        if (turmas != null) {
-            turmas.forEach(i -> i.setSerieTurma(this));
-        }
         this.turmas = turmas;
     }
-
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -140,8 +121,7 @@ public class Serie implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
-        return getClass().hashCode();
+        return 31;
     }
 
     // prettier-ignore

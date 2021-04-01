@@ -19,23 +19,26 @@
       "relationshipType": "many-to-one",
       "otherEntityName": "turma",
       "otherEntityRelationshipName": "matricula",
-      "relationshipName": "turmaMatricula"
+      "relationshipName": "turmaMatricula",
+      "otherEntityField": "id"
     },
     {
       "relationshipType": "many-to-one",
       "otherEntityName": "aluno",
       "otherEntityRelationshipName": "matricula",
-      "relationshipName": "alunoMatricula"
+      "relationshipName": "alunoMatricula",
+      "otherEntityField": "id"
     }
   ],
+  "changelogDate": "20210329174228",
   "entityTableName": "matricula",
   "dto": "no",
-  "pagination": "pagination",
-  "service": "serviceClass",
+  "pagination": "no",
+  "service": "no",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "applications": "*",
-  "changelogDate": "20210331173554"
+  "clientRootFolder": "",
+  "applications": "*"
 }

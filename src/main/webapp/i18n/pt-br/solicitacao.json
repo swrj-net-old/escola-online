@@ -3,7 +3,6 @@
     "solicitacao": {
       "home": {
         "title": "Solicitacaos",
-        "refreshListLabel": "Atualizar lista",
         "createLabel": "Criar novo Solicitacao",
         "createOrEditLabel": "Criar ou editar Solicitacao",
         "notFound": "Nenhum Solicitacao encontrado"
@@ -17,7 +16,6 @@
       "detail": {
         "title": "Solicitacao"
       },
-      "id": "ID",
       "situacaoSolicitacao": "Situacao Solicitacao",
       "dataSolicitacao": "Data Solicitacao",
       "observacoesSolicitante": "Observacoes Solicitante",
