@@ -1,6 +1,8 @@
 import { IPessoa } from 'app/shared/model/pessoa.model';
 import { IAluno } from 'app/shared/model/aluno.model';
 import { IUnidade } from 'app/shared/model/unidade.model';
+import { IGrade } from 'app/shared/model/grade.model';
+import { ITipoSolicitacao } from 'app/shared/model/tipo-solicitacao.model';
 
 export interface IEscola {
   id?: number;
@@ -16,6 +18,8 @@ export interface IEscola {
   pessoas?: IPessoa[];
   alunos?: IAluno[];
   unidades?: IUnidade[];
+  grades?: IGrade[];
+  tipoSolicitacaos?: ITipoSolicitacao[];
 }
 
 export class Escola implements IEscola {
@@ -32,6 +36,8 @@ export class Escola implements IEscola {
     public responsavelCelular?: string,
     public pessoas?: IPessoa[],
     public alunos?: IAluno[],
-    public unidades?: IUnidade[]
+    public unidades?: IUnidade[],
+    public grades?: IGrade[],
+    public tipoSolicitacaos?: ITipoSolicitacao[]
   ) {}
 }

@@ -1,9 +1,17 @@
 package com.swrj.net.escolaonline.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.swrj.net.escolaonline.EscolaOnlineApp;
 import com.swrj.net.escolaonline.domain.TipoSolicitacao;
 import com.swrj.net.escolaonline.repository.TipoSolicitacaoRepository;
-
+import com.swrj.net.escolaonline.service.TipoSolicitacaoService;
+import java.math.BigDecimal;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +21,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.math.BigDecimal;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link TipoSolicitacaoResource} REST controller.
@@ -29,7 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 public class TipoSolicitacaoResourceIT {
-
     private static final String DEFAULT_NOME = "AAAAAAAAAA";
     private static final String UPDATED_NOME = "BBBBBBBBBB";
 
@@ -41,6 +40,9 @@ public class TipoSolicitacaoResourceIT {
 
     @Autowired
     private TipoSolicitacaoRepository tipoSolicitacaoRepository;
+
+    @Autowired
+    private TipoSolicitacaoService tipoSolicitacaoService;
 
     @Autowired
     private EntityManager em;
@@ -63,6 +65,7 @@ public class TipoSolicitacaoResourceIT {
             .valorEmissao(DEFAULT_VALOR_EMISSAO);
         return tipoSolicitacao;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -87,9 +90,12 @@ public class TipoSolicitacaoResourceIT {
     public void createTipoSolicitacao() throws Exception {
         int databaseSizeBeforeCreate = tipoSolicitacaoRepository.findAll().size();
         // Create the TipoSolicitacao
-        restTipoSolicitacaoMockMvc.perform(post("/api/tipo-solicitacaos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(tipoSolicitacao)))
+        restTipoSolicitacaoMockMvc
+            .perform(
+                post("/api/tipo-solicitacaos")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(tipoSolicitacao))
+            )
             .andExpect(status().isCreated());
 
         // Validate the TipoSolicitacao in the database
@@ -110,16 +116,18 @@ public class TipoSolicitacaoResourceIT {
         tipoSolicitacao.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restTipoSolicitacaoMockMvc.perform(post("/api/tipo-solicitacaos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(tipoSolicitacao)))
+        restTipoSolicitacaoMockMvc
+            .perform(
+                post("/api/tipo-solicitacaos")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(tipoSolicitacao))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the TipoSolicitacao in the database
         List<TipoSolicitacao> tipoSolicitacaoList = tipoSolicitacaoRepository.findAll();
         assertThat(tipoSolicitacaoList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -128,7 +136,8 @@ public class TipoSolicitacaoResourceIT {
         tipoSolicitacaoRepository.saveAndFlush(tipoSolicitacao);
 
         // Get all the tipoSolicitacaoList
-        restTipoSolicitacaoMockMvc.perform(get("/api/tipo-solicitacaos?sort=id,desc"))
+        restTipoSolicitacaoMockMvc
+            .perform(get("/api/tipo-solicitacaos?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(tipoSolicitacao.getId().intValue())))
@@ -136,7 +145,7 @@ public class TipoSolicitacaoResourceIT {
             .andExpect(jsonPath("$.[*].prazoAtendimento").value(hasItem(DEFAULT_PRAZO_ATENDIMENTO)))
             .andExpect(jsonPath("$.[*].valorEmissao").value(hasItem(DEFAULT_VALOR_EMISSAO.intValue())));
     }
-    
+
     @Test
     @Transactional
     public void getTipoSolicitacao() throws Exception {
@@ -144,7 +153,8 @@ public class TipoSolicitacaoResourceIT {
         tipoSolicitacaoRepository.saveAndFlush(tipoSolicitacao);
 
         // Get the tipoSolicitacao
-        restTipoSolicitacaoMockMvc.perform(get("/api/tipo-solicitacaos/{id}", tipoSolicitacao.getId()))
+        restTipoSolicitacaoMockMvc
+            .perform(get("/api/tipo-solicitacaos/{id}", tipoSolicitacao.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(tipoSolicitacao.getId().intValue()))
@@ -152,19 +162,19 @@ public class TipoSolicitacaoResourceIT {
             .andExpect(jsonPath("$.prazoAtendimento").value(DEFAULT_PRAZO_ATENDIMENTO))
             .andExpect(jsonPath("$.valorEmissao").value(DEFAULT_VALOR_EMISSAO.intValue()));
     }
+
     @Test
     @Transactional
     public void getNonExistingTipoSolicitacao() throws Exception {
         // Get the tipoSolicitacao
-        restTipoSolicitacaoMockMvc.perform(get("/api/tipo-solicitacaos/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restTipoSolicitacaoMockMvc.perform(get("/api/tipo-solicitacaos/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     public void updateTipoSolicitacao() throws Exception {
         // Initialize the database
-        tipoSolicitacaoRepository.saveAndFlush(tipoSolicitacao);
+        tipoSolicitacaoService.save(tipoSolicitacao);
 
         int databaseSizeBeforeUpdate = tipoSolicitacaoRepository.findAll().size();
 
@@ -172,14 +182,14 @@ public class TipoSolicitacaoResourceIT {
         TipoSolicitacao updatedTipoSolicitacao = tipoSolicitacaoRepository.findById(tipoSolicitacao.getId()).get();
         // Disconnect from session so that the updates on updatedTipoSolicitacao are not directly saved in db
         em.detach(updatedTipoSolicitacao);
-        updatedTipoSolicitacao
-            .nome(UPDATED_NOME)
-            .prazoAtendimento(UPDATED_PRAZO_ATENDIMENTO)
-            .valorEmissao(UPDATED_VALOR_EMISSAO);
+        updatedTipoSolicitacao.nome(UPDATED_NOME).prazoAtendimento(UPDATED_PRAZO_ATENDIMENTO).valorEmissao(UPDATED_VALOR_EMISSAO);
 
-        restTipoSolicitacaoMockMvc.perform(put("/api/tipo-solicitacaos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedTipoSolicitacao)))
+        restTipoSolicitacaoMockMvc
+            .perform(
+                put("/api/tipo-solicitacaos")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedTipoSolicitacao))
+            )
             .andExpect(status().isOk());
 
         // Validate the TipoSolicitacao in the database
@@ -197,9 +207,12 @@ public class TipoSolicitacaoResourceIT {
         int databaseSizeBeforeUpdate = tipoSolicitacaoRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restTipoSolicitacaoMockMvc.perform(put("/api/tipo-solicitacaos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(tipoSolicitacao)))
+        restTipoSolicitacaoMockMvc
+            .perform(
+                put("/api/tipo-solicitacaos")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(tipoSolicitacao))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the TipoSolicitacao in the database
@@ -211,13 +224,13 @@ public class TipoSolicitacaoResourceIT {
     @Transactional
     public void deleteTipoSolicitacao() throws Exception {
         // Initialize the database
-        tipoSolicitacaoRepository.saveAndFlush(tipoSolicitacao);
+        tipoSolicitacaoService.save(tipoSolicitacao);
 
         int databaseSizeBeforeDelete = tipoSolicitacaoRepository.findAll().size();
 
         // Delete the tipoSolicitacao
-        restTipoSolicitacaoMockMvc.perform(delete("/api/tipo-solicitacaos/{id}", tipoSolicitacao.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restTipoSolicitacaoMockMvc
+            .perform(delete("/api/tipo-solicitacaos/{id}", tipoSolicitacao.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

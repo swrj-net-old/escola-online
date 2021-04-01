@@ -21,21 +21,21 @@
     <div class="table-responsive" id="entities" *ngIf="unidades && unidades.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
-                <tr>
-                    <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.unidade.nome">Nome</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.unidade.cnpj">Cnpj</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.unidade.endereco">Endereco</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.unidade.complemento">Complemento</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.unidade.bairro">Bairro</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.unidade.cidade">Cidade</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.unidade.cep">Cep</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.unidade.telefoneComercial">Telefone Comercial</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.unidade.telefoneWhatsapp">Telefone Whatsapp</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.unidade.email">Email</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.unidade.facebook">Facebook</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.unidade.observacoes">Observacoes</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.unidade.escolaUnidade">Escola Unidade</span></th>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+                    <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="nome"><span jhiTranslate="escolaOnlineApp.unidade.nome">Nome</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="cnpj"><span jhiTranslate="escolaOnlineApp.unidade.cnpj">Cnpj</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="endereco"><span jhiTranslate="escolaOnlineApp.unidade.endereco">Endereco</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="complemento"><span jhiTranslate="escolaOnlineApp.unidade.complemento">Complemento</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="bairro"><span jhiTranslate="escolaOnlineApp.unidade.bairro">Bairro</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="cidade"><span jhiTranslate="escolaOnlineApp.unidade.cidade">Cidade</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="cep"><span jhiTranslate="escolaOnlineApp.unidade.cep">Cep</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="telefoneComercial"><span jhiTranslate="escolaOnlineApp.unidade.telefoneComercial">Telefone Comercial</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="telefoneWhatsapp"><span jhiTranslate="escolaOnlineApp.unidade.telefoneWhatsapp">Telefone Whatsapp</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="email"><span jhiTranslate="escolaOnlineApp.unidade.email">Email</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="facebook"><span jhiTranslate="escolaOnlineApp.unidade.facebook">Facebook</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="observacoes"><span jhiTranslate="escolaOnlineApp.unidade.observacoes">Observacoes</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="escolaUnidade.id"><span jhiTranslate="escolaOnlineApp.unidade.escolaUnidade">Escola Unidade</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -85,5 +85,15 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <div *ngIf="unidades && unidades.length > 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
     </div>
 </div>

@@ -24,6 +24,9 @@
             <column name="valor_emissao" type="decimal(21,2)">
                 <constraints nullable="true" />
             </column>
+            <column name="escola_tipo_solicitacao_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
     </changeSet>

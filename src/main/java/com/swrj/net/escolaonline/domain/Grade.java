@@ -1,12 +1,10 @@
 package com.swrj.net.escolaonline.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
-import java.io.Serializable;
 
 /**
  * A Grade.
@@ -15,7 +13,6 @@ import java.io.Serializable;
 @Table(name = "grade")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Grade implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -33,6 +30,10 @@ public class Grade implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties(value = "grades", allowSetters = true)
     private Materia materiaGrade;
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = "grades", allowSetters = true)
+    private Escola escolaGrade;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -81,6 +82,20 @@ public class Grade implements Serializable {
     public void setMateriaGrade(Materia materia) {
         this.materiaGrade = materia;
     }
+
+    public Escola getEscolaGrade() {
+        return escolaGrade;
+    }
+
+    public Grade escolaGrade(Escola escola) {
+        this.escolaGrade = escola;
+        return this;
+    }
+
+    public void setEscolaGrade(Escola escola) {
+        this.escolaGrade = escola;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override

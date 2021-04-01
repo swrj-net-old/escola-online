@@ -1,10 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
-import { Subscription } from 'rxjs';
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
+import { ActivatedRoute, ParamMap, Router, Data } from '@angular/router';
+import { Subscription, combineLatest } from 'rxjs';
 import { JhiEventManager } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { IChamada } from 'app/shared/model/chamada.model';
+
+import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 import { ChamadaService } from './chamada.service';
 import { ChamadaDeleteDialogComponent } from './chamada-delete-dialog.component';
 
@@ -15,16 +18,54 @@ import { ChamadaDeleteDialogComponent } from './chamada-delete-dialog.component'
 export class ChamadaComponent implements OnInit, OnDestroy {
   chamadas?: IChamada[];
   eventSubscriber?: Subscription;
+  totalItems = 0;
+  itemsPerPage = ITEMS_PER_PAGE;
+  page!: number;
+  predicate!: string;
+  ascending!: boolean;
+  ngbPaginationPage = 1;
 
-  constructor(protected chamadaService: ChamadaService, protected eventManager: JhiEventManager, protected modalService: NgbModal) {}
+  constructor(
+    protected chamadaService: ChamadaService,
+    protected activatedRoute: ActivatedRoute,
+    protected router: Router,
+    protected eventManager: JhiEventManager,
+    protected modalService: NgbModal
+  ) {}
 
-  loadAll(): void {
-    this.chamadaService.query().subscribe((res: HttpResponse<IChamada[]>) => (this.chamadas = res.body || []));
+  loadPage(page?: number, dontNavigate?: boolean): void {
+    const pageToLoad: number = page || this.page || 1;
+
+    this.chamadaService
+      .query({
+        page: pageToLoad - 1,
+        size: this.itemsPerPage,
+        sort: this.sort(),
+      })
+      .subscribe(
+        (res: HttpResponse<IChamada[]>) => this.onSuccess(res.body, res.headers, pageToLoad, !dontNavigate),
+        () => this.onError()
+      );
   }
 
   ngOnInit(): void {
-    this.loadAll();
+    this.handleNavigation();
     this.registerChangeInChamadas();
+  }
+
+  protected handleNavigation(): void {
+    combineLatest(this.activatedRoute.data, this.activatedRoute.queryParamMap, (data: Data, params: ParamMap) => {
+      const page = params.get('page');
+      const pageNumber = page !== null ? +page : 1;
+      const sort = (params.get('sort') ?? data['defaultSort']).split(',');
+      const predicate = sort[0];
+      const ascending = sort[1] === 'asc';
+      if (pageNumber !== this.page || predicate !== this.predicate || ascending !== this.ascending) {
+        this.predicate = predicate;
+        this.ascending = ascending;
+        this.loadPage(pageNumber, true);
+      }
+    }).subscribe();
   }
 
   ngOnDestroy(): void {
@@ -39,11 +80,39 @@ export class ChamadaComponent implements OnInit, OnDestroy {
   }
 
   registerChangeInChamadas(): void {
-    this.eventSubscriber = this.eventManager.subscribe('chamadaListModification', () => this.loadAll());
+    this.eventSubscriber = this.eventManager.subscribe('chamadaListModification', () => this.loadPage());
   }
 
   delete(chamada: IChamada): void {
     const modalRef = this.modalService.open(ChamadaDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.chamada = chamada;
+  }
+
+  sort(): string[] {
+    const result = [this.predicate + ',' + (this.ascending ? 'asc' : 'desc')];
+    if (this.predicate !== 'id') {
+      result.push('id');
+    }
+    return result;
+  }
+
+  protected onSuccess(data: IChamada[] | null, headers: HttpHeaders, page: number, navigate: boolean): void {
+    this.totalItems = Number(headers.get('X-Total-Count'));
+    this.page = page;
+    if (navigate) {
+      this.router.navigate(['/chamada'], {
+        queryParams: {
+          page: this.page,
+          size: this.itemsPerPage,
+          sort: this.predicate + ',' + (this.ascending ? 'asc' : 'desc'),
+        },
+      });
+    }
+    this.chamadas = data || [];
+    this.ngbPaginationPage = this.page;
+  }
+
+  protected onError(): void {
+    this.ngbPaginationPage = this.page ?? 1;
   }
 }

@@ -1,31 +1,32 @@
 package com.swrj.net.escolaonline.web.rest;
 
 import com.swrj.net.escolaonline.domain.Pessoa;
-import com.swrj.net.escolaonline.repository.PessoaRepository;
+import com.swrj.net.escolaonline.service.PessoaService;
 import com.swrj.net.escolaonline.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * REST controller for managing {@link com.swrj.net.escolaonline.domain.Pessoa}.
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class PessoaResource {
-
     private final Logger log = LoggerFactory.getLogger(PessoaResource.class);
 
     private static final String ENTITY_NAME = "pessoa";
@@ -33,10 +34,10 @@ public class PessoaResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final PessoaRepository pessoaRepository;
+    private final PessoaService pessoaService;
 
-    public PessoaResource(PessoaRepository pessoaRepository) {
-        this.pessoaRepository = pessoaRepository;
+    public PessoaResource(PessoaService pessoaService) {
+        this.pessoaService = pessoaService;
     }
 
     /**
@@ -52,8 +53,9 @@ public class PessoaResource {
         if (pessoa.getId() != null) {
             throw new BadRequestAlertException("A new pessoa cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Pessoa result = pessoaRepository.save(pessoa);
-        return ResponseEntity.created(new URI("/api/pessoas/" + result.getId()))
+        Pessoa result = pessoaService.save(pessoa);
+        return ResponseEntity
+            .created(new URI("/api/pessoas/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -73,8 +75,9 @@ public class PessoaResource {
         if (pessoa.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Pessoa result = pessoaRepository.save(pessoa);
-        return ResponseEntity.ok()
+        Pessoa result = pessoaService.save(pessoa);
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, pessoa.getId().toString()))
             .body(result);
     }
@@ -82,12 +85,15 @@ public class PessoaResource {
     /**
      * {@code GET  /pessoas} : get all the pessoas.
      *
+     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of pessoas in body.
      */
     @GetMapping("/pessoas")
-    public List<Pessoa> getAllPessoas() {
-        log.debug("REST request to get all Pessoas");
-        return pessoaRepository.findAll();
+    public ResponseEntity<List<Pessoa>> getAllPessoas(Pageable pageable) {
+        log.debug("REST request to get a page of Pessoas");
+        Page<Pessoa> page = pessoaService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -99,7 +105,7 @@ public class PessoaResource {
     @GetMapping("/pessoas/{id}")
     public ResponseEntity<Pessoa> getPessoa(@PathVariable Long id) {
         log.debug("REST request to get Pessoa : {}", id);
-        Optional<Pessoa> pessoa = pessoaRepository.findById(id);
+        Optional<Pessoa> pessoa = pessoaService.findOne(id);
         return ResponseUtil.wrapOrNotFound(pessoa);
     }
 
@@ -112,7 +118,10 @@ public class PessoaResource {
     @DeleteMapping("/pessoas/{id}")
     public ResponseEntity<Void> deletePessoa(@PathVariable Long id) {
         log.debug("REST request to delete Pessoa : {}", id);
-        pessoaRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        pessoaService.delete(id);
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

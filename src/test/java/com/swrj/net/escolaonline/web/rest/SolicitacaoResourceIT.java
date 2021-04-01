@@ -1,9 +1,19 @@
 package com.swrj.net.escolaonline.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.swrj.net.escolaonline.EscolaOnlineApp;
 import com.swrj.net.escolaonline.domain.Solicitacao;
+import com.swrj.net.escolaonline.domain.enumeration.SituacaoSolicitacao;
 import com.swrj.net.escolaonline.repository.SolicitacaoRepository;
-
+import com.swrj.net.escolaonline.service.SolicitacaoService;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,17 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import com.swrj.net.escolaonline.domain.enumeration.SituacaoSolicitacao;
 /**
  * Integration tests for the {@link SolicitacaoResource} REST controller.
  */
@@ -31,7 +31,6 @@ import com.swrj.net.escolaonline.domain.enumeration.SituacaoSolicitacao;
 @AutoConfigureMockMvc
 @WithMockUser
 public class SolicitacaoResourceIT {
-
     private static final SituacaoSolicitacao DEFAULT_SITUACAO_SOLICITACAO = SituacaoSolicitacao.AGUARDANDO;
     private static final SituacaoSolicitacao UPDATED_SITUACAO_SOLICITACAO = SituacaoSolicitacao.EM_ANDAMENTO;
 
@@ -46,6 +45,9 @@ public class SolicitacaoResourceIT {
 
     @Autowired
     private SolicitacaoRepository solicitacaoRepository;
+
+    @Autowired
+    private SolicitacaoService solicitacaoService;
 
     @Autowired
     private EntityManager em;
@@ -69,6 +71,7 @@ public class SolicitacaoResourceIT {
             .observacoesAtendimento(DEFAULT_OBSERVACOES_ATENDIMENTO);
         return solicitacao;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -94,9 +97,10 @@ public class SolicitacaoResourceIT {
     public void createSolicitacao() throws Exception {
         int databaseSizeBeforeCreate = solicitacaoRepository.findAll().size();
         // Create the Solicitacao
-        restSolicitacaoMockMvc.perform(post("/api/solicitacaos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(solicitacao)))
+        restSolicitacaoMockMvc
+            .perform(
+                post("/api/solicitacaos").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(solicitacao))
+            )
             .andExpect(status().isCreated());
 
         // Validate the Solicitacao in the database
@@ -118,16 +122,16 @@ public class SolicitacaoResourceIT {
         solicitacao.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restSolicitacaoMockMvc.perform(post("/api/solicitacaos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(solicitacao)))
+        restSolicitacaoMockMvc
+            .perform(
+                post("/api/solicitacaos").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(solicitacao))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Solicitacao in the database
         List<Solicitacao> solicitacaoList = solicitacaoRepository.findAll();
         assertThat(solicitacaoList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -136,7 +140,8 @@ public class SolicitacaoResourceIT {
         solicitacaoRepository.saveAndFlush(solicitacao);
 
         // Get all the solicitacaoList
-        restSolicitacaoMockMvc.perform(get("/api/solicitacaos?sort=id,desc"))
+        restSolicitacaoMockMvc
+            .perform(get("/api/solicitacaos?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(solicitacao.getId().intValue())))
@@ -145,7 +150,7 @@ public class SolicitacaoResourceIT {
             .andExpect(jsonPath("$.[*].observacoesSolicitante").value(hasItem(DEFAULT_OBSERVACOES_SOLICITANTE)))
             .andExpect(jsonPath("$.[*].observacoesAtendimento").value(hasItem(DEFAULT_OBSERVACOES_ATENDIMENTO)));
     }
-    
+
     @Test
     @Transactional
     public void getSolicitacao() throws Exception {
@@ -153,7 +158,8 @@ public class SolicitacaoResourceIT {
         solicitacaoRepository.saveAndFlush(solicitacao);
 
         // Get the solicitacao
-        restSolicitacaoMockMvc.perform(get("/api/solicitacaos/{id}", solicitacao.getId()))
+        restSolicitacaoMockMvc
+            .perform(get("/api/solicitacaos/{id}", solicitacao.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(solicitacao.getId().intValue()))
@@ -162,19 +168,19 @@ public class SolicitacaoResourceIT {
             .andExpect(jsonPath("$.observacoesSolicitante").value(DEFAULT_OBSERVACOES_SOLICITANTE))
             .andExpect(jsonPath("$.observacoesAtendimento").value(DEFAULT_OBSERVACOES_ATENDIMENTO));
     }
+
     @Test
     @Transactional
     public void getNonExistingSolicitacao() throws Exception {
         // Get the solicitacao
-        restSolicitacaoMockMvc.perform(get("/api/solicitacaos/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restSolicitacaoMockMvc.perform(get("/api/solicitacaos/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     public void updateSolicitacao() throws Exception {
         // Initialize the database
-        solicitacaoRepository.saveAndFlush(solicitacao);
+        solicitacaoService.save(solicitacao);
 
         int databaseSizeBeforeUpdate = solicitacaoRepository.findAll().size();
 
@@ -188,9 +194,12 @@ public class SolicitacaoResourceIT {
             .observacoesSolicitante(UPDATED_OBSERVACOES_SOLICITANTE)
             .observacoesAtendimento(UPDATED_OBSERVACOES_ATENDIMENTO);
 
-        restSolicitacaoMockMvc.perform(put("/api/solicitacaos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedSolicitacao)))
+        restSolicitacaoMockMvc
+            .perform(
+                put("/api/solicitacaos")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedSolicitacao))
+            )
             .andExpect(status().isOk());
 
         // Validate the Solicitacao in the database
@@ -209,9 +218,10 @@ public class SolicitacaoResourceIT {
         int databaseSizeBeforeUpdate = solicitacaoRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restSolicitacaoMockMvc.perform(put("/api/solicitacaos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(solicitacao)))
+        restSolicitacaoMockMvc
+            .perform(
+                put("/api/solicitacaos").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(solicitacao))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Solicitacao in the database
@@ -223,13 +233,13 @@ public class SolicitacaoResourceIT {
     @Transactional
     public void deleteSolicitacao() throws Exception {
         // Initialize the database
-        solicitacaoRepository.saveAndFlush(solicitacao);
+        solicitacaoService.save(solicitacao);
 
         int databaseSizeBeforeDelete = solicitacaoRepository.findAll().size();
 
         // Delete the solicitacao
-        restSolicitacaoMockMvc.perform(delete("/api/solicitacaos/{id}", solicitacao.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restSolicitacaoMockMvc
+            .perform(delete("/api/solicitacaos/{id}", solicitacao.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

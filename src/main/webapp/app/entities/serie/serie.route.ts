@@ -39,7 +39,8 @@ export const serieRoute: Routes = [
     path: '',
     component: SerieComponent,
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [Authority.USER],
+      defaultSort: 'id,asc',
       pageTitle: 'escolaOnlineApp.serie.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -51,7 +52,7 @@ export const serieRoute: Routes = [
       serie: SerieResolve,
     },
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [Authority.USER],
       pageTitle: 'escolaOnlineApp.serie.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -63,7 +64,7 @@ export const serieRoute: Routes = [
       serie: SerieResolve,
     },
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [Authority.USER],
       pageTitle: 'escolaOnlineApp.serie.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -75,7 +76,7 @@ export const serieRoute: Routes = [
       serie: SerieResolve,
     },
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [Authority.USER],
       pageTitle: 'escolaOnlineApp.serie.home.title',
     },
     canActivate: [UserRouteAccessService],

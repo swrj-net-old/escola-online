@@ -1,14 +1,13 @@
 package com.swrj.net.escolaonline.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A TipoSolicitacao.
@@ -17,7 +16,6 @@ import java.util.Set;
 @Table(name = "tipo_solicitacao")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class TipoSolicitacao implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -37,6 +35,10 @@ public class TipoSolicitacao implements Serializable {
     @OneToMany(mappedBy = "tipoSolicitacaoSolicitacao")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Solicitacao> solicitacaos = new HashSet<>();
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = "tipoSolicitacaos", allowSetters = true)
+    private Escola escolaTipoSolicitacao;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -110,6 +112,20 @@ public class TipoSolicitacao implements Serializable {
     public void setSolicitacaos(Set<Solicitacao> solicitacaos) {
         this.solicitacaos = solicitacaos;
     }
+
+    public Escola getEscolaTipoSolicitacao() {
+        return escolaTipoSolicitacao;
+    }
+
+    public TipoSolicitacao escolaTipoSolicitacao(Escola escola) {
+        this.escolaTipoSolicitacao = escola;
+        return this;
+    }
+
+    public void setEscolaTipoSolicitacao(Escola escola) {
+        this.escolaTipoSolicitacao = escola;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override

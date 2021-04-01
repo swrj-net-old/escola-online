@@ -1,4 +1,5 @@
 import { ISolicitacao } from 'app/shared/model/solicitacao.model';
+import { IEscola } from 'app/shared/model/escola.model';
 
 export interface ITipoSolicitacao {
   id?: number;
@@ -6,6 +7,7 @@ export interface ITipoSolicitacao {
   prazoAtendimento?: number;
   valorEmissao?: number;
   solicitacaos?: ISolicitacao[];
+  escolaTipoSolicitacao?: IEscola;
 }
 
 export class TipoSolicitacao implements ITipoSolicitacao {
@@ -14,6 +16,7 @@ export class TipoSolicitacao implements ITipoSolicitacao {
     public nome?: string,
     public prazoAtendimento?: number,
     public valorEmissao?: number,
-    public solicitacaos?: ISolicitacao[]
+    public solicitacaos?: ISolicitacao[],
+    public escolaTipoSolicitacao?: IEscola
   ) {}
 }

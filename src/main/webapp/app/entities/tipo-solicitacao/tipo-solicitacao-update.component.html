@@ -28,6 +28,14 @@
                     <input type="number" class="form-control" name="valorEmissao" id="field_valorEmissao"
                            formControlName="valorEmissao"/>
                 </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.tipoSolicitacao.escolaTipoSolicitacao" for="field_escolaTipoSolicitacao">Escola Tipo Solicitacao</label>
+                    <select class="form-control" id="field_escolaTipoSolicitacao" name="escolaTipoSolicitacao" formControlName="escolaTipoSolicitacao">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="escolaOption.id === editForm.get('escolaTipoSolicitacao')!.value?.id ? editForm.get('escolaTipoSolicitacao')!.value : escolaOption" *ngFor="let escolaOption of escolas; trackBy: trackById">{{ escolaOption.id }}</option>
+                    </select>
+                </div>
             </div>
 
             <div>

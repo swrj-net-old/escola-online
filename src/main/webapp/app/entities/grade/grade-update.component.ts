@@ -11,8 +11,10 @@ import { ISerie } from 'app/shared/model/serie.model';
 import { SerieService } from 'app/entities/serie/serie.service';
 import { IMateria } from 'app/shared/model/materia.model';
 import { MateriaService } from 'app/entities/materia/materia.service';
+import { IEscola } from 'app/shared/model/escola.model';
+import { EscolaService } from 'app/entities/escola/escola.service';
 
-type SelectableEntity = ISerie | IMateria;
+type SelectableEntity = ISerie | IMateria | IEscola;
 
 @Component({
   selector: 'jhi-grade-update',
@@ -22,18 +24,21 @@ export class GradeUpdateComponent implements OnInit {
   isSaving = false;
   series: ISerie[] = [];
   materias: IMateria[] = [];
+  escolas: IEscola[] = [];
 
   editForm = this.fb.group({
     id: [],
     anoLetivo: [],
     serieGrade: [],
     materiaGrade: [],
+    escolaGrade: [],
   });
 
   constructor(
     protected gradeService: GradeService,
     protected serieService: SerieService,
     protected materiaService: MateriaService,
+    protected escolaService: EscolaService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -45,6 +50,8 @@ export class GradeUpdateComponent implements OnInit {
       this.serieService.query().subscribe((res: HttpResponse<ISerie[]>) => (this.series = res.body || []));
 
       this.materiaService.query().subscribe((res: HttpResponse<IMateria[]>) => (this.materias = res.body || []));
+
+      this.escolaService.query().subscribe((res: HttpResponse<IEscola[]>) => (this.escolas = res.body || []));
     });
   }
 
@@ -54,6 +61,7 @@ export class GradeUpdateComponent implements OnInit {
       anoLetivo: grade.anoLetivo,
       serieGrade: grade.serieGrade,
       materiaGrade: grade.materiaGrade,
+      escolaGrade: grade.escolaGrade,
     });
   }
 
@@ -78,6 +86,7 @@ export class GradeUpdateComponent implements OnInit {
       anoLetivo: this.editForm.get(['anoLetivo'])!.value,
       serieGrade: this.editForm.get(['serieGrade'])!.value,
       materiaGrade: this.editForm.get(['materiaGrade'])!.value,
+      escolaGrade: this.editForm.get(['escolaGrade'])!.value,
     };
   }
 

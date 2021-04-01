@@ -39,7 +39,8 @@ export const pessoaRoute: Routes = [
     path: '',
     component: PessoaComponent,
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [Authority.USER],
+      defaultSort: 'id,asc',
       pageTitle: 'escolaOnlineApp.pessoa.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -51,7 +52,7 @@ export const pessoaRoute: Routes = [
       pessoa: PessoaResolve,
     },
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [Authority.USER],
       pageTitle: 'escolaOnlineApp.pessoa.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -63,7 +64,7 @@ export const pessoaRoute: Routes = [
       pessoa: PessoaResolve,
     },
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [Authority.USER],
       pageTitle: 'escolaOnlineApp.pessoa.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -75,7 +76,7 @@ export const pessoaRoute: Routes = [
       pessoa: PessoaResolve,
     },
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [Authority.USER],
       pageTitle: 'escolaOnlineApp.pessoa.home.title',
     },
     canActivate: [UserRouteAccessService],

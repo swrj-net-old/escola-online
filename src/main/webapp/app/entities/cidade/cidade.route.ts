@@ -39,7 +39,8 @@ export const cidadeRoute: Routes = [
     path: '',
     component: CidadeComponent,
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [Authority.USER],
+      defaultSort: 'id,asc',
       pageTitle: 'escolaOnlineApp.cidade.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -51,7 +52,7 @@ export const cidadeRoute: Routes = [
       cidade: CidadeResolve,
     },
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [Authority.USER],
       pageTitle: 'escolaOnlineApp.cidade.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -63,7 +64,7 @@ export const cidadeRoute: Routes = [
       cidade: CidadeResolve,
     },
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [Authority.USER],
       pageTitle: 'escolaOnlineApp.cidade.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -75,7 +76,7 @@ export const cidadeRoute: Routes = [
       cidade: CidadeResolve,
     },
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [Authority.USER],
       pageTitle: 'escolaOnlineApp.cidade.home.title',
     },
     canActivate: [UserRouteAccessService],

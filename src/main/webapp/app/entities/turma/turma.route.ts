@@ -40,6 +40,7 @@ export const turmaRoute: Routes = [
     component: TurmaComponent,
     data: {
       authorities: [Authority.USER],
+      defaultSort: 'id,asc',
       pageTitle: 'escolaOnlineApp.turma.home.title',
     },
     canActivate: [UserRouteAccessService],

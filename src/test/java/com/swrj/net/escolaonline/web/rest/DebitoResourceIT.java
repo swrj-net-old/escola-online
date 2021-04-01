@@ -1,9 +1,21 @@
 package com.swrj.net.escolaonline.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.swrj.net.escolaonline.EscolaOnlineApp;
 import com.swrj.net.escolaonline.domain.Debito;
+import com.swrj.net.escolaonline.domain.enumeration.SituacaoDebito;
+import com.swrj.net.escolaonline.domain.enumeration.TipoDebito;
 import com.swrj.net.escolaonline.repository.DebitoRepository;
-
+import com.swrj.net.escolaonline.service.DebitoService;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,19 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import com.swrj.net.escolaonline.domain.enumeration.TipoDebito;
-import com.swrj.net.escolaonline.domain.enumeration.SituacaoDebito;
 /**
  * Integration tests for the {@link DebitoResource} REST controller.
  */
@@ -33,7 +33,6 @@ import com.swrj.net.escolaonline.domain.enumeration.SituacaoDebito;
 @AutoConfigureMockMvc
 @WithMockUser
 public class DebitoResourceIT {
-
     private static final TipoDebito DEFAULT_TIPO_DEBITO = TipoDebito.MENSALIDADE;
     private static final TipoDebito UPDATED_TIPO_DEBITO = TipoDebito.TAXA_MATERIAL;
 
@@ -65,6 +64,9 @@ public class DebitoResourceIT {
     private DebitoRepository debitoRepository;
 
     @Autowired
+    private DebitoService debitoService;
+
+    @Autowired
     private EntityManager em;
 
     @Autowired
@@ -91,6 +93,7 @@ public class DebitoResourceIT {
             .observacoes(DEFAULT_OBSERVACOES);
         return debito;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -121,9 +124,8 @@ public class DebitoResourceIT {
     public void createDebito() throws Exception {
         int databaseSizeBeforeCreate = debitoRepository.findAll().size();
         // Create the Debito
-        restDebitoMockMvc.perform(post("/api/debitos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(debito)))
+        restDebitoMockMvc
+            .perform(post("/api/debitos").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(debito)))
             .andExpect(status().isCreated());
 
         // Validate the Debito in the database
@@ -150,16 +152,14 @@ public class DebitoResourceIT {
         debito.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restDebitoMockMvc.perform(post("/api/debitos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(debito)))
+        restDebitoMockMvc
+            .perform(post("/api/debitos").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(debito)))
             .andExpect(status().isBadRequest());
 
         // Validate the Debito in the database
         List<Debito> debitoList = debitoRepository.findAll();
         assertThat(debitoList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -168,7 +168,8 @@ public class DebitoResourceIT {
         debitoRepository.saveAndFlush(debito);
 
         // Get all the debitoList
-        restDebitoMockMvc.perform(get("/api/debitos?sort=id,desc"))
+        restDebitoMockMvc
+            .perform(get("/api/debitos?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(debito.getId().intValue())))
@@ -182,7 +183,7 @@ public class DebitoResourceIT {
             .andExpect(jsonPath("$.[*].totalDevido").value(hasItem(DEFAULT_TOTAL_DEVIDO.intValue())))
             .andExpect(jsonPath("$.[*].observacoes").value(hasItem(DEFAULT_OBSERVACOES)));
     }
-    
+
     @Test
     @Transactional
     public void getDebito() throws Exception {
@@ -190,7 +191,8 @@ public class DebitoResourceIT {
         debitoRepository.saveAndFlush(debito);
 
         // Get the debito
-        restDebitoMockMvc.perform(get("/api/debitos/{id}", debito.getId()))
+        restDebitoMockMvc
+            .perform(get("/api/debitos/{id}", debito.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(debito.getId().intValue()))
@@ -204,19 +206,19 @@ public class DebitoResourceIT {
             .andExpect(jsonPath("$.totalDevido").value(DEFAULT_TOTAL_DEVIDO.intValue()))
             .andExpect(jsonPath("$.observacoes").value(DEFAULT_OBSERVACOES));
     }
+
     @Test
     @Transactional
     public void getNonExistingDebito() throws Exception {
         // Get the debito
-        restDebitoMockMvc.perform(get("/api/debitos/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restDebitoMockMvc.perform(get("/api/debitos/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     public void updateDebito() throws Exception {
         // Initialize the database
-        debitoRepository.saveAndFlush(debito);
+        debitoService.save(debito);
 
         int databaseSizeBeforeUpdate = debitoRepository.findAll().size();
 
@@ -235,9 +237,8 @@ public class DebitoResourceIT {
             .totalDevido(UPDATED_TOTAL_DEVIDO)
             .observacoes(UPDATED_OBSERVACOES);
 
-        restDebitoMockMvc.perform(put("/api/debitos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedDebito)))
+        restDebitoMockMvc
+            .perform(put("/api/debitos").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(updatedDebito)))
             .andExpect(status().isOk());
 
         // Validate the Debito in the database
@@ -261,9 +262,8 @@ public class DebitoResourceIT {
         int databaseSizeBeforeUpdate = debitoRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restDebitoMockMvc.perform(put("/api/debitos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(debito)))
+        restDebitoMockMvc
+            .perform(put("/api/debitos").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(debito)))
             .andExpect(status().isBadRequest());
 
         // Validate the Debito in the database
@@ -275,13 +275,13 @@ public class DebitoResourceIT {
     @Transactional
     public void deleteDebito() throws Exception {
         // Initialize the database
-        debitoRepository.saveAndFlush(debito);
+        debitoService.save(debito);
 
         int databaseSizeBeforeDelete = debitoRepository.findAll().size();
 
         // Delete the debito
-        restDebitoMockMvc.perform(delete("/api/debitos/{id}", debito.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restDebitoMockMvc
+            .perform(delete("/api/debitos/{id}", debito.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

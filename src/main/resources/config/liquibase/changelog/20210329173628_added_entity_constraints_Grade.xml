@@ -20,5 +20,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="materia"/>
 
+        <addForeignKeyConstraint baseColumnNames="escola_grade_id"
+                                 baseTableName="grade"
+                                 constraintName="fk_grade_escola_grade_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="escola"/>
+
     </changeSet>
 </databaseChangeLog>

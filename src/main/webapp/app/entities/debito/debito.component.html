@@ -21,18 +21,18 @@
     <div class="table-responsive" id="entities" *ngIf="debitos && debitos.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
-                <tr>
-                    <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.debito.tipoDebito">Tipo Debito</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.debito.situacaoDebito">Situacao Debito</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.debito.dataVencimento">Data Vencimento</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.debito.dataPagamento">Data Pagamento</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.debito.valorOriginal">Valor Original</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.debito.totalPago">Total Pago</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.debito.totalDesconto">Total Desconto</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.debito.totalDevido">Total Devido</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.debito.observacoes">Observacoes</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.debito.alunoDebito">Aluno Debito</span></th>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+                    <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="tipoDebito"><span jhiTranslate="escolaOnlineApp.debito.tipoDebito">Tipo Debito</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="situacaoDebito"><span jhiTranslate="escolaOnlineApp.debito.situacaoDebito">Situacao Debito</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="dataVencimento"><span jhiTranslate="escolaOnlineApp.debito.dataVencimento">Data Vencimento</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="dataPagamento"><span jhiTranslate="escolaOnlineApp.debito.dataPagamento">Data Pagamento</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="valorOriginal"><span jhiTranslate="escolaOnlineApp.debito.valorOriginal">Valor Original</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="totalPago"><span jhiTranslate="escolaOnlineApp.debito.totalPago">Total Pago</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="totalDesconto"><span jhiTranslate="escolaOnlineApp.debito.totalDesconto">Total Desconto</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="totalDevido"><span jhiTranslate="escolaOnlineApp.debito.totalDevido">Total Devido</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="observacoes"><span jhiTranslate="escolaOnlineApp.debito.observacoes">Observacoes</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="alunoDebito.id"><span jhiTranslate="escolaOnlineApp.debito.alunoDebito">Aluno Debito</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -79,5 +79,15 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <div *ngIf="debitos && debitos.length > 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
     </div>
 </div>

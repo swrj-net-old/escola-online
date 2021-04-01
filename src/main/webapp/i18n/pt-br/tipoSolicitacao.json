@@ -19,7 +19,8 @@
       "nome": "Nome",
       "prazoAtendimento": "Prazo Atendimento",
       "valorEmissao": "Valor Emissao",
-      "solicitacao": "Solicitacao"
+      "solicitacao": "Solicitacao",
+      "escolaTipoSolicitacao": "Escola Tipo Solicitacao"
     }
   }
 }

@@ -284,15 +284,19 @@ relationship OneToMany {
 relationship OneToMany {
   Pessoa to Professor{pessoaProfessor}
 }
+
 relationship OneToMany {
   Unidade to Professor{unidadeProfessor}
 }
+
 relationship OneToMany {
   Pessoa to Aluno{pessoaAluno}
 }
+
 relationship OneToMany {
   Escola to Aluno{EscolaAluno}
 }
+
 relationship OneToMany {
   Escola to Unidade{EscolaUnidade}
 }
@@ -308,6 +312,7 @@ relationship OneToMany {
 relationship OneToMany {
   Turma to Matricula{TurmaMatricula}
 }
+
 relationship OneToMany {
   Aluno to Matricula{AlunoMatricula}
 }
@@ -315,4 +320,16 @@ relationship OneToMany {
 relationship OneToOne {
  DetalheUsuario{usuario} to User{usuario}
 }
+
+relationship OneToMany {
+  Escola to Grade{EscolaGrade}
+}
+
+relationship OneToMany {
+  Escola to TipoSolicitacao{EscolaTipoSolicitacao}
+}
+
+paginate * with pagination
+service * with serviceClass
+
 

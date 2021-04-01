@@ -1,31 +1,32 @@
 package com.swrj.net.escolaonline.web.rest;
 
 import com.swrj.net.escolaonline.domain.Materia;
-import com.swrj.net.escolaonline.repository.MateriaRepository;
+import com.swrj.net.escolaonline.service.MateriaService;
 import com.swrj.net.escolaonline.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * REST controller for managing {@link com.swrj.net.escolaonline.domain.Materia}.
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class MateriaResource {
-
     private final Logger log = LoggerFactory.getLogger(MateriaResource.class);
 
     private static final String ENTITY_NAME = "materia";
@@ -33,10 +34,10 @@ public class MateriaResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final MateriaRepository materiaRepository;
+    private final MateriaService materiaService;
 
-    public MateriaResource(MateriaRepository materiaRepository) {
-        this.materiaRepository = materiaRepository;
+    public MateriaResource(MateriaService materiaService) {
+        this.materiaService = materiaService;
     }
 
     /**
@@ -52,8 +53,9 @@ public class MateriaResource {
         if (materia.getId() != null) {
             throw new BadRequestAlertException("A new materia cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Materia result = materiaRepository.save(materia);
-        return ResponseEntity.created(new URI("/api/materias/" + result.getId()))
+        Materia result = materiaService.save(materia);
+        return ResponseEntity
+            .created(new URI("/api/materias/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -73,8 +75,9 @@ public class MateriaResource {
         if (materia.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Materia result = materiaRepository.save(materia);
-        return ResponseEntity.ok()
+        Materia result = materiaService.save(materia);
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, materia.getId().toString()))
             .body(result);
     }
@@ -82,12 +85,15 @@ public class MateriaResource {
     /**
      * {@code GET  /materias} : get all the materias.
      *
+     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of materias in body.
      */
     @GetMapping("/materias")
-    public List<Materia> getAllMaterias() {
-        log.debug("REST request to get all Materias");
-        return materiaRepository.findAll();
+    public ResponseEntity<List<Materia>> getAllMaterias(Pageable pageable) {
+        log.debug("REST request to get a page of Materias");
+        Page<Materia> page = materiaService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -99,7 +105,7 @@ public class MateriaResource {
     @GetMapping("/materias/{id}")
     public ResponseEntity<Materia> getMateria(@PathVariable Long id) {
         log.debug("REST request to get Materia : {}", id);
-        Optional<Materia> materia = materiaRepository.findById(id);
+        Optional<Materia> materia = materiaService.findOne(id);
         return ResponseUtil.wrapOrNotFound(materia);
     }
 
@@ -112,7 +118,10 @@ public class MateriaResource {
     @DeleteMapping("/materias/{id}")
     public ResponseEntity<Void> deleteMateria(@PathVariable Long id) {
         log.debug("REST request to delete Materia : {}", id);
-        materiaRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        materiaService.delete(id);
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

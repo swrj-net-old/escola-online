@@ -1,9 +1,19 @@
 package com.swrj.net.escolaonline.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.swrj.net.escolaonline.EscolaOnlineApp;
 import com.swrj.net.escolaonline.domain.Aluno;
+import com.swrj.net.escolaonline.domain.enumeration.TipoSanguineo;
 import com.swrj.net.escolaonline.repository.AlunoRepository;
-
+import com.swrj.net.escolaonline.service.AlunoService;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,17 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import com.swrj.net.escolaonline.domain.enumeration.TipoSanguineo;
 /**
  * Integration tests for the {@link AlunoResource} REST controller.
  */
@@ -31,7 +31,6 @@ import com.swrj.net.escolaonline.domain.enumeration.TipoSanguineo;
 @AutoConfigureMockMvc
 @WithMockUser
 public class AlunoResourceIT {
-
     private static final LocalDate DEFAULT_DATA_NASCIMENTO = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DATA_NASCIMENTO = LocalDate.now(ZoneId.systemDefault());
 
@@ -63,6 +62,9 @@ public class AlunoResourceIT {
     private AlunoRepository alunoRepository;
 
     @Autowired
+    private AlunoService alunoService;
+
+    @Autowired
     private EntityManager em;
 
     @Autowired
@@ -89,6 +91,7 @@ public class AlunoResourceIT {
             .observacoes(DEFAULT_OBSERVACOES);
         return aluno;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -119,9 +122,8 @@ public class AlunoResourceIT {
     public void createAluno() throws Exception {
         int databaseSizeBeforeCreate = alunoRepository.findAll().size();
         // Create the Aluno
-        restAlunoMockMvc.perform(post("/api/alunos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(aluno)))
+        restAlunoMockMvc
+            .perform(post("/api/alunos").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(aluno)))
             .andExpect(status().isCreated());
 
         // Validate the Aluno in the database
@@ -148,16 +150,14 @@ public class AlunoResourceIT {
         aluno.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restAlunoMockMvc.perform(post("/api/alunos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(aluno)))
+        restAlunoMockMvc
+            .perform(post("/api/alunos").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(aluno)))
             .andExpect(status().isBadRequest());
 
         // Validate the Aluno in the database
         List<Aluno> alunoList = alunoRepository.findAll();
         assertThat(alunoList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -166,7 +166,8 @@ public class AlunoResourceIT {
         alunoRepository.saveAndFlush(aluno);
 
         // Get all the alunoList
-        restAlunoMockMvc.perform(get("/api/alunos?sort=id,desc"))
+        restAlunoMockMvc
+            .perform(get("/api/alunos?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(aluno.getId().intValue())))
@@ -180,7 +181,7 @@ public class AlunoResourceIT {
             .andExpect(jsonPath("$.[*].cpfResponsavel").value(hasItem(DEFAULT_CPF_RESPONSAVEL)))
             .andExpect(jsonPath("$.[*].observacoes").value(hasItem(DEFAULT_OBSERVACOES)));
     }
-    
+
     @Test
     @Transactional
     public void getAluno() throws Exception {
@@ -188,7 +189,8 @@ public class AlunoResourceIT {
         alunoRepository.saveAndFlush(aluno);
 
         // Get the aluno
-        restAlunoMockMvc.perform(get("/api/alunos/{id}", aluno.getId()))
+        restAlunoMockMvc
+            .perform(get("/api/alunos/{id}", aluno.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(aluno.getId().intValue()))
@@ -202,19 +204,19 @@ public class AlunoResourceIT {
             .andExpect(jsonPath("$.cpfResponsavel").value(DEFAULT_CPF_RESPONSAVEL))
             .andExpect(jsonPath("$.observacoes").value(DEFAULT_OBSERVACOES));
     }
+
     @Test
     @Transactional
     public void getNonExistingAluno() throws Exception {
         // Get the aluno
-        restAlunoMockMvc.perform(get("/api/alunos/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restAlunoMockMvc.perform(get("/api/alunos/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     public void updateAluno() throws Exception {
         // Initialize the database
-        alunoRepository.saveAndFlush(aluno);
+        alunoService.save(aluno);
 
         int databaseSizeBeforeUpdate = alunoRepository.findAll().size();
 
@@ -233,9 +235,8 @@ public class AlunoResourceIT {
             .cpfResponsavel(UPDATED_CPF_RESPONSAVEL)
             .observacoes(UPDATED_OBSERVACOES);
 
-        restAlunoMockMvc.perform(put("/api/alunos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedAluno)))
+        restAlunoMockMvc
+            .perform(put("/api/alunos").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(updatedAluno)))
             .andExpect(status().isOk());
 
         // Validate the Aluno in the database
@@ -259,9 +260,8 @@ public class AlunoResourceIT {
         int databaseSizeBeforeUpdate = alunoRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restAlunoMockMvc.perform(put("/api/alunos")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(aluno)))
+        restAlunoMockMvc
+            .perform(put("/api/alunos").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(aluno)))
             .andExpect(status().isBadRequest());
 
         // Validate the Aluno in the database
@@ -273,13 +273,13 @@ public class AlunoResourceIT {
     @Transactional
     public void deleteAluno() throws Exception {
         // Initialize the database
-        alunoRepository.saveAndFlush(aluno);
+        alunoService.save(aluno);
 
         int databaseSizeBeforeDelete = alunoRepository.findAll().size();
 
         // Delete the aluno
-        restAlunoMockMvc.perform(delete("/api/alunos/{id}", aluno.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restAlunoMockMvc
+            .perform(delete("/api/alunos/{id}", aluno.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

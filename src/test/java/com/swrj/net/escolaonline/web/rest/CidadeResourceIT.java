@@ -1,9 +1,17 @@
 package com.swrj.net.escolaonline.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.swrj.net.escolaonline.EscolaOnlineApp;
 import com.swrj.net.escolaonline.domain.Cidade;
+import com.swrj.net.escolaonline.domain.enumeration.UF;
 import com.swrj.net.escolaonline.repository.CidadeRepository;
-
+import com.swrj.net.escolaonline.service.CidadeService;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import com.swrj.net.escolaonline.domain.enumeration.UF;
 /**
  * Integration tests for the {@link CidadeResource} REST controller.
  */
@@ -29,7 +29,6 @@ import com.swrj.net.escolaonline.domain.enumeration.UF;
 @AutoConfigureMockMvc
 @WithMockUser
 public class CidadeResourceIT {
-
     private static final String DEFAULT_NOME = "AAAAAAAAAA";
     private static final String UPDATED_NOME = "BBBBBBBBBB";
 
@@ -38,6 +37,9 @@ public class CidadeResourceIT {
 
     @Autowired
     private CidadeRepository cidadeRepository;
+
+    @Autowired
+    private CidadeService cidadeService;
 
     @Autowired
     private EntityManager em;
@@ -54,11 +56,10 @@ public class CidadeResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Cidade createEntity(EntityManager em) {
-        Cidade cidade = new Cidade()
-            .nome(DEFAULT_NOME)
-            .uf(DEFAULT_UF);
+        Cidade cidade = new Cidade().nome(DEFAULT_NOME).uf(DEFAULT_UF);
         return cidade;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -66,9 +67,7 @@ public class CidadeResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Cidade createUpdatedEntity(EntityManager em) {
-        Cidade cidade = new Cidade()
-            .nome(UPDATED_NOME)
-            .uf(UPDATED_UF);
+        Cidade cidade = new Cidade().nome(UPDATED_NOME).uf(UPDATED_UF);
         return cidade;
     }
 
@@ -82,9 +81,8 @@ public class CidadeResourceIT {
     public void createCidade() throws Exception {
         int databaseSizeBeforeCreate = cidadeRepository.findAll().size();
         // Create the Cidade
-        restCidadeMockMvc.perform(post("/api/cidades")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(cidade)))
+        restCidadeMockMvc
+            .perform(post("/api/cidades").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(cidade)))
             .andExpect(status().isCreated());
 
         // Validate the Cidade in the database
@@ -104,16 +102,14 @@ public class CidadeResourceIT {
         cidade.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restCidadeMockMvc.perform(post("/api/cidades")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(cidade)))
+        restCidadeMockMvc
+            .perform(post("/api/cidades").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(cidade)))
             .andExpect(status().isBadRequest());
 
         // Validate the Cidade in the database
         List<Cidade> cidadeList = cidadeRepository.findAll();
         assertThat(cidadeList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -122,14 +118,15 @@ public class CidadeResourceIT {
         cidadeRepository.saveAndFlush(cidade);
 
         // Get all the cidadeList
-        restCidadeMockMvc.perform(get("/api/cidades?sort=id,desc"))
+        restCidadeMockMvc
+            .perform(get("/api/cidades?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(cidade.getId().intValue())))
             .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME)))
             .andExpect(jsonPath("$.[*].uf").value(hasItem(DEFAULT_UF.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getCidade() throws Exception {
@@ -137,26 +134,27 @@ public class CidadeResourceIT {
         cidadeRepository.saveAndFlush(cidade);
 
         // Get the cidade
-        restCidadeMockMvc.perform(get("/api/cidades/{id}", cidade.getId()))
+        restCidadeMockMvc
+            .perform(get("/api/cidades/{id}", cidade.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(cidade.getId().intValue()))
             .andExpect(jsonPath("$.nome").value(DEFAULT_NOME))
             .andExpect(jsonPath("$.uf").value(DEFAULT_UF.toString()));
     }
+
     @Test
     @Transactional
     public void getNonExistingCidade() throws Exception {
         // Get the cidade
-        restCidadeMockMvc.perform(get("/api/cidades/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restCidadeMockMvc.perform(get("/api/cidades/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     public void updateCidade() throws Exception {
         // Initialize the database
-        cidadeRepository.saveAndFlush(cidade);
+        cidadeService.save(cidade);
 
         int databaseSizeBeforeUpdate = cidadeRepository.findAll().size();
 
@@ -164,13 +162,10 @@ public class CidadeResourceIT {
         Cidade updatedCidade = cidadeRepository.findById(cidade.getId()).get();
         // Disconnect from session so that the updates on updatedCidade are not directly saved in db
         em.detach(updatedCidade);
-        updatedCidade
-            .nome(UPDATED_NOME)
-            .uf(UPDATED_UF);
+        updatedCidade.nome(UPDATED_NOME).uf(UPDATED_UF);
 
-        restCidadeMockMvc.perform(put("/api/cidades")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedCidade)))
+        restCidadeMockMvc
+            .perform(put("/api/cidades").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(updatedCidade)))
             .andExpect(status().isOk());
 
         // Validate the Cidade in the database
@@ -187,9 +182,8 @@ public class CidadeResourceIT {
         int databaseSizeBeforeUpdate = cidadeRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restCidadeMockMvc.perform(put("/api/cidades")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(cidade)))
+        restCidadeMockMvc
+            .perform(put("/api/cidades").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(cidade)))
             .andExpect(status().isBadRequest());
 
         // Validate the Cidade in the database
@@ -201,13 +195,13 @@ public class CidadeResourceIT {
     @Transactional
     public void deleteCidade() throws Exception {
         // Initialize the database
-        cidadeRepository.saveAndFlush(cidade);
+        cidadeService.save(cidade);
 
         int databaseSizeBeforeDelete = cidadeRepository.findAll().size();
 
         // Delete the cidade
-        restCidadeMockMvc.perform(delete("/api/cidades/{id}", cidade.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restCidadeMockMvc
+            .perform(delete("/api/cidades/{id}", cidade.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

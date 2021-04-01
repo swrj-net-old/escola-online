@@ -21,13 +21,13 @@
     <div class="table-responsive" id="entities" *ngIf="chamadas && chamadas.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
-                <tr>
-                    <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.chamada.dataAula">Data Aula</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.chamada.observacoes">Observacoes</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.chamada.alunoChamada">Aluno Chamada</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.chamada.turmaChamada">Turma Chamada</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.chamada.professorChamada">Professor Chamada</span></th>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+                    <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="dataAula"><span jhiTranslate="escolaOnlineApp.chamada.dataAula">Data Aula</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="observacoes"><span jhiTranslate="escolaOnlineApp.chamada.observacoes">Observacoes</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="alunoChamada.id"><span jhiTranslate="escolaOnlineApp.chamada.alunoChamada">Aluno Chamada</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="turmaChamada.id"><span jhiTranslate="escolaOnlineApp.chamada.turmaChamada">Turma Chamada</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="professorChamada.id"><span jhiTranslate="escolaOnlineApp.chamada.professorChamada">Professor Chamada</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -77,5 +77,15 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <div *ngIf="chamadas && chamadas.length > 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
     </div>
 </div>

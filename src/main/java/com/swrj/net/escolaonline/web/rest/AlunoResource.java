@@ -1,31 +1,32 @@
 package com.swrj.net.escolaonline.web.rest;
 
 import com.swrj.net.escolaonline.domain.Aluno;
-import com.swrj.net.escolaonline.repository.AlunoRepository;
+import com.swrj.net.escolaonline.service.AlunoService;
 import com.swrj.net.escolaonline.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * REST controller for managing {@link com.swrj.net.escolaonline.domain.Aluno}.
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
-//Secured({ AuthoritiesConstants.GERENTE })
 public class AlunoResource {
-
     private final Logger log = LoggerFactory.getLogger(AlunoResource.class);
 
     private static final String ENTITY_NAME = "aluno";
@@ -33,10 +34,10 @@ public class AlunoResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final AlunoRepository alunoRepository;
+    private final AlunoService alunoService;
 
-    public AlunoResource(AlunoRepository alunoRepository) {
-        this.alunoRepository = alunoRepository;
+    public AlunoResource(AlunoService alunoService) {
+        this.alunoService = alunoService;
     }
 
     /**
@@ -52,8 +53,9 @@ public class AlunoResource {
         if (aluno.getId() != null) {
             throw new BadRequestAlertException("A new aluno cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Aluno result = alunoRepository.save(aluno);
-        return ResponseEntity.created(new URI("/api/alunos/" + result.getId()))
+        Aluno result = alunoService.save(aluno);
+        return ResponseEntity
+            .created(new URI("/api/alunos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -73,8 +75,9 @@ public class AlunoResource {
         if (aluno.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Aluno result = alunoRepository.save(aluno);
-        return ResponseEntity.ok()
+        Aluno result = alunoService.save(aluno);
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, aluno.getId().toString()))
             .body(result);
     }
@@ -82,12 +85,15 @@ public class AlunoResource {
     /**
      * {@code GET  /alunos} : get all the alunos.
      *
+     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of alunos in body.
      */
     @GetMapping("/alunos")
-    public List<Aluno> getAllAlunos() {
-        log.debug("REST request to get all Alunos");
-        return alunoRepository.findAll();
+    public ResponseEntity<List<Aluno>> getAllAlunos(Pageable pageable) {
+        log.debug("REST request to get a page of Alunos");
+        Page<Aluno> page = alunoService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -99,7 +105,7 @@ public class AlunoResource {
     @GetMapping("/alunos/{id}")
     public ResponseEntity<Aluno> getAluno(@PathVariable Long id) {
         log.debug("REST request to get Aluno : {}", id);
-        Optional<Aluno> aluno = alunoRepository.findById(id);
+        Optional<Aluno> aluno = alunoService.findOne(id);
         return ResponseUtil.wrapOrNotFound(aluno);
     }
 
@@ -112,7 +118,10 @@ public class AlunoResource {
     @DeleteMapping("/alunos/{id}")
     public ResponseEntity<Void> deleteAluno(@PathVariable Long id) {
         log.debug("REST request to delete Aluno : {}", id);
-        alunoRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        alunoService.delete(id);
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

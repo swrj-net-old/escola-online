@@ -1,10 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
-import { Subscription } from 'rxjs';
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
+import { ActivatedRoute, ParamMap, Router, Data } from '@angular/router';
+import { Subscription, combineLatest } from 'rxjs';
 import { JhiEventManager } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ITipoSolicitacao } from 'app/shared/model/tipo-solicitacao.model';
+
+import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 import { TipoSolicitacaoService } from './tipo-solicitacao.service';
 import { TipoSolicitacaoDeleteDialogComponent } from './tipo-solicitacao-delete-dialog.component';
 
@@ -15,20 +18,54 @@ import { TipoSolicitacaoDeleteDialogComponent } from './tipo-solicitacao-delete-
 export class TipoSolicitacaoComponent implements OnInit, OnDestroy {
   tipoSolicitacaos?: ITipoSolicitacao[];
   eventSubscriber?: Subscription;
+  totalItems = 0;
+  itemsPerPage = ITEMS_PER_PAGE;
+  page!: number;
+  predicate!: string;
+  ascending!: boolean;
+  ngbPaginationPage = 1;
 
   constructor(
     protected tipoSolicitacaoService: TipoSolicitacaoService,
+    protected activatedRoute: ActivatedRoute,
+    protected router: Router,
     protected eventManager: JhiEventManager,
     protected modalService: NgbModal
   ) {}
 
-  loadAll(): void {
-    this.tipoSolicitacaoService.query().subscribe((res: HttpResponse<ITipoSolicitacao[]>) => (this.tipoSolicitacaos = res.body || []));
+  loadPage(page?: number, dontNavigate?: boolean): void {
+    const pageToLoad: number = page || this.page || 1;
+
+    this.tipoSolicitacaoService
+      .query({
+        page: pageToLoad - 1,
+        size: this.itemsPerPage,
+        sort: this.sort(),
+      })
+      .subscribe(
+        (res: HttpResponse<ITipoSolicitacao[]>) => this.onSuccess(res.body, res.headers, pageToLoad, !dontNavigate),
+        () => this.onError()
+      );
   }
 
   ngOnInit(): void {
-    this.loadAll();
+    this.handleNavigation();
     this.registerChangeInTipoSolicitacaos();
+  }
+
+  protected handleNavigation(): void {
+    combineLatest(this.activatedRoute.data, this.activatedRoute.queryParamMap, (data: Data, params: ParamMap) => {
+      const page = params.get('page');
+      const pageNumber = page !== null ? +page : 1;
+      const sort = (params.get('sort') ?? data['defaultSort']).split(',');
+      const predicate = sort[0];
+      const ascending = sort[1] === 'asc';
+      if (pageNumber !== this.page || predicate !== this.predicate || ascending !== this.ascending) {
+        this.predicate = predicate;
+        this.ascending = ascending;
+        this.loadPage(pageNumber, true);
+      }
+    }).subscribe();
   }
 
   ngOnDestroy(): void {
@@ -43,11 +80,39 @@ export class TipoSolicitacaoComponent implements OnInit, OnDestroy {
   }
 
   registerChangeInTipoSolicitacaos(): void {
-    this.eventSubscriber = this.eventManager.subscribe('tipoSolicitacaoListModification', () => this.loadAll());
+    this.eventSubscriber = this.eventManager.subscribe('tipoSolicitacaoListModification', () => this.loadPage());
   }
 
   delete(tipoSolicitacao: ITipoSolicitacao): void {
     const modalRef = this.modalService.open(TipoSolicitacaoDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.tipoSolicitacao = tipoSolicitacao;
+  }
+
+  sort(): string[] {
+    const result = [this.predicate + ',' + (this.ascending ? 'asc' : 'desc')];
+    if (this.predicate !== 'id') {
+      result.push('id');
+    }
+    return result;
+  }
+
+  protected onSuccess(data: ITipoSolicitacao[] | null, headers: HttpHeaders, page: number, navigate: boolean): void {
+    this.totalItems = Number(headers.get('X-Total-Count'));
+    this.page = page;
+    if (navigate) {
+      this.router.navigate(['/tipo-solicitacao'], {
+        queryParams: {
+          page: this.page,
+          size: this.itemsPerPage,
+          sort: this.predicate + ',' + (this.ascending ? 'asc' : 'desc'),
+        },
+      });
+    }
+    this.tipoSolicitacaos = data || [];
+    this.ngbPaginationPage = this.page;
+  }
+
+  protected onError(): void {
+    this.ngbPaginationPage = this.page ?? 1;
   }
 }

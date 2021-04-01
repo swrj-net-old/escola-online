@@ -1,9 +1,18 @@
 package com.swrj.net.escolaonline.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.swrj.net.escolaonline.EscolaOnlineApp;
 import com.swrj.net.escolaonline.domain.Professor;
 import com.swrj.net.escolaonline.repository.ProfessorRepository;
-
+import com.swrj.net.escolaonline.service.ProfessorService;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +22,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link ProfessorResource} REST controller.
@@ -30,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 public class ProfessorResourceIT {
-
     private static final Integer DEFAULT_ANO_LETIVO = 1;
     private static final Integer UPDATED_ANO_LETIVO = 2;
 
@@ -42,6 +41,9 @@ public class ProfessorResourceIT {
 
     @Autowired
     private ProfessorRepository professorRepository;
+
+    @Autowired
+    private ProfessorService professorService;
 
     @Autowired
     private EntityManager em;
@@ -58,12 +60,10 @@ public class ProfessorResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Professor createEntity(EntityManager em) {
-        Professor professor = new Professor()
-            .anoLetivo(DEFAULT_ANO_LETIVO)
-            .dataInicio(DEFAULT_DATA_INICIO)
-            .dataFim(DEFAULT_DATA_FIM);
+        Professor professor = new Professor().anoLetivo(DEFAULT_ANO_LETIVO).dataInicio(DEFAULT_DATA_INICIO).dataFim(DEFAULT_DATA_FIM);
         return professor;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -71,10 +71,7 @@ public class ProfessorResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Professor createUpdatedEntity(EntityManager em) {
-        Professor professor = new Professor()
-            .anoLetivo(UPDATED_ANO_LETIVO)
-            .dataInicio(UPDATED_DATA_INICIO)
-            .dataFim(UPDATED_DATA_FIM);
+        Professor professor = new Professor().anoLetivo(UPDATED_ANO_LETIVO).dataInicio(UPDATED_DATA_INICIO).dataFim(UPDATED_DATA_FIM);
         return professor;
     }
 
@@ -88,9 +85,8 @@ public class ProfessorResourceIT {
     public void createProfessor() throws Exception {
         int databaseSizeBeforeCreate = professorRepository.findAll().size();
         // Create the Professor
-        restProfessorMockMvc.perform(post("/api/professors")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(professor)))
+        restProfessorMockMvc
+            .perform(post("/api/professors").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(professor)))
             .andExpect(status().isCreated());
 
         // Validate the Professor in the database
@@ -111,16 +107,14 @@ public class ProfessorResourceIT {
         professor.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restProfessorMockMvc.perform(post("/api/professors")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(professor)))
+        restProfessorMockMvc
+            .perform(post("/api/professors").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(professor)))
             .andExpect(status().isBadRequest());
 
         // Validate the Professor in the database
         List<Professor> professorList = professorRepository.findAll();
         assertThat(professorList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -129,7 +123,8 @@ public class ProfessorResourceIT {
         professorRepository.saveAndFlush(professor);
 
         // Get all the professorList
-        restProfessorMockMvc.perform(get("/api/professors?sort=id,desc"))
+        restProfessorMockMvc
+            .perform(get("/api/professors?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(professor.getId().intValue())))
@@ -137,7 +132,7 @@ public class ProfessorResourceIT {
             .andExpect(jsonPath("$.[*].dataInicio").value(hasItem(DEFAULT_DATA_INICIO.toString())))
             .andExpect(jsonPath("$.[*].dataFim").value(hasItem(DEFAULT_DATA_FIM.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getProfessor() throws Exception {
@@ -145,7 +140,8 @@ public class ProfessorResourceIT {
         professorRepository.saveAndFlush(professor);
 
         // Get the professor
-        restProfessorMockMvc.perform(get("/api/professors/{id}", professor.getId()))
+        restProfessorMockMvc
+            .perform(get("/api/professors/{id}", professor.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(professor.getId().intValue()))
@@ -153,19 +149,19 @@ public class ProfessorResourceIT {
             .andExpect(jsonPath("$.dataInicio").value(DEFAULT_DATA_INICIO.toString()))
             .andExpect(jsonPath("$.dataFim").value(DEFAULT_DATA_FIM.toString()));
     }
+
     @Test
     @Transactional
     public void getNonExistingProfessor() throws Exception {
         // Get the professor
-        restProfessorMockMvc.perform(get("/api/professors/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restProfessorMockMvc.perform(get("/api/professors/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     public void updateProfessor() throws Exception {
         // Initialize the database
-        professorRepository.saveAndFlush(professor);
+        professorService.save(professor);
 
         int databaseSizeBeforeUpdate = professorRepository.findAll().size();
 
@@ -173,14 +169,12 @@ public class ProfessorResourceIT {
         Professor updatedProfessor = professorRepository.findById(professor.getId()).get();
         // Disconnect from session so that the updates on updatedProfessor are not directly saved in db
         em.detach(updatedProfessor);
-        updatedProfessor
-            .anoLetivo(UPDATED_ANO_LETIVO)
-            .dataInicio(UPDATED_DATA_INICIO)
-            .dataFim(UPDATED_DATA_FIM);
+        updatedProfessor.anoLetivo(UPDATED_ANO_LETIVO).dataInicio(UPDATED_DATA_INICIO).dataFim(UPDATED_DATA_FIM);
 
-        restProfessorMockMvc.perform(put("/api/professors")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedProfessor)))
+        restProfessorMockMvc
+            .perform(
+                put("/api/professors").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(updatedProfessor))
+            )
             .andExpect(status().isOk());
 
         // Validate the Professor in the database
@@ -198,9 +192,8 @@ public class ProfessorResourceIT {
         int databaseSizeBeforeUpdate = professorRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restProfessorMockMvc.perform(put("/api/professors")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(professor)))
+        restProfessorMockMvc
+            .perform(put("/api/professors").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(professor)))
             .andExpect(status().isBadRequest());
 
         // Validate the Professor in the database
@@ -212,13 +205,13 @@ public class ProfessorResourceIT {
     @Transactional
     public void deleteProfessor() throws Exception {
         // Initialize the database
-        professorRepository.saveAndFlush(professor);
+        professorService.save(professor);
 
         int databaseSizeBeforeDelete = professorRepository.findAll().size();
 
         // Delete the professor
-        restProfessorMockMvc.perform(delete("/api/professors/{id}", professor.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restProfessorMockMvc
+            .perform(delete("/api/professors/{id}", professor.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

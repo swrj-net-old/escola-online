@@ -1,31 +1,32 @@
 package com.swrj.net.escolaonline.web.rest;
 
 import com.swrj.net.escolaonline.domain.Escola;
-import com.swrj.net.escolaonline.repository.EscolaRepository;
+import com.swrj.net.escolaonline.service.EscolaService;
 import com.swrj.net.escolaonline.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * REST controller for managing {@link com.swrj.net.escolaonline.domain.Escola}.
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class EscolaResource {
-
     private final Logger log = LoggerFactory.getLogger(EscolaResource.class);
 
     private static final String ENTITY_NAME = "escola";
@@ -33,10 +34,10 @@ public class EscolaResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final EscolaRepository escolaRepository;
+    private final EscolaService escolaService;
 
-    public EscolaResource(EscolaRepository escolaRepository) {
-        this.escolaRepository = escolaRepository;
+    public EscolaResource(EscolaService escolaService) {
+        this.escolaService = escolaService;
     }
 
     /**
@@ -52,8 +53,9 @@ public class EscolaResource {
         if (escola.getId() != null) {
             throw new BadRequestAlertException("A new escola cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Escola result = escolaRepository.save(escola);
-        return ResponseEntity.created(new URI("/api/escolas/" + result.getId()))
+        Escola result = escolaService.save(escola);
+        return ResponseEntity
+            .created(new URI("/api/escolas/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -73,8 +75,9 @@ public class EscolaResource {
         if (escola.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Escola result = escolaRepository.save(escola);
-        return ResponseEntity.ok()
+        Escola result = escolaService.save(escola);
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, escola.getId().toString()))
             .body(result);
     }
@@ -82,12 +85,15 @@ public class EscolaResource {
     /**
      * {@code GET  /escolas} : get all the escolas.
      *
+     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of escolas in body.
      */
     @GetMapping("/escolas")
-    public List<Escola> getAllEscolas() {
-        log.debug("REST request to get all Escolas");
-        return escolaRepository.findAll();
+    public ResponseEntity<List<Escola>> getAllEscolas(Pageable pageable) {
+        log.debug("REST request to get a page of Escolas");
+        Page<Escola> page = escolaService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -99,7 +105,7 @@ public class EscolaResource {
     @GetMapping("/escolas/{id}")
     public ResponseEntity<Escola> getEscola(@PathVariable Long id) {
         log.debug("REST request to get Escola : {}", id);
-        Optional<Escola> escola = escolaRepository.findById(id);
+        Optional<Escola> escola = escolaService.findOne(id);
         return ResponseUtil.wrapOrNotFound(escola);
     }
 
@@ -112,7 +118,10 @@ public class EscolaResource {
     @DeleteMapping("/escolas/{id}")
     public ResponseEntity<Void> deleteEscola(@PathVariable Long id) {
         log.debug("REST request to delete Escola : {}", id);
-        escolaRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        escolaService.delete(id);
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

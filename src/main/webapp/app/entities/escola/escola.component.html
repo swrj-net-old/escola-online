@@ -21,17 +21,17 @@
     <div class="table-responsive" id="entities" *ngIf="escolas && escolas.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
-                <tr>
-                    <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.escola.nome">Nome</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.escola.razaoSocial">Razao Social</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.escola.cnpjPrincipal">Cnpj Principal</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.escola.url">Url</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.escola.prefixo">Prefixo</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.escola.responsavelNome">Responsavel Nome</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.escola.responsavelCpf">Responsavel Cpf</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.escola.responsavelEmail">Responsavel Email</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.escola.responsavelCelular">Responsavel Celular</span></th>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+                    <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="nome"><span jhiTranslate="escolaOnlineApp.escola.nome">Nome</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="razaoSocial"><span jhiTranslate="escolaOnlineApp.escola.razaoSocial">Razao Social</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="cnpjPrincipal"><span jhiTranslate="escolaOnlineApp.escola.cnpjPrincipal">Cnpj Principal</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="url"><span jhiTranslate="escolaOnlineApp.escola.url">Url</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="prefixo"><span jhiTranslate="escolaOnlineApp.escola.prefixo">Prefixo</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="responsavelNome"><span jhiTranslate="escolaOnlineApp.escola.responsavelNome">Responsavel Nome</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="responsavelCpf"><span jhiTranslate="escolaOnlineApp.escola.responsavelCpf">Responsavel Cpf</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="responsavelEmail"><span jhiTranslate="escolaOnlineApp.escola.responsavelEmail">Responsavel Email</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="responsavelCelular"><span jhiTranslate="escolaOnlineApp.escola.responsavelCelular">Responsavel Celular</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -73,5 +73,15 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <div *ngIf="escolas && escolas.length > 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
     </div>
 </div>

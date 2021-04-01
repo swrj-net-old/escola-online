@@ -1,31 +1,32 @@
 package com.swrj.net.escolaonline.web.rest;
 
 import com.swrj.net.escolaonline.domain.Matricula;
-import com.swrj.net.escolaonline.repository.MatriculaRepository;
+import com.swrj.net.escolaonline.service.MatriculaService;
 import com.swrj.net.escolaonline.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * REST controller for managing {@link com.swrj.net.escolaonline.domain.Matricula}.
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class MatriculaResource {
-
     private final Logger log = LoggerFactory.getLogger(MatriculaResource.class);
 
     private static final String ENTITY_NAME = "matricula";
@@ -33,10 +34,10 @@ public class MatriculaResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final MatriculaRepository matriculaRepository;
+    private final MatriculaService matriculaService;
 
-    public MatriculaResource(MatriculaRepository matriculaRepository) {
-        this.matriculaRepository = matriculaRepository;
+    public MatriculaResource(MatriculaService matriculaService) {
+        this.matriculaService = matriculaService;
     }
 
     /**
@@ -52,8 +53,9 @@ public class MatriculaResource {
         if (matricula.getId() != null) {
             throw new BadRequestAlertException("A new matricula cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Matricula result = matriculaRepository.save(matricula);
-        return ResponseEntity.created(new URI("/api/matriculas/" + result.getId()))
+        Matricula result = matriculaService.save(matricula);
+        return ResponseEntity
+            .created(new URI("/api/matriculas/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -73,8 +75,9 @@ public class MatriculaResource {
         if (matricula.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Matricula result = matriculaRepository.save(matricula);
-        return ResponseEntity.ok()
+        Matricula result = matriculaService.save(matricula);
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, matricula.getId().toString()))
             .body(result);
     }
@@ -82,12 +85,15 @@ public class MatriculaResource {
     /**
      * {@code GET  /matriculas} : get all the matriculas.
      *
+     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of matriculas in body.
      */
     @GetMapping("/matriculas")
-    public List<Matricula> getAllMatriculas() {
-        log.debug("REST request to get all Matriculas");
-        return matriculaRepository.findAll();
+    public ResponseEntity<List<Matricula>> getAllMatriculas(Pageable pageable) {
+        log.debug("REST request to get a page of Matriculas");
+        Page<Matricula> page = matriculaService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -99,7 +105,7 @@ public class MatriculaResource {
     @GetMapping("/matriculas/{id}")
     public ResponseEntity<Matricula> getMatricula(@PathVariable Long id) {
         log.debug("REST request to get Matricula : {}", id);
-        Optional<Matricula> matricula = matriculaRepository.findById(id);
+        Optional<Matricula> matricula = matriculaService.findOne(id);
         return ResponseUtil.wrapOrNotFound(matricula);
     }
 
@@ -112,7 +118,10 @@ public class MatriculaResource {
     @DeleteMapping("/matriculas/{id}")
     public ResponseEntity<Void> deleteMatricula(@PathVariable Long id) {
         log.debug("REST request to delete Matricula : {}", id);
-        matriculaRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        matriculaService.delete(id);
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

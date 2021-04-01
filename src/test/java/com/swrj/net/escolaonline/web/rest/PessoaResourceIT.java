@@ -1,9 +1,16 @@
 package com.swrj.net.escolaonline.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.swrj.net.escolaonline.EscolaOnlineApp;
 import com.swrj.net.escolaonline.domain.Pessoa;
 import com.swrj.net.escolaonline.repository.PessoaRepository;
-
+import com.swrj.net.escolaonline.service.PessoaService;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link PessoaResource} REST controller.
@@ -28,7 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 public class PessoaResourceIT {
-
     private static final String DEFAULT_NOME = "AAAAAAAAAA";
     private static final String UPDATED_NOME = "BBBBBBBBBB";
 
@@ -72,6 +71,9 @@ public class PessoaResourceIT {
     private PessoaRepository pessoaRepository;
 
     @Autowired
+    private PessoaService pessoaService;
+
+    @Autowired
     private EntityManager em;
 
     @Autowired
@@ -102,6 +104,7 @@ public class PessoaResourceIT {
             .observacoes(DEFAULT_OBSERVACOES);
         return pessoa;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -136,9 +139,8 @@ public class PessoaResourceIT {
     public void createPessoa() throws Exception {
         int databaseSizeBeforeCreate = pessoaRepository.findAll().size();
         // Create the Pessoa
-        restPessoaMockMvc.perform(post("/api/pessoas")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(pessoa)))
+        restPessoaMockMvc
+            .perform(post("/api/pessoas").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(pessoa)))
             .andExpect(status().isCreated());
 
         // Validate the Pessoa in the database
@@ -169,16 +171,14 @@ public class PessoaResourceIT {
         pessoa.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restPessoaMockMvc.perform(post("/api/pessoas")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(pessoa)))
+        restPessoaMockMvc
+            .perform(post("/api/pessoas").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(pessoa)))
             .andExpect(status().isBadRequest());
 
         // Validate the Pessoa in the database
         List<Pessoa> pessoaList = pessoaRepository.findAll();
         assertThat(pessoaList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -187,7 +187,8 @@ public class PessoaResourceIT {
         pessoaRepository.saveAndFlush(pessoa);
 
         // Get all the pessoaList
-        restPessoaMockMvc.perform(get("/api/pessoas?sort=id,desc"))
+        restPessoaMockMvc
+            .perform(get("/api/pessoas?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(pessoa.getId().intValue())))
@@ -205,7 +206,7 @@ public class PessoaResourceIT {
             .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
             .andExpect(jsonPath("$.[*].observacoes").value(hasItem(DEFAULT_OBSERVACOES)));
     }
-    
+
     @Test
     @Transactional
     public void getPessoa() throws Exception {
@@ -213,7 +214,8 @@ public class PessoaResourceIT {
         pessoaRepository.saveAndFlush(pessoa);
 
         // Get the pessoa
-        restPessoaMockMvc.perform(get("/api/pessoas/{id}", pessoa.getId()))
+        restPessoaMockMvc
+            .perform(get("/api/pessoas/{id}", pessoa.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(pessoa.getId().intValue()))
@@ -231,19 +233,19 @@ public class PessoaResourceIT {
             .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL))
             .andExpect(jsonPath("$.observacoes").value(DEFAULT_OBSERVACOES));
     }
+
     @Test
     @Transactional
     public void getNonExistingPessoa() throws Exception {
         // Get the pessoa
-        restPessoaMockMvc.perform(get("/api/pessoas/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restPessoaMockMvc.perform(get("/api/pessoas/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     public void updatePessoa() throws Exception {
         // Initialize the database
-        pessoaRepository.saveAndFlush(pessoa);
+        pessoaService.save(pessoa);
 
         int databaseSizeBeforeUpdate = pessoaRepository.findAll().size();
 
@@ -266,9 +268,8 @@ public class PessoaResourceIT {
             .email(UPDATED_EMAIL)
             .observacoes(UPDATED_OBSERVACOES);
 
-        restPessoaMockMvc.perform(put("/api/pessoas")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedPessoa)))
+        restPessoaMockMvc
+            .perform(put("/api/pessoas").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(updatedPessoa)))
             .andExpect(status().isOk());
 
         // Validate the Pessoa in the database
@@ -296,9 +297,8 @@ public class PessoaResourceIT {
         int databaseSizeBeforeUpdate = pessoaRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restPessoaMockMvc.perform(put("/api/pessoas")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(pessoa)))
+        restPessoaMockMvc
+            .perform(put("/api/pessoas").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(pessoa)))
             .andExpect(status().isBadRequest());
 
         // Validate the Pessoa in the database
@@ -310,13 +310,13 @@ public class PessoaResourceIT {
     @Transactional
     public void deletePessoa() throws Exception {
         // Initialize the database
-        pessoaRepository.saveAndFlush(pessoa);
+        pessoaService.save(pessoa);
 
         int databaseSizeBeforeDelete = pessoaRepository.findAll().size();
 
         // Delete the pessoa
-        restPessoaMockMvc.perform(delete("/api/pessoas/{id}", pessoa.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restPessoaMockMvc
+            .perform(delete("/api/pessoas/{id}", pessoa.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

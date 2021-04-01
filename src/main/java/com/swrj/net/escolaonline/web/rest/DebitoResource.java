@@ -1,31 +1,32 @@
 package com.swrj.net.escolaonline.web.rest;
 
 import com.swrj.net.escolaonline.domain.Debito;
-import com.swrj.net.escolaonline.repository.DebitoRepository;
+import com.swrj.net.escolaonline.service.DebitoService;
 import com.swrj.net.escolaonline.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * REST controller for managing {@link com.swrj.net.escolaonline.domain.Debito}.
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class DebitoResource {
-
     private final Logger log = LoggerFactory.getLogger(DebitoResource.class);
 
     private static final String ENTITY_NAME = "debito";
@@ -33,10 +34,10 @@ public class DebitoResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final DebitoRepository debitoRepository;
+    private final DebitoService debitoService;
 
-    public DebitoResource(DebitoRepository debitoRepository) {
-        this.debitoRepository = debitoRepository;
+    public DebitoResource(DebitoService debitoService) {
+        this.debitoService = debitoService;
     }
 
     /**
@@ -52,8 +53,9 @@ public class DebitoResource {
         if (debito.getId() != null) {
             throw new BadRequestAlertException("A new debito cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Debito result = debitoRepository.save(debito);
-        return ResponseEntity.created(new URI("/api/debitos/" + result.getId()))
+        Debito result = debitoService.save(debito);
+        return ResponseEntity
+            .created(new URI("/api/debitos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -73,8 +75,9 @@ public class DebitoResource {
         if (debito.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Debito result = debitoRepository.save(debito);
-        return ResponseEntity.ok()
+        Debito result = debitoService.save(debito);
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, debito.getId().toString()))
             .body(result);
     }
@@ -82,12 +85,15 @@ public class DebitoResource {
     /**
      * {@code GET  /debitos} : get all the debitos.
      *
+     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of debitos in body.
      */
     @GetMapping("/debitos")
-    public List<Debito> getAllDebitos() {
-        log.debug("REST request to get all Debitos");
-        return debitoRepository.findAll();
+    public ResponseEntity<List<Debito>> getAllDebitos(Pageable pageable) {
+        log.debug("REST request to get a page of Debitos");
+        Page<Debito> page = debitoService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -99,7 +105,7 @@ public class DebitoResource {
     @GetMapping("/debitos/{id}")
     public ResponseEntity<Debito> getDebito(@PathVariable Long id) {
         log.debug("REST request to get Debito : {}", id);
-        Optional<Debito> debito = debitoRepository.findById(id);
+        Optional<Debito> debito = debitoService.findOne(id);
         return ResponseUtil.wrapOrNotFound(debito);
     }
 
@@ -112,7 +118,10 @@ public class DebitoResource {
     @DeleteMapping("/debitos/{id}")
     public ResponseEntity<Void> deleteDebito(@PathVariable Long id) {
         log.debug("REST request to delete Debito : {}", id);
-        debitoRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        debitoService.delete(id);
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

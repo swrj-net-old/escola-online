@@ -1,9 +1,16 @@
 package com.swrj.net.escolaonline.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.swrj.net.escolaonline.EscolaOnlineApp;
 import com.swrj.net.escolaonline.domain.DetalheUsuario;
 import com.swrj.net.escolaonline.repository.DetalheUsuarioRepository;
-
+import com.swrj.net.escolaonline.service.DetalheUsuarioService;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link DetalheUsuarioResource} REST controller.
@@ -28,7 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 public class DetalheUsuarioResourceIT {
-
     private static final String DEFAULT_CPF = "AAAAAAAAAA";
     private static final String UPDATED_CPF = "BBBBBBBBBB";
 
@@ -37,6 +36,9 @@ public class DetalheUsuarioResourceIT {
 
     @Autowired
     private DetalheUsuarioRepository detalheUsuarioRepository;
+
+    @Autowired
+    private DetalheUsuarioService detalheUsuarioService;
 
     @Autowired
     private EntityManager em;
@@ -53,11 +55,10 @@ public class DetalheUsuarioResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static DetalheUsuario createEntity(EntityManager em) {
-        DetalheUsuario detalheUsuario = new DetalheUsuario()
-            .cpf(DEFAULT_CPF)
-            .celular(DEFAULT_CELULAR);
+        DetalheUsuario detalheUsuario = new DetalheUsuario().cpf(DEFAULT_CPF).celular(DEFAULT_CELULAR);
         return detalheUsuario;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -65,9 +66,7 @@ public class DetalheUsuarioResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static DetalheUsuario createUpdatedEntity(EntityManager em) {
-        DetalheUsuario detalheUsuario = new DetalheUsuario()
-            .cpf(UPDATED_CPF)
-            .celular(UPDATED_CELULAR);
+        DetalheUsuario detalheUsuario = new DetalheUsuario().cpf(UPDATED_CPF).celular(UPDATED_CELULAR);
         return detalheUsuario;
     }
 
@@ -81,9 +80,12 @@ public class DetalheUsuarioResourceIT {
     public void createDetalheUsuario() throws Exception {
         int databaseSizeBeforeCreate = detalheUsuarioRepository.findAll().size();
         // Create the DetalheUsuario
-        restDetalheUsuarioMockMvc.perform(post("/api/detalhe-usuarios")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(detalheUsuario)))
+        restDetalheUsuarioMockMvc
+            .perform(
+                post("/api/detalhe-usuarios")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(detalheUsuario))
+            )
             .andExpect(status().isCreated());
 
         // Validate the DetalheUsuario in the database
@@ -103,16 +105,18 @@ public class DetalheUsuarioResourceIT {
         detalheUsuario.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restDetalheUsuarioMockMvc.perform(post("/api/detalhe-usuarios")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(detalheUsuario)))
+        restDetalheUsuarioMockMvc
+            .perform(
+                post("/api/detalhe-usuarios")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(detalheUsuario))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the DetalheUsuario in the database
         List<DetalheUsuario> detalheUsuarioList = detalheUsuarioRepository.findAll();
         assertThat(detalheUsuarioList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -121,14 +125,15 @@ public class DetalheUsuarioResourceIT {
         detalheUsuarioRepository.saveAndFlush(detalheUsuario);
 
         // Get all the detalheUsuarioList
-        restDetalheUsuarioMockMvc.perform(get("/api/detalhe-usuarios?sort=id,desc"))
+        restDetalheUsuarioMockMvc
+            .perform(get("/api/detalhe-usuarios?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(detalheUsuario.getId().intValue())))
             .andExpect(jsonPath("$.[*].cpf").value(hasItem(DEFAULT_CPF)))
             .andExpect(jsonPath("$.[*].celular").value(hasItem(DEFAULT_CELULAR)));
     }
-    
+
     @Test
     @Transactional
     public void getDetalheUsuario() throws Exception {
@@ -136,26 +141,27 @@ public class DetalheUsuarioResourceIT {
         detalheUsuarioRepository.saveAndFlush(detalheUsuario);
 
         // Get the detalheUsuario
-        restDetalheUsuarioMockMvc.perform(get("/api/detalhe-usuarios/{id}", detalheUsuario.getId()))
+        restDetalheUsuarioMockMvc
+            .perform(get("/api/detalhe-usuarios/{id}", detalheUsuario.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(detalheUsuario.getId().intValue()))
             .andExpect(jsonPath("$.cpf").value(DEFAULT_CPF))
             .andExpect(jsonPath("$.celular").value(DEFAULT_CELULAR));
     }
+
     @Test
     @Transactional
     public void getNonExistingDetalheUsuario() throws Exception {
         // Get the detalheUsuario
-        restDetalheUsuarioMockMvc.perform(get("/api/detalhe-usuarios/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restDetalheUsuarioMockMvc.perform(get("/api/detalhe-usuarios/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     public void updateDetalheUsuario() throws Exception {
         // Initialize the database
-        detalheUsuarioRepository.saveAndFlush(detalheUsuario);
+        detalheUsuarioService.save(detalheUsuario);
 
         int databaseSizeBeforeUpdate = detalheUsuarioRepository.findAll().size();
 
@@ -163,13 +169,14 @@ public class DetalheUsuarioResourceIT {
         DetalheUsuario updatedDetalheUsuario = detalheUsuarioRepository.findById(detalheUsuario.getId()).get();
         // Disconnect from session so that the updates on updatedDetalheUsuario are not directly saved in db
         em.detach(updatedDetalheUsuario);
-        updatedDetalheUsuario
-            .cpf(UPDATED_CPF)
-            .celular(UPDATED_CELULAR);
+        updatedDetalheUsuario.cpf(UPDATED_CPF).celular(UPDATED_CELULAR);
 
-        restDetalheUsuarioMockMvc.perform(put("/api/detalhe-usuarios")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedDetalheUsuario)))
+        restDetalheUsuarioMockMvc
+            .perform(
+                put("/api/detalhe-usuarios")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedDetalheUsuario))
+            )
             .andExpect(status().isOk());
 
         // Validate the DetalheUsuario in the database
@@ -186,9 +193,12 @@ public class DetalheUsuarioResourceIT {
         int databaseSizeBeforeUpdate = detalheUsuarioRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restDetalheUsuarioMockMvc.perform(put("/api/detalhe-usuarios")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(detalheUsuario)))
+        restDetalheUsuarioMockMvc
+            .perform(
+                put("/api/detalhe-usuarios")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(detalheUsuario))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the DetalheUsuario in the database
@@ -200,13 +210,13 @@ public class DetalheUsuarioResourceIT {
     @Transactional
     public void deleteDetalheUsuario() throws Exception {
         // Initialize the database
-        detalheUsuarioRepository.saveAndFlush(detalheUsuario);
+        detalheUsuarioService.save(detalheUsuario);
 
         int databaseSizeBeforeDelete = detalheUsuarioRepository.findAll().size();
 
         // Delete the detalheUsuario
-        restDetalheUsuarioMockMvc.perform(delete("/api/detalhe-usuarios/{id}", detalheUsuario.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restDetalheUsuarioMockMvc
+            .perform(delete("/api/detalhe-usuarios/{id}", detalheUsuario.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

@@ -92,6 +92,8 @@ public class CacheConfiguration {
             createCache(cm, com.swrj.net.escolaonline.domain.TipoSolicitacao.class.getName());
             createCache(cm, com.swrj.net.escolaonline.domain.TipoSolicitacao.class.getName() + ".solicitacaos");
             createCache(cm, com.swrj.net.escolaonline.domain.Solicitacao.class.getName());
+            createCache(cm, com.swrj.net.escolaonline.domain.Escola.class.getName() + ".grades");
+            createCache(cm, com.swrj.net.escolaonline.domain.Escola.class.getName() + ".tipoSolicitacaos");
             // jhipster-needle-ehcache-add-entry
         };
     }

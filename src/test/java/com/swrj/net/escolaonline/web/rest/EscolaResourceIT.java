@@ -1,9 +1,16 @@
 package com.swrj.net.escolaonline.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.swrj.net.escolaonline.EscolaOnlineApp;
 import com.swrj.net.escolaonline.domain.Escola;
 import com.swrj.net.escolaonline.repository.EscolaRepository;
-
+import com.swrj.net.escolaonline.service.EscolaService;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link EscolaResource} REST controller.
@@ -28,7 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 public class EscolaResourceIT {
-
     private static final String DEFAULT_NOME = "AAAAAAAAAA";
     private static final String UPDATED_NOME = "BBBBBBBBBB";
 
@@ -60,6 +59,9 @@ public class EscolaResourceIT {
     private EscolaRepository escolaRepository;
 
     @Autowired
+    private EscolaService escolaService;
+
+    @Autowired
     private EntityManager em;
 
     @Autowired
@@ -86,6 +88,7 @@ public class EscolaResourceIT {
             .responsavelCelular(DEFAULT_RESPONSAVEL_CELULAR);
         return escola;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -116,9 +119,8 @@ public class EscolaResourceIT {
     public void createEscola() throws Exception {
         int databaseSizeBeforeCreate = escolaRepository.findAll().size();
         // Create the Escola
-        restEscolaMockMvc.perform(post("/api/escolas")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(escola)))
+        restEscolaMockMvc
+            .perform(post("/api/escolas").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(escola)))
             .andExpect(status().isCreated());
 
         // Validate the Escola in the database
@@ -145,16 +147,14 @@ public class EscolaResourceIT {
         escola.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restEscolaMockMvc.perform(post("/api/escolas")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(escola)))
+        restEscolaMockMvc
+            .perform(post("/api/escolas").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(escola)))
             .andExpect(status().isBadRequest());
 
         // Validate the Escola in the database
         List<Escola> escolaList = escolaRepository.findAll();
         assertThat(escolaList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -163,7 +163,8 @@ public class EscolaResourceIT {
         escolaRepository.saveAndFlush(escola);
 
         // Get all the escolaList
-        restEscolaMockMvc.perform(get("/api/escolas?sort=id,desc"))
+        restEscolaMockMvc
+            .perform(get("/api/escolas?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(escola.getId().intValue())))
@@ -177,7 +178,7 @@ public class EscolaResourceIT {
             .andExpect(jsonPath("$.[*].responsavelEmail").value(hasItem(DEFAULT_RESPONSAVEL_EMAIL)))
             .andExpect(jsonPath("$.[*].responsavelCelular").value(hasItem(DEFAULT_RESPONSAVEL_CELULAR)));
     }
-    
+
     @Test
     @Transactional
     public void getEscola() throws Exception {
@@ -185,7 +186,8 @@ public class EscolaResourceIT {
         escolaRepository.saveAndFlush(escola);
 
         // Get the escola
-        restEscolaMockMvc.perform(get("/api/escolas/{id}", escola.getId()))
+        restEscolaMockMvc
+            .perform(get("/api/escolas/{id}", escola.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(escola.getId().intValue()))
@@ -199,19 +201,19 @@ public class EscolaResourceIT {
             .andExpect(jsonPath("$.responsavelEmail").value(DEFAULT_RESPONSAVEL_EMAIL))
             .andExpect(jsonPath("$.responsavelCelular").value(DEFAULT_RESPONSAVEL_CELULAR));
     }
+
     @Test
     @Transactional
     public void getNonExistingEscola() throws Exception {
         // Get the escola
-        restEscolaMockMvc.perform(get("/api/escolas/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restEscolaMockMvc.perform(get("/api/escolas/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     public void updateEscola() throws Exception {
         // Initialize the database
-        escolaRepository.saveAndFlush(escola);
+        escolaService.save(escola);
 
         int databaseSizeBeforeUpdate = escolaRepository.findAll().size();
 
@@ -230,9 +232,8 @@ public class EscolaResourceIT {
             .responsavelEmail(UPDATED_RESPONSAVEL_EMAIL)
             .responsavelCelular(UPDATED_RESPONSAVEL_CELULAR);
 
-        restEscolaMockMvc.perform(put("/api/escolas")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedEscola)))
+        restEscolaMockMvc
+            .perform(put("/api/escolas").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(updatedEscola)))
             .andExpect(status().isOk());
 
         // Validate the Escola in the database
@@ -256,9 +257,8 @@ public class EscolaResourceIT {
         int databaseSizeBeforeUpdate = escolaRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restEscolaMockMvc.perform(put("/api/escolas")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(escola)))
+        restEscolaMockMvc
+            .perform(put("/api/escolas").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(escola)))
             .andExpect(status().isBadRequest());
 
         // Validate the Escola in the database
@@ -270,13 +270,13 @@ public class EscolaResourceIT {
     @Transactional
     public void deleteEscola() throws Exception {
         // Initialize the database
-        escolaRepository.saveAndFlush(escola);
+        escolaService.save(escola);
 
         int databaseSizeBeforeDelete = escolaRepository.findAll().size();
 
         // Delete the escola
-        restEscolaMockMvc.perform(delete("/api/escolas/{id}", escola.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restEscolaMockMvc
+            .perform(delete("/api/escolas/{id}", escola.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

@@ -21,11 +21,12 @@
     <div class="table-responsive" id="entities" *ngIf="grades && grades.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
-                <tr>
-                    <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.grade.anoLetivo">Ano Letivo</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.grade.serieGrade">Serie Grade</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.grade.materiaGrade">Materia Grade</span></th>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+                    <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="anoLetivo"><span jhiTranslate="escolaOnlineApp.grade.anoLetivo">Ano Letivo</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="serieGrade.id"><span jhiTranslate="escolaOnlineApp.grade.serieGrade">Serie Grade</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="materiaGrade.id"><span jhiTranslate="escolaOnlineApp.grade.materiaGrade">Materia Grade</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="escolaGrade.id"><span jhiTranslate="escolaOnlineApp.grade.escolaGrade">Escola Grade</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -41,6 +42,11 @@
                     <td>
                         <div *ngIf="grade.materiaGrade">
                             <a [routerLink]="['/materia', grade.materiaGrade?.id, 'view']" >{{ grade.materiaGrade?.id }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="grade.escolaGrade">
+                            <a [routerLink]="['/escola', grade.escolaGrade?.id, 'view']" >{{ grade.escolaGrade?.id }}</a>
                         </div>
                     </td>
                     <td class="text-right">
@@ -69,5 +75,15 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <div *ngIf="grades && grades.length > 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
     </div>
 </div>

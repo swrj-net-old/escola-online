@@ -21,13 +21,13 @@
     <div class="table-responsive" id="entities" *ngIf="diretors && diretors.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
-                <tr>
-                    <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.diretor.anoLetivo">Ano Letivo</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.diretor.dataInicio">Data Inicio</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.diretor.dataFim">Data Fim</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.diretor.pessoaDiretor">Pessoa Diretor</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.diretor.unidadeDiretor">Unidade Diretor</span></th>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+                    <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="anoLetivo"><span jhiTranslate="escolaOnlineApp.diretor.anoLetivo">Ano Letivo</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="dataInicio"><span jhiTranslate="escolaOnlineApp.diretor.dataInicio">Data Inicio</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="dataFim"><span jhiTranslate="escolaOnlineApp.diretor.dataFim">Data Fim</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="pessoaDiretor.id"><span jhiTranslate="escolaOnlineApp.diretor.pessoaDiretor">Pessoa Diretor</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="unidadeDiretor.id"><span jhiTranslate="escolaOnlineApp.diretor.unidadeDiretor">Unidade Diretor</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -73,5 +73,15 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <div *ngIf="diretors && diretors.length > 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
     </div>
 </div>

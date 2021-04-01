@@ -24,6 +24,12 @@
                         <a [routerLink]="['/materia', grade.materiaGrade?.id, 'view']">{{ grade.materiaGrade?.id }}</a>
                     </div>
                 </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.grade.escolaGrade">Escola Grade</span></dt>
+                <dd>
+                    <div *ngIf="grade.escolaGrade">
+                        <a [routerLink]="['/escola', grade.escolaGrade?.id, 'view']">{{ grade.escolaGrade?.id }}</a>
+                    </div>
+                </dd>
             </dl>
 
             <button type="submit"

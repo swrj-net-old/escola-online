@@ -1,31 +1,32 @@
 package com.swrj.net.escolaonline.web.rest;
 
 import com.swrj.net.escolaonline.domain.HistoricoDebito;
-import com.swrj.net.escolaonline.repository.HistoricoDebitoRepository;
+import com.swrj.net.escolaonline.service.HistoricoDebitoService;
 import com.swrj.net.escolaonline.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * REST controller for managing {@link com.swrj.net.escolaonline.domain.HistoricoDebito}.
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class HistoricoDebitoResource {
-
     private final Logger log = LoggerFactory.getLogger(HistoricoDebitoResource.class);
 
     private static final String ENTITY_NAME = "historicoDebito";
@@ -33,10 +34,10 @@ public class HistoricoDebitoResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final HistoricoDebitoRepository historicoDebitoRepository;
+    private final HistoricoDebitoService historicoDebitoService;
 
-    public HistoricoDebitoResource(HistoricoDebitoRepository historicoDebitoRepository) {
-        this.historicoDebitoRepository = historicoDebitoRepository;
+    public HistoricoDebitoResource(HistoricoDebitoService historicoDebitoService) {
+        this.historicoDebitoService = historicoDebitoService;
     }
 
     /**
@@ -52,8 +53,9 @@ public class HistoricoDebitoResource {
         if (historicoDebito.getId() != null) {
             throw new BadRequestAlertException("A new historicoDebito cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        HistoricoDebito result = historicoDebitoRepository.save(historicoDebito);
-        return ResponseEntity.created(new URI("/api/historico-debitos/" + result.getId()))
+        HistoricoDebito result = historicoDebitoService.save(historicoDebito);
+        return ResponseEntity
+            .created(new URI("/api/historico-debitos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -73,8 +75,9 @@ public class HistoricoDebitoResource {
         if (historicoDebito.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        HistoricoDebito result = historicoDebitoRepository.save(historicoDebito);
-        return ResponseEntity.ok()
+        HistoricoDebito result = historicoDebitoService.save(historicoDebito);
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, historicoDebito.getId().toString()))
             .body(result);
     }
@@ -82,12 +85,15 @@ public class HistoricoDebitoResource {
     /**
      * {@code GET  /historico-debitos} : get all the historicoDebitos.
      *
+     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of historicoDebitos in body.
      */
     @GetMapping("/historico-debitos")
-    public List<HistoricoDebito> getAllHistoricoDebitos() {
-        log.debug("REST request to get all HistoricoDebitos");
-        return historicoDebitoRepository.findAll();
+    public ResponseEntity<List<HistoricoDebito>> getAllHistoricoDebitos(Pageable pageable) {
+        log.debug("REST request to get a page of HistoricoDebitos");
+        Page<HistoricoDebito> page = historicoDebitoService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -99,7 +105,7 @@ public class HistoricoDebitoResource {
     @GetMapping("/historico-debitos/{id}")
     public ResponseEntity<HistoricoDebito> getHistoricoDebito(@PathVariable Long id) {
         log.debug("REST request to get HistoricoDebito : {}", id);
-        Optional<HistoricoDebito> historicoDebito = historicoDebitoRepository.findById(id);
+        Optional<HistoricoDebito> historicoDebito = historicoDebitoService.findOne(id);
         return ResponseUtil.wrapOrNotFound(historicoDebito);
     }
 
@@ -112,7 +118,10 @@ public class HistoricoDebitoResource {
     @DeleteMapping("/historico-debitos/{id}")
     public ResponseEntity<Void> deleteHistoricoDebito(@PathVariable Long id) {
         log.debug("REST request to delete HistoricoDebito : {}", id);
-        historicoDebitoRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        historicoDebitoService.delete(id);
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

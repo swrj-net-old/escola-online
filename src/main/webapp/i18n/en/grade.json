@@ -18,7 +18,8 @@
       },
       "anoLetivo": "Ano Letivo",
       "serieGrade": "Serie Grade",
-      "materiaGrade": "Materia Grade"
+      "materiaGrade": "Materia Grade",
+      "escolaGrade": "Escola Grade"
     }
   }
 }

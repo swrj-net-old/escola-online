@@ -21,14 +21,14 @@
     <div class="table-responsive" id="entities" *ngIf="solicitacaos && solicitacaos.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
-                <tr>
-                    <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.solicitacao.situacaoSolicitacao">Situacao Solicitacao</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.solicitacao.dataSolicitacao">Data Solicitacao</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.solicitacao.observacoesSolicitante">Observacoes Solicitante</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.solicitacao.observacoesAtendimento">Observacoes Atendimento</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.solicitacao.tipoSolicitacaoSolicitacao">Tipo Solicitacao Solicitacao</span></th>
-                    <th scope="col" ><span jhiTranslate="escolaOnlineApp.solicitacao.alunoSolicitacao">Aluno Solicitacao</span></th>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+                    <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="situacaoSolicitacao"><span jhiTranslate="escolaOnlineApp.solicitacao.situacaoSolicitacao">Situacao Solicitacao</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="dataSolicitacao"><span jhiTranslate="escolaOnlineApp.solicitacao.dataSolicitacao">Data Solicitacao</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="observacoesSolicitante"><span jhiTranslate="escolaOnlineApp.solicitacao.observacoesSolicitante">Observacoes Solicitante</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="observacoesAtendimento"><span jhiTranslate="escolaOnlineApp.solicitacao.observacoesAtendimento">Observacoes Atendimento</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="tipoSolicitacaoSolicitacao.id"><span jhiTranslate="escolaOnlineApp.solicitacao.tipoSolicitacaoSolicitacao">Tipo Solicitacao Solicitacao</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="alunoSolicitacao.id"><span jhiTranslate="escolaOnlineApp.solicitacao.alunoSolicitacao">Aluno Solicitacao</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -75,5 +75,15 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <div *ngIf="solicitacaos && solicitacaos.length > 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
     </div>
 </div>

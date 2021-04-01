@@ -1,31 +1,32 @@
 package com.swrj.net.escolaonline.web.rest;
 
 import com.swrj.net.escolaonline.domain.Professor;
-import com.swrj.net.escolaonline.repository.ProfessorRepository;
+import com.swrj.net.escolaonline.service.ProfessorService;
 import com.swrj.net.escolaonline.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * REST controller for managing {@link com.swrj.net.escolaonline.domain.Professor}.
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class ProfessorResource {
-
     private final Logger log = LoggerFactory.getLogger(ProfessorResource.class);
 
     private static final String ENTITY_NAME = "professor";
@@ -33,10 +34,10 @@ public class ProfessorResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final ProfessorRepository professorRepository;
+    private final ProfessorService professorService;
 
-    public ProfessorResource(ProfessorRepository professorRepository) {
-        this.professorRepository = professorRepository;
+    public ProfessorResource(ProfessorService professorService) {
+        this.professorService = professorService;
     }
 
     /**
@@ -52,8 +53,9 @@ public class ProfessorResource {
         if (professor.getId() != null) {
             throw new BadRequestAlertException("A new professor cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Professor result = professorRepository.save(professor);
-        return ResponseEntity.created(new URI("/api/professors/" + result.getId()))
+        Professor result = professorService.save(professor);
+        return ResponseEntity
+            .created(new URI("/api/professors/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -73,8 +75,9 @@ public class ProfessorResource {
         if (professor.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Professor result = professorRepository.save(professor);
-        return ResponseEntity.ok()
+        Professor result = professorService.save(professor);
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, professor.getId().toString()))
             .body(result);
     }
@@ -82,12 +85,15 @@ public class ProfessorResource {
     /**
      * {@code GET  /professors} : get all the professors.
      *
+     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of professors in body.
      */
     @GetMapping("/professors")
-    public List<Professor> getAllProfessors() {
-        log.debug("REST request to get all Professors");
-        return professorRepository.findAll();
+    public ResponseEntity<List<Professor>> getAllProfessors(Pageable pageable) {
+        log.debug("REST request to get a page of Professors");
+        Page<Professor> page = professorService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -99,7 +105,7 @@ public class ProfessorResource {
     @GetMapping("/professors/{id}")
     public ResponseEntity<Professor> getProfessor(@PathVariable Long id) {
         log.debug("REST request to get Professor : {}", id);
-        Optional<Professor> professor = professorRepository.findById(id);
+        Optional<Professor> professor = professorService.findOne(id);
         return ResponseUtil.wrapOrNotFound(professor);
     }
 
@@ -112,7 +118,10 @@ public class ProfessorResource {
     @DeleteMapping("/professors/{id}")
     public ResponseEntity<Void> deleteProfessor(@PathVariable Long id) {
         log.debug("REST request to delete Professor : {}", id);
-        professorRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        professorService.delete(id);
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

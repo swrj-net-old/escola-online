@@ -20,13 +20,20 @@
       "otherEntityRelationshipName": "grade",
       "relationshipName": "materiaGrade",
       "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "escola",
+      "otherEntityRelationshipName": "grade",
+      "relationshipName": "escolaGrade",
+      "otherEntityField": "id"
     }
   ],
   "changelogDate": "20210329173628",
   "entityTableName": "grade",
   "dto": "no",
-  "pagination": "no",
-  "service": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,

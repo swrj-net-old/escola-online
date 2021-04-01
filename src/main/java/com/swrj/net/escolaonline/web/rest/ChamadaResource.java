@@ -1,31 +1,32 @@
 package com.swrj.net.escolaonline.web.rest;
 
 import com.swrj.net.escolaonline.domain.Chamada;
-import com.swrj.net.escolaonline.repository.ChamadaRepository;
+import com.swrj.net.escolaonline.service.ChamadaService;
 import com.swrj.net.escolaonline.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * REST controller for managing {@link com.swrj.net.escolaonline.domain.Chamada}.
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class ChamadaResource {
-
     private final Logger log = LoggerFactory.getLogger(ChamadaResource.class);
 
     private static final String ENTITY_NAME = "chamada";
@@ -33,10 +34,10 @@ public class ChamadaResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final ChamadaRepository chamadaRepository;
+    private final ChamadaService chamadaService;
 
-    public ChamadaResource(ChamadaRepository chamadaRepository) {
-        this.chamadaRepository = chamadaRepository;
+    public ChamadaResource(ChamadaService chamadaService) {
+        this.chamadaService = chamadaService;
     }
 
     /**
@@ -52,8 +53,9 @@ public class ChamadaResource {
         if (chamada.getId() != null) {
             throw new BadRequestAlertException("A new chamada cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Chamada result = chamadaRepository.save(chamada);
-        return ResponseEntity.created(new URI("/api/chamadas/" + result.getId()))
+        Chamada result = chamadaService.save(chamada);
+        return ResponseEntity
+            .created(new URI("/api/chamadas/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -73,8 +75,9 @@ public class ChamadaResource {
         if (chamada.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Chamada result = chamadaRepository.save(chamada);
-        return ResponseEntity.ok()
+        Chamada result = chamadaService.save(chamada);
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, chamada.getId().toString()))
             .body(result);
     }
@@ -82,12 +85,15 @@ public class ChamadaResource {
     /**
      * {@code GET  /chamadas} : get all the chamadas.
      *
+     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of chamadas in body.
      */
     @GetMapping("/chamadas")
-    public List<Chamada> getAllChamadas() {
-        log.debug("REST request to get all Chamadas");
-        return chamadaRepository.findAll();
+    public ResponseEntity<List<Chamada>> getAllChamadas(Pageable pageable) {
+        log.debug("REST request to get a page of Chamadas");
+        Page<Chamada> page = chamadaService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -99,7 +105,7 @@ public class ChamadaResource {
     @GetMapping("/chamadas/{id}")
     public ResponseEntity<Chamada> getChamada(@PathVariable Long id) {
         log.debug("REST request to get Chamada : {}", id);
-        Optional<Chamada> chamada = chamadaRepository.findById(id);
+        Optional<Chamada> chamada = chamadaService.findOne(id);
         return ResponseUtil.wrapOrNotFound(chamada);
     }
 
@@ -112,7 +118,10 @@ public class ChamadaResource {
     @DeleteMapping("/chamadas/{id}")
     public ResponseEntity<Void> deleteChamada(@PathVariable Long id) {
         log.debug("REST request to delete Chamada : {}", id);
-        chamadaRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        chamadaService.delete(id);
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

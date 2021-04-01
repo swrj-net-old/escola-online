@@ -1,31 +1,32 @@
 package com.swrj.net.escolaonline.web.rest;
 
 import com.swrj.net.escolaonline.domain.Solicitacao;
-import com.swrj.net.escolaonline.repository.SolicitacaoRepository;
+import com.swrj.net.escolaonline.service.SolicitacaoService;
 import com.swrj.net.escolaonline.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * REST controller for managing {@link com.swrj.net.escolaonline.domain.Solicitacao}.
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class SolicitacaoResource {
-
     private final Logger log = LoggerFactory.getLogger(SolicitacaoResource.class);
 
     private static final String ENTITY_NAME = "solicitacao";
@@ -33,10 +34,10 @@ public class SolicitacaoResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final SolicitacaoRepository solicitacaoRepository;
+    private final SolicitacaoService solicitacaoService;
 
-    public SolicitacaoResource(SolicitacaoRepository solicitacaoRepository) {
-        this.solicitacaoRepository = solicitacaoRepository;
+    public SolicitacaoResource(SolicitacaoService solicitacaoService) {
+        this.solicitacaoService = solicitacaoService;
     }
 
     /**
@@ -52,8 +53,9 @@ public class SolicitacaoResource {
         if (solicitacao.getId() != null) {
             throw new BadRequestAlertException("A new solicitacao cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Solicitacao result = solicitacaoRepository.save(solicitacao);
-        return ResponseEntity.created(new URI("/api/solicitacaos/" + result.getId()))
+        Solicitacao result = solicitacaoService.save(solicitacao);
+        return ResponseEntity
+            .created(new URI("/api/solicitacaos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -73,8 +75,9 @@ public class SolicitacaoResource {
         if (solicitacao.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Solicitacao result = solicitacaoRepository.save(solicitacao);
-        return ResponseEntity.ok()
+        Solicitacao result = solicitacaoService.save(solicitacao);
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, solicitacao.getId().toString()))
             .body(result);
     }
@@ -82,12 +85,15 @@ public class SolicitacaoResource {
     /**
      * {@code GET  /solicitacaos} : get all the solicitacaos.
      *
+     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of solicitacaos in body.
      */
     @GetMapping("/solicitacaos")
-    public List<Solicitacao> getAllSolicitacaos() {
-        log.debug("REST request to get all Solicitacaos");
-        return solicitacaoRepository.findAll();
+    public ResponseEntity<List<Solicitacao>> getAllSolicitacaos(Pageable pageable) {
+        log.debug("REST request to get a page of Solicitacaos");
+        Page<Solicitacao> page = solicitacaoService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -99,7 +105,7 @@ public class SolicitacaoResource {
     @GetMapping("/solicitacaos/{id}")
     public ResponseEntity<Solicitacao> getSolicitacao(@PathVariable Long id) {
         log.debug("REST request to get Solicitacao : {}", id);
-        Optional<Solicitacao> solicitacao = solicitacaoRepository.findById(id);
+        Optional<Solicitacao> solicitacao = solicitacaoService.findOne(id);
         return ResponseUtil.wrapOrNotFound(solicitacao);
     }
 
@@ -112,7 +118,10 @@ public class SolicitacaoResource {
     @DeleteMapping("/solicitacaos/{id}")
     public ResponseEntity<Void> deleteSolicitacao(@PathVariable Long id) {
         log.debug("REST request to delete Solicitacao : {}", id);
-        solicitacaoRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        solicitacaoService.delete(id);
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

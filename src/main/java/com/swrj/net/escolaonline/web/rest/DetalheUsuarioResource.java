@@ -1,31 +1,32 @@
 package com.swrj.net.escolaonline.web.rest;
 
 import com.swrj.net.escolaonline.domain.DetalheUsuario;
-import com.swrj.net.escolaonline.repository.DetalheUsuarioRepository;
+import com.swrj.net.escolaonline.service.DetalheUsuarioService;
 import com.swrj.net.escolaonline.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * REST controller for managing {@link com.swrj.net.escolaonline.domain.DetalheUsuario}.
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class DetalheUsuarioResource {
-
     private final Logger log = LoggerFactory.getLogger(DetalheUsuarioResource.class);
 
     private static final String ENTITY_NAME = "detalheUsuario";
@@ -33,10 +34,10 @@ public class DetalheUsuarioResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final DetalheUsuarioRepository detalheUsuarioRepository;
+    private final DetalheUsuarioService detalheUsuarioService;
 
-    public DetalheUsuarioResource(DetalheUsuarioRepository detalheUsuarioRepository) {
-        this.detalheUsuarioRepository = detalheUsuarioRepository;
+    public DetalheUsuarioResource(DetalheUsuarioService detalheUsuarioService) {
+        this.detalheUsuarioService = detalheUsuarioService;
     }
 
     /**
@@ -52,8 +53,9 @@ public class DetalheUsuarioResource {
         if (detalheUsuario.getId() != null) {
             throw new BadRequestAlertException("A new detalheUsuario cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        DetalheUsuario result = detalheUsuarioRepository.save(detalheUsuario);
-        return ResponseEntity.created(new URI("/api/detalhe-usuarios/" + result.getId()))
+        DetalheUsuario result = detalheUsuarioService.save(detalheUsuario);
+        return ResponseEntity
+            .created(new URI("/api/detalhe-usuarios/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -73,8 +75,9 @@ public class DetalheUsuarioResource {
         if (detalheUsuario.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        DetalheUsuario result = detalheUsuarioRepository.save(detalheUsuario);
-        return ResponseEntity.ok()
+        DetalheUsuario result = detalheUsuarioService.save(detalheUsuario);
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, detalheUsuario.getId().toString()))
             .body(result);
     }
@@ -82,12 +85,15 @@ public class DetalheUsuarioResource {
     /**
      * {@code GET  /detalhe-usuarios} : get all the detalheUsuarios.
      *
+     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of detalheUsuarios in body.
      */
     @GetMapping("/detalhe-usuarios")
-    public List<DetalheUsuario> getAllDetalheUsuarios() {
-        log.debug("REST request to get all DetalheUsuarios");
-        return detalheUsuarioRepository.findAll();
+    public ResponseEntity<List<DetalheUsuario>> getAllDetalheUsuarios(Pageable pageable) {
+        log.debug("REST request to get a page of DetalheUsuarios");
+        Page<DetalheUsuario> page = detalheUsuarioService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -99,7 +105,7 @@ public class DetalheUsuarioResource {
     @GetMapping("/detalhe-usuarios/{id}")
     public ResponseEntity<DetalheUsuario> getDetalheUsuario(@PathVariable Long id) {
         log.debug("REST request to get DetalheUsuario : {}", id);
-        Optional<DetalheUsuario> detalheUsuario = detalheUsuarioRepository.findById(id);
+        Optional<DetalheUsuario> detalheUsuario = detalheUsuarioService.findOne(id);
         return ResponseUtil.wrapOrNotFound(detalheUsuario);
     }
 
@@ -112,7 +118,10 @@ public class DetalheUsuarioResource {
     @DeleteMapping("/detalhe-usuarios/{id}")
     public ResponseEntity<Void> deleteDetalheUsuario(@PathVariable Long id) {
         log.debug("REST request to delete DetalheUsuario : {}", id);
-        detalheUsuarioRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        detalheUsuarioService.delete(id);
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

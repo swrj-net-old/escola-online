@@ -1,31 +1,32 @@
 package com.swrj.net.escolaonline.web.rest;
 
 import com.swrj.net.escolaonline.domain.TipoSolicitacao;
-import com.swrj.net.escolaonline.repository.TipoSolicitacaoRepository;
+import com.swrj.net.escolaonline.service.TipoSolicitacaoService;
 import com.swrj.net.escolaonline.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * REST controller for managing {@link com.swrj.net.escolaonline.domain.TipoSolicitacao}.
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class TipoSolicitacaoResource {
-
     private final Logger log = LoggerFactory.getLogger(TipoSolicitacaoResource.class);
 
     private static final String ENTITY_NAME = "tipoSolicitacao";
@@ -33,10 +34,10 @@ public class TipoSolicitacaoResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final TipoSolicitacaoRepository tipoSolicitacaoRepository;
+    private final TipoSolicitacaoService tipoSolicitacaoService;
 
-    public TipoSolicitacaoResource(TipoSolicitacaoRepository tipoSolicitacaoRepository) {
-        this.tipoSolicitacaoRepository = tipoSolicitacaoRepository;
+    public TipoSolicitacaoResource(TipoSolicitacaoService tipoSolicitacaoService) {
+        this.tipoSolicitacaoService = tipoSolicitacaoService;
     }
 
     /**
@@ -52,8 +53,9 @@ public class TipoSolicitacaoResource {
         if (tipoSolicitacao.getId() != null) {
             throw new BadRequestAlertException("A new tipoSolicitacao cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        TipoSolicitacao result = tipoSolicitacaoRepository.save(tipoSolicitacao);
-        return ResponseEntity.created(new URI("/api/tipo-solicitacaos/" + result.getId()))
+        TipoSolicitacao result = tipoSolicitacaoService.save(tipoSolicitacao);
+        return ResponseEntity
+            .created(new URI("/api/tipo-solicitacaos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -73,8 +75,9 @@ public class TipoSolicitacaoResource {
         if (tipoSolicitacao.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        TipoSolicitacao result = tipoSolicitacaoRepository.save(tipoSolicitacao);
-        return ResponseEntity.ok()
+        TipoSolicitacao result = tipoSolicitacaoService.save(tipoSolicitacao);
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, tipoSolicitacao.getId().toString()))
             .body(result);
     }
@@ -82,12 +85,15 @@ public class TipoSolicitacaoResource {
     /**
      * {@code GET  /tipo-solicitacaos} : get all the tipoSolicitacaos.
      *
+     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tipoSolicitacaos in body.
      */
     @GetMapping("/tipo-solicitacaos")
-    public List<TipoSolicitacao> getAllTipoSolicitacaos() {
-        log.debug("REST request to get all TipoSolicitacaos");
-        return tipoSolicitacaoRepository.findAll();
+    public ResponseEntity<List<TipoSolicitacao>> getAllTipoSolicitacaos(Pageable pageable) {
+        log.debug("REST request to get a page of TipoSolicitacaos");
+        Page<TipoSolicitacao> page = tipoSolicitacaoService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -99,7 +105,7 @@ public class TipoSolicitacaoResource {
     @GetMapping("/tipo-solicitacaos/{id}")
     public ResponseEntity<TipoSolicitacao> getTipoSolicitacao(@PathVariable Long id) {
         log.debug("REST request to get TipoSolicitacao : {}", id);
-        Optional<TipoSolicitacao> tipoSolicitacao = tipoSolicitacaoRepository.findById(id);
+        Optional<TipoSolicitacao> tipoSolicitacao = tipoSolicitacaoService.findOne(id);
         return ResponseUtil.wrapOrNotFound(tipoSolicitacao);
     }
 
@@ -112,7 +118,10 @@ public class TipoSolicitacaoResource {
     @DeleteMapping("/tipo-solicitacaos/{id}")
     public ResponseEntity<Void> deleteTipoSolicitacao(@PathVariable Long id) {
         log.debug("REST request to delete TipoSolicitacao : {}", id);
-        tipoSolicitacaoRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        tipoSolicitacaoService.delete(id);
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

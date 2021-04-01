@@ -1,9 +1,16 @@
 package com.swrj.net.escolaonline.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.swrj.net.escolaonline.EscolaOnlineApp;
 import com.swrj.net.escolaonline.domain.Unidade;
 import com.swrj.net.escolaonline.repository.UnidadeRepository;
-
+import com.swrj.net.escolaonline.service.UnidadeService;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link UnidadeResource} REST controller.
@@ -28,7 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 public class UnidadeResourceIT {
-
     private static final String DEFAULT_NOME = "AAAAAAAAAA";
     private static final String UPDATED_NOME = "BBBBBBBBBB";
 
@@ -69,6 +68,9 @@ public class UnidadeResourceIT {
     private UnidadeRepository unidadeRepository;
 
     @Autowired
+    private UnidadeService unidadeService;
+
+    @Autowired
     private EntityManager em;
 
     @Autowired
@@ -98,6 +100,7 @@ public class UnidadeResourceIT {
             .observacoes(DEFAULT_OBSERVACOES);
         return unidade;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -131,9 +134,8 @@ public class UnidadeResourceIT {
     public void createUnidade() throws Exception {
         int databaseSizeBeforeCreate = unidadeRepository.findAll().size();
         // Create the Unidade
-        restUnidadeMockMvc.perform(post("/api/unidades")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(unidade)))
+        restUnidadeMockMvc
+            .perform(post("/api/unidades").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(unidade)))
             .andExpect(status().isCreated());
 
         // Validate the Unidade in the database
@@ -163,16 +165,14 @@ public class UnidadeResourceIT {
         unidade.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restUnidadeMockMvc.perform(post("/api/unidades")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(unidade)))
+        restUnidadeMockMvc
+            .perform(post("/api/unidades").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(unidade)))
             .andExpect(status().isBadRequest());
 
         // Validate the Unidade in the database
         List<Unidade> unidadeList = unidadeRepository.findAll();
         assertThat(unidadeList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -181,7 +181,8 @@ public class UnidadeResourceIT {
         unidadeRepository.saveAndFlush(unidade);
 
         // Get all the unidadeList
-        restUnidadeMockMvc.perform(get("/api/unidades?sort=id,desc"))
+        restUnidadeMockMvc
+            .perform(get("/api/unidades?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(unidade.getId().intValue())))
@@ -198,7 +199,7 @@ public class UnidadeResourceIT {
             .andExpect(jsonPath("$.[*].facebook").value(hasItem(DEFAULT_FACEBOOK)))
             .andExpect(jsonPath("$.[*].observacoes").value(hasItem(DEFAULT_OBSERVACOES)));
     }
-    
+
     @Test
     @Transactional
     public void getUnidade() throws Exception {
@@ -206,7 +207,8 @@ public class UnidadeResourceIT {
         unidadeRepository.saveAndFlush(unidade);
 
         // Get the unidade
-        restUnidadeMockMvc.perform(get("/api/unidades/{id}", unidade.getId()))
+        restUnidadeMockMvc
+            .perform(get("/api/unidades/{id}", unidade.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(unidade.getId().intValue()))
@@ -223,19 +225,19 @@ public class UnidadeResourceIT {
             .andExpect(jsonPath("$.facebook").value(DEFAULT_FACEBOOK))
             .andExpect(jsonPath("$.observacoes").value(DEFAULT_OBSERVACOES));
     }
+
     @Test
     @Transactional
     public void getNonExistingUnidade() throws Exception {
         // Get the unidade
-        restUnidadeMockMvc.perform(get("/api/unidades/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restUnidadeMockMvc.perform(get("/api/unidades/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     public void updateUnidade() throws Exception {
         // Initialize the database
-        unidadeRepository.saveAndFlush(unidade);
+        unidadeService.save(unidade);
 
         int databaseSizeBeforeUpdate = unidadeRepository.findAll().size();
 
@@ -257,9 +259,10 @@ public class UnidadeResourceIT {
             .facebook(UPDATED_FACEBOOK)
             .observacoes(UPDATED_OBSERVACOES);
 
-        restUnidadeMockMvc.perform(put("/api/unidades")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedUnidade)))
+        restUnidadeMockMvc
+            .perform(
+                put("/api/unidades").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(updatedUnidade))
+            )
             .andExpect(status().isOk());
 
         // Validate the Unidade in the database
@@ -286,9 +289,8 @@ public class UnidadeResourceIT {
         int databaseSizeBeforeUpdate = unidadeRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restUnidadeMockMvc.perform(put("/api/unidades")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(unidade)))
+        restUnidadeMockMvc
+            .perform(put("/api/unidades").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(unidade)))
             .andExpect(status().isBadRequest());
 
         // Validate the Unidade in the database
@@ -300,13 +302,13 @@ public class UnidadeResourceIT {
     @Transactional
     public void deleteUnidade() throws Exception {
         // Initialize the database
-        unidadeRepository.saveAndFlush(unidade);
+        unidadeService.save(unidade);
 
         int databaseSizeBeforeDelete = unidadeRepository.findAll().size();
 
         // Delete the unidade
-        restUnidadeMockMvc.perform(delete("/api/unidades/{id}", unidade.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restUnidadeMockMvc
+            .perform(delete("/api/unidades/{id}", unidade.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

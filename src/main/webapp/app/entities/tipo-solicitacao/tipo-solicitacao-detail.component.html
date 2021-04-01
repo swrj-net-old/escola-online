@@ -20,6 +20,12 @@
                 <dd>
                     <span>{{ tipoSolicitacao.valorEmissao }}</span>
                 </dd>
+                <dt><span jhiTranslate="escolaOnlineApp.tipoSolicitacao.escolaTipoSolicitacao">Escola Tipo Solicitacao</span></dt>
+                <dd>
+                    <div *ngIf="tipoSolicitacao.escolaTipoSolicitacao">
+                        <a [routerLink]="['/escola', tipoSolicitacao.escolaTipoSolicitacao?.id, 'view']">{{ tipoSolicitacao.escolaTipoSolicitacao?.id }}</a>
+                    </div>
+                </dd>
             </dl>
 
             <button type="submit"

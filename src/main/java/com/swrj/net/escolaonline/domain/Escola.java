@@ -1,13 +1,11 @@
 package com.swrj.net.escolaonline.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Escola.
@@ -16,7 +14,6 @@ import java.util.Set;
 @Table(name = "escola")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Escola implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -62,6 +59,14 @@ public class Escola implements Serializable {
     @OneToMany(mappedBy = "escolaUnidade")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Unidade> unidades = new HashSet<>();
+
+    @OneToMany(mappedBy = "escolaGrade")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Grade> grades = new HashSet<>();
+
+    @OneToMany(mappedBy = "escolaTipoSolicitacao")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<TipoSolicitacao> tipoSolicitacaos = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -263,6 +268,57 @@ public class Escola implements Serializable {
     public void setUnidades(Set<Unidade> unidades) {
         this.unidades = unidades;
     }
+
+    public Set<Grade> getGrades() {
+        return grades;
+    }
+
+    public Escola grades(Set<Grade> grades) {
+        this.grades = grades;
+        return this;
+    }
+
+    public Escola addGrade(Grade grade) {
+        this.grades.add(grade);
+        grade.setEscolaGrade(this);
+        return this;
+    }
+
+    public Escola removeGrade(Grade grade) {
+        this.grades.remove(grade);
+        grade.setEscolaGrade(null);
+        return this;
+    }
+
+    public void setGrades(Set<Grade> grades) {
+        this.grades = grades;
+    }
+
+    public Set<TipoSolicitacao> getTipoSolicitacaos() {
+        return tipoSolicitacaos;
+    }
+
+    public Escola tipoSolicitacaos(Set<TipoSolicitacao> tipoSolicitacaos) {
+        this.tipoSolicitacaos = tipoSolicitacaos;
+        return this;
+    }
+
+    public Escola addTipoSolicitacao(TipoSolicitacao tipoSolicitacao) {
+        this.tipoSolicitacaos.add(tipoSolicitacao);
+        tipoSolicitacao.setEscolaTipoSolicitacao(this);
+        return this;
+    }
+
+    public Escola removeTipoSolicitacao(TipoSolicitacao tipoSolicitacao) {
+        this.tipoSolicitacaos.remove(tipoSolicitacao);
+        tipoSolicitacao.setEscolaTipoSolicitacao(null);
+        return this;
+    }
+
+    public void setTipoSolicitacaos(Set<TipoSolicitacao> tipoSolicitacaos) {
+        this.tipoSolicitacaos = tipoSolicitacaos;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override

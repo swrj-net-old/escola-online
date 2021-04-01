@@ -7,6 +7,8 @@ import { Observable } from 'rxjs';
 
 import { ITipoSolicitacao, TipoSolicitacao } from 'app/shared/model/tipo-solicitacao.model';
 import { TipoSolicitacaoService } from './tipo-solicitacao.service';
+import { IEscola } from 'app/shared/model/escola.model';
+import { EscolaService } from 'app/entities/escola/escola.service';
 
 @Component({
   selector: 'jhi-tipo-solicitacao-update',
@@ -14,16 +16,19 @@ import { TipoSolicitacaoService } from './tipo-solicitacao.service';
 })
 export class TipoSolicitacaoUpdateComponent implements OnInit {
   isSaving = false;
+  escolas: IEscola[] = [];
 
   editForm = this.fb.group({
     id: [],
     nome: [],
     prazoAtendimento: [],
     valorEmissao: [],
+    escolaTipoSolicitacao: [],
   });
 
   constructor(
     protected tipoSolicitacaoService: TipoSolicitacaoService,
+    protected escolaService: EscolaService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -31,6 +36,8 @@ export class TipoSolicitacaoUpdateComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ tipoSolicitacao }) => {
       this.updateForm(tipoSolicitacao);
+
+      this.escolaService.query().subscribe((res: HttpResponse<IEscola[]>) => (this.escolas = res.body || []));
     });
   }
 
@@ -40,6 +47,7 @@ export class TipoSolicitacaoUpdateComponent implements OnInit {
       nome: tipoSolicitacao.nome,
       prazoAtendimento: tipoSolicitacao.prazoAtendimento,
       valorEmissao: tipoSolicitacao.valorEmissao,
+      escolaTipoSolicitacao: tipoSolicitacao.escolaTipoSolicitacao,
     });
   }
 
@@ -64,6 +72,7 @@ export class TipoSolicitacaoUpdateComponent implements OnInit {
       nome: this.editForm.get(['nome'])!.value,
       prazoAtendimento: this.editForm.get(['prazoAtendimento'])!.value,
       valorEmissao: this.editForm.get(['valorEmissao'])!.value,
+      escolaTipoSolicitacao: this.editForm.get(['escolaTipoSolicitacao'])!.value,
     };
   }
 
@@ -81,5 +90,9 @@ export class TipoSolicitacaoUpdateComponent implements OnInit {
 
   protected onSaveError(): void {
     this.isSaving = false;
+  }
+
+  trackById(index: number, item: IEscola): any {
+    return item.id;
   }
 }

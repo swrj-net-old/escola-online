@@ -27,7 +27,9 @@
       "responsavelCelular": "Responsavel Celular",
       "pessoa": "Pessoa",
       "aluno": "Aluno",
-      "unidade": "Unidade"
+      "unidade": "Unidade",
+      "grade": "Grade",
+      "tipoSolicitacao": "Tipo Solicitacao"
     }
   }
 }

@@ -32,6 +32,14 @@
                         <option [ngValue]="materiaOption.id === editForm.get('materiaGrade')!.value?.id ? editForm.get('materiaGrade')!.value : materiaOption" *ngFor="let materiaOption of materias; trackBy: trackById">{{ materiaOption.id }}</option>
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.grade.escolaGrade" for="field_escolaGrade">Escola Grade</label>
+                    <select class="form-control" id="field_escolaGrade" name="escolaGrade" formControlName="escolaGrade">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="escolaOption.id === editForm.get('escolaGrade')!.value?.id ? editForm.get('escolaGrade')!.value : escolaOption" *ngFor="let escolaOption of escolas; trackBy: trackById">{{ escolaOption.id }}</option>
+                    </select>
+                </div>
             </div>
 
             <div>

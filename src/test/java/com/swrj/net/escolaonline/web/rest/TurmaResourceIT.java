@@ -1,9 +1,16 @@
 package com.swrj.net.escolaonline.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.swrj.net.escolaonline.EscolaOnlineApp;
 import com.swrj.net.escolaonline.domain.Turma;
 import com.swrj.net.escolaonline.repository.TurmaRepository;
-
+import com.swrj.net.escolaonline.service.TurmaService;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link TurmaResource} REST controller.
@@ -28,12 +28,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 public class TurmaResourceIT {
-
     private static final String DEFAULT_NOME = "AAAAAAAAAA";
     private static final String UPDATED_NOME = "BBBBBBBBBB";
 
     @Autowired
     private TurmaRepository turmaRepository;
+
+    @Autowired
+    private TurmaService turmaService;
 
     @Autowired
     private EntityManager em;
@@ -50,10 +52,10 @@ public class TurmaResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Turma createEntity(EntityManager em) {
-        Turma turma = new Turma()
-            .nome(DEFAULT_NOME);
+        Turma turma = new Turma().nome(DEFAULT_NOME);
         return turma;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -61,8 +63,7 @@ public class TurmaResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Turma createUpdatedEntity(EntityManager em) {
-        Turma turma = new Turma()
-            .nome(UPDATED_NOME);
+        Turma turma = new Turma().nome(UPDATED_NOME);
         return turma;
     }
 
@@ -76,9 +77,8 @@ public class TurmaResourceIT {
     public void createTurma() throws Exception {
         int databaseSizeBeforeCreate = turmaRepository.findAll().size();
         // Create the Turma
-        restTurmaMockMvc.perform(post("/api/turmas")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(turma)))
+        restTurmaMockMvc
+            .perform(post("/api/turmas").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(turma)))
             .andExpect(status().isCreated());
 
         // Validate the Turma in the database
@@ -97,16 +97,14 @@ public class TurmaResourceIT {
         turma.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restTurmaMockMvc.perform(post("/api/turmas")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(turma)))
+        restTurmaMockMvc
+            .perform(post("/api/turmas").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(turma)))
             .andExpect(status().isBadRequest());
 
         // Validate the Turma in the database
         List<Turma> turmaList = turmaRepository.findAll();
         assertThat(turmaList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -115,13 +113,14 @@ public class TurmaResourceIT {
         turmaRepository.saveAndFlush(turma);
 
         // Get all the turmaList
-        restTurmaMockMvc.perform(get("/api/turmas?sort=id,desc"))
+        restTurmaMockMvc
+            .perform(get("/api/turmas?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(turma.getId().intValue())))
             .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME)));
     }
-    
+
     @Test
     @Transactional
     public void getTurma() throws Exception {
@@ -129,25 +128,26 @@ public class TurmaResourceIT {
         turmaRepository.saveAndFlush(turma);
 
         // Get the turma
-        restTurmaMockMvc.perform(get("/api/turmas/{id}", turma.getId()))
+        restTurmaMockMvc
+            .perform(get("/api/turmas/{id}", turma.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(turma.getId().intValue()))
             .andExpect(jsonPath("$.nome").value(DEFAULT_NOME));
     }
+
     @Test
     @Transactional
     public void getNonExistingTurma() throws Exception {
         // Get the turma
-        restTurmaMockMvc.perform(get("/api/turmas/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restTurmaMockMvc.perform(get("/api/turmas/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     public void updateTurma() throws Exception {
         // Initialize the database
-        turmaRepository.saveAndFlush(turma);
+        turmaService.save(turma);
 
         int databaseSizeBeforeUpdate = turmaRepository.findAll().size();
 
@@ -155,12 +155,10 @@ public class TurmaResourceIT {
         Turma updatedTurma = turmaRepository.findById(turma.getId()).get();
         // Disconnect from session so that the updates on updatedTurma are not directly saved in db
         em.detach(updatedTurma);
-        updatedTurma
-            .nome(UPDATED_NOME);
+        updatedTurma.nome(UPDATED_NOME);
 
-        restTurmaMockMvc.perform(put("/api/turmas")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedTurma)))
+        restTurmaMockMvc
+            .perform(put("/api/turmas").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(updatedTurma)))
             .andExpect(status().isOk());
 
         // Validate the Turma in the database
@@ -176,9 +174,8 @@ public class TurmaResourceIT {
         int databaseSizeBeforeUpdate = turmaRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restTurmaMockMvc.perform(put("/api/turmas")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(turma)))
+        restTurmaMockMvc
+            .perform(put("/api/turmas").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(turma)))
             .andExpect(status().isBadRequest());
 
         // Validate the Turma in the database
@@ -190,13 +187,13 @@ public class TurmaResourceIT {
     @Transactional
     public void deleteTurma() throws Exception {
         // Initialize the database
-        turmaRepository.saveAndFlush(turma);
+        turmaService.save(turma);
 
         int databaseSizeBeforeDelete = turmaRepository.findAll().size();
 
         // Delete the turma
-        restTurmaMockMvc.perform(delete("/api/turmas/{id}", turma.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restTurmaMockMvc
+            .perform(delete("/api/turmas/{id}", turma.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

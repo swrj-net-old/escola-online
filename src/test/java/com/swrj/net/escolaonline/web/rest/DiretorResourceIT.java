@@ -1,9 +1,18 @@
 package com.swrj.net.escolaonline.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.swrj.net.escolaonline.EscolaOnlineApp;
 import com.swrj.net.escolaonline.domain.Diretor;
 import com.swrj.net.escolaonline.repository.DiretorRepository;
-
+import com.swrj.net.escolaonline.service.DiretorService;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +22,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link DiretorResource} REST controller.
@@ -30,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 public class DiretorResourceIT {
-
     private static final Integer DEFAULT_ANO_LETIVO = 1;
     private static final Integer UPDATED_ANO_LETIVO = 2;
 
@@ -42,6 +41,9 @@ public class DiretorResourceIT {
 
     @Autowired
     private DiretorRepository diretorRepository;
+
+    @Autowired
+    private DiretorService diretorService;
 
     @Autowired
     private EntityManager em;
@@ -58,12 +60,10 @@ public class DiretorResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Diretor createEntity(EntityManager em) {
-        Diretor diretor = new Diretor()
-            .anoLetivo(DEFAULT_ANO_LETIVO)
-            .dataInicio(DEFAULT_DATA_INICIO)
-            .dataFim(DEFAULT_DATA_FIM);
+        Diretor diretor = new Diretor().anoLetivo(DEFAULT_ANO_LETIVO).dataInicio(DEFAULT_DATA_INICIO).dataFim(DEFAULT_DATA_FIM);
         return diretor;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -71,10 +71,7 @@ public class DiretorResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Diretor createUpdatedEntity(EntityManager em) {
-        Diretor diretor = new Diretor()
-            .anoLetivo(UPDATED_ANO_LETIVO)
-            .dataInicio(UPDATED_DATA_INICIO)
-            .dataFim(UPDATED_DATA_FIM);
+        Diretor diretor = new Diretor().anoLetivo(UPDATED_ANO_LETIVO).dataInicio(UPDATED_DATA_INICIO).dataFim(UPDATED_DATA_FIM);
         return diretor;
     }
 
@@ -88,9 +85,8 @@ public class DiretorResourceIT {
     public void createDiretor() throws Exception {
         int databaseSizeBeforeCreate = diretorRepository.findAll().size();
         // Create the Diretor
-        restDiretorMockMvc.perform(post("/api/diretors")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(diretor)))
+        restDiretorMockMvc
+            .perform(post("/api/diretors").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(diretor)))
             .andExpect(status().isCreated());
 
         // Validate the Diretor in the database
@@ -111,16 +107,14 @@ public class DiretorResourceIT {
         diretor.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restDiretorMockMvc.perform(post("/api/diretors")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(diretor)))
+        restDiretorMockMvc
+            .perform(post("/api/diretors").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(diretor)))
             .andExpect(status().isBadRequest());
 
         // Validate the Diretor in the database
         List<Diretor> diretorList = diretorRepository.findAll();
         assertThat(diretorList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -129,7 +123,8 @@ public class DiretorResourceIT {
         diretorRepository.saveAndFlush(diretor);
 
         // Get all the diretorList
-        restDiretorMockMvc.perform(get("/api/diretors?sort=id,desc"))
+        restDiretorMockMvc
+            .perform(get("/api/diretors?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(diretor.getId().intValue())))
@@ -137,7 +132,7 @@ public class DiretorResourceIT {
             .andExpect(jsonPath("$.[*].dataInicio").value(hasItem(DEFAULT_DATA_INICIO.toString())))
             .andExpect(jsonPath("$.[*].dataFim").value(hasItem(DEFAULT_DATA_FIM.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getDiretor() throws Exception {
@@ -145,7 +140,8 @@ public class DiretorResourceIT {
         diretorRepository.saveAndFlush(diretor);
 
         // Get the diretor
-        restDiretorMockMvc.perform(get("/api/diretors/{id}", diretor.getId()))
+        restDiretorMockMvc
+            .perform(get("/api/diretors/{id}", diretor.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(diretor.getId().intValue()))
@@ -153,19 +149,19 @@ public class DiretorResourceIT {
             .andExpect(jsonPath("$.dataInicio").value(DEFAULT_DATA_INICIO.toString()))
             .andExpect(jsonPath("$.dataFim").value(DEFAULT_DATA_FIM.toString()));
     }
+
     @Test
     @Transactional
     public void getNonExistingDiretor() throws Exception {
         // Get the diretor
-        restDiretorMockMvc.perform(get("/api/diretors/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restDiretorMockMvc.perform(get("/api/diretors/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     public void updateDiretor() throws Exception {
         // Initialize the database
-        diretorRepository.saveAndFlush(diretor);
+        diretorService.save(diretor);
 
         int databaseSizeBeforeUpdate = diretorRepository.findAll().size();
 
@@ -173,14 +169,12 @@ public class DiretorResourceIT {
         Diretor updatedDiretor = diretorRepository.findById(diretor.getId()).get();
         // Disconnect from session so that the updates on updatedDiretor are not directly saved in db
         em.detach(updatedDiretor);
-        updatedDiretor
-            .anoLetivo(UPDATED_ANO_LETIVO)
-            .dataInicio(UPDATED_DATA_INICIO)
-            .dataFim(UPDATED_DATA_FIM);
+        updatedDiretor.anoLetivo(UPDATED_ANO_LETIVO).dataInicio(UPDATED_DATA_INICIO).dataFim(UPDATED_DATA_FIM);
 
-        restDiretorMockMvc.perform(put("/api/diretors")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedDiretor)))
+        restDiretorMockMvc
+            .perform(
+                put("/api/diretors").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(updatedDiretor))
+            )
             .andExpect(status().isOk());
 
         // Validate the Diretor in the database
@@ -198,9 +192,8 @@ public class DiretorResourceIT {
         int databaseSizeBeforeUpdate = diretorRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restDiretorMockMvc.perform(put("/api/diretors")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(diretor)))
+        restDiretorMockMvc
+            .perform(put("/api/diretors").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(diretor)))
             .andExpect(status().isBadRequest());
 
         // Validate the Diretor in the database
@@ -212,13 +205,13 @@ public class DiretorResourceIT {
     @Transactional
     public void deleteDiretor() throws Exception {
         // Initialize the database
-        diretorRepository.saveAndFlush(diretor);
+        diretorService.save(diretor);
 
         int databaseSizeBeforeDelete = diretorRepository.findAll().size();
 
         // Delete the diretor
-        restDiretorMockMvc.perform(delete("/api/diretors/{id}", diretor.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restDiretorMockMvc
+            .perform(delete("/api/diretors/{id}", diretor.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

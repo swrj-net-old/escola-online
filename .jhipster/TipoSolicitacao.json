@@ -20,13 +20,20 @@
       "otherEntityName": "solicitacao",
       "otherEntityRelationshipName": "tipoSolicitacaoSolicitacao",
       "relationshipName": "solicitacao"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "escola",
+      "otherEntityRelationshipName": "tipoSolicitacao",
+      "relationshipName": "escolaTipoSolicitacao",
+      "otherEntityField": "id"
     }
   ],
   "changelogDate": "20210329174628",
   "entityTableName": "tipo_solicitacao",
   "dto": "no",
-  "pagination": "no",
-  "service": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,

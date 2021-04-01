@@ -56,13 +56,25 @@
       "otherEntityName": "unidade",
       "otherEntityRelationshipName": "escolaUnidade",
       "relationshipName": "unidade"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "grade",
+      "otherEntityRelationshipName": "escolaGrade",
+      "relationshipName": "grade"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "tipoSolicitacao",
+      "otherEntityRelationshipName": "escolaTipoSolicitacao",
+      "relationshipName": "tipoSolicitacao"
     }
   ],
   "changelogDate": "20210329173028",
   "entityTableName": "escola",
   "dto": "no",
-  "pagination": "no",
-  "service": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
