@@ -32,8 +32,8 @@
                     <th scope="col"  jhiSortBy="nomeResponsavel"><span jhiTranslate="escolaOnlineApp.aluno.nomeResponsavel">Nome Responsavel</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="cpfResponsavel"><span jhiTranslate="escolaOnlineApp.aluno.cpfResponsavel">Cpf Responsavel</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="observacoes"><span jhiTranslate="escolaOnlineApp.aluno.observacoes">Observacoes</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="pessoaAluno.id"><span jhiTranslate="escolaOnlineApp.aluno.pessoaAluno">Pessoa Aluno</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="escolaAluno.id"><span jhiTranslate="escolaOnlineApp.aluno.escolaAluno">Escola Aluno</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="pessoaAluno.nome"><span jhiTranslate="escolaOnlineApp.aluno.pessoaAluno">Pessoa Aluno</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="escolaAluno.nome"><span jhiTranslate="escolaOnlineApp.aluno.escolaAluno">Escola Aluno</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -51,12 +51,12 @@
                     <td>{{ aluno.observacoes }}</td>
                     <td>
                         <div *ngIf="aluno.pessoaAluno">
-                            <a [routerLink]="['/pessoa', aluno.pessoaAluno?.id, 'view']" >{{ aluno.pessoaAluno?.id }}</a>
+                            <a [routerLink]="['/pessoa', aluno.pessoaAluno?.id, 'view']" >{{ aluno.pessoaAluno?.nome }}</a>
                         </div>
                     </td>
                     <td>
                         <div *ngIf="aluno.escolaAluno">
-                            <a [routerLink]="['/escola', aluno.escolaAluno?.id, 'view']" >{{ aluno.escolaAluno?.id }}</a>
+                            <a [routerLink]="['/escola', aluno.escolaAluno?.id, 'view']" >{{ aluno.escolaAluno?.nome }}</a>
                         </div>
                     </td>
                     <td class="text-right">

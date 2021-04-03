@@ -47,7 +47,7 @@
                     <label class="form-control-label" jhiTranslate="escolaOnlineApp.solicitacao.tipoSolicitacaoSolicitacao" for="field_tipoSolicitacaoSolicitacao">Tipo Solicitacao Solicitacao</label>
                     <select class="form-control" id="field_tipoSolicitacaoSolicitacao" name="tipoSolicitacaoSolicitacao" formControlName="tipoSolicitacaoSolicitacao">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="tipoSolicitacaoOption.id === editForm.get('tipoSolicitacaoSolicitacao')!.value?.id ? editForm.get('tipoSolicitacaoSolicitacao')!.value : tipoSolicitacaoOption" *ngFor="let tipoSolicitacaoOption of tiposolicitacaos; trackBy: trackById">{{ tipoSolicitacaoOption.id }}</option>
+                        <option [ngValue]="tipoSolicitacaoOption.id === editForm.get('tipoSolicitacaoSolicitacao')!.value?.id ? editForm.get('tipoSolicitacaoSolicitacao')!.value : tipoSolicitacaoOption" *ngFor="let tipoSolicitacaoOption of tiposolicitacaos; trackBy: trackById">{{ tipoSolicitacaoOption.nome }}</option>
                     </select>
                 </div>
 
@@ -55,7 +55,7 @@
                     <label class="form-control-label" jhiTranslate="escolaOnlineApp.solicitacao.alunoSolicitacao" for="field_alunoSolicitacao">Aluno Solicitacao</label>
                     <select class="form-control" id="field_alunoSolicitacao" name="alunoSolicitacao" formControlName="alunoSolicitacao">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="alunoOption.id === editForm.get('alunoSolicitacao')!.value?.id ? editForm.get('alunoSolicitacao')!.value : alunoOption" *ngFor="let alunoOption of alunos; trackBy: trackById">{{ alunoOption.id }}</option>
+                        <option [ngValue]="alunoOption.id === editForm.get('alunoSolicitacao')!.value?.id ? editForm.get('alunoSolicitacao')!.value : alunoOption" *ngFor="let alunoOption of alunos; trackBy: trackById">{{ alunoOption.pessoaAluno.nome }}</option>
                     </select>
                 </div>
             </div>

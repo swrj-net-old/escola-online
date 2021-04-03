@@ -23,13 +23,13 @@
                 <dt><span jhiTranslate="escolaOnlineApp.professor.pessoaProfessor">Pessoa Professor</span></dt>
                 <dd>
                     <div *ngIf="professor.pessoaProfessor">
-                        <a [routerLink]="['/pessoa', professor.pessoaProfessor?.id, 'view']">{{ professor.pessoaProfessor?.id }}</a>
+                        <a [routerLink]="['/pessoa', professor.pessoaProfessor?.id, 'view']">{{ professor.pessoaProfessor?.nome }}</a>
                     </div>
                 </dd>
                 <dt><span jhiTranslate="escolaOnlineApp.professor.unidadeProfessor">Unidade Professor</span></dt>
                 <dd>
                     <div *ngIf="professor.unidadeProfessor">
-                        <a [routerLink]="['/unidade', professor.unidadeProfessor?.id, 'view']">{{ professor.unidadeProfessor?.id }}</a>
+                        <a [routerLink]="['/unidade', professor.unidadeProfessor?.id, 'view']">{{ professor.unidadeProfessor?.nome }}</a>
                     </div>
                 </dd>
             </dl>

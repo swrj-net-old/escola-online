@@ -15,19 +15,19 @@
                 <dt><span jhiTranslate="escolaOnlineApp.grade.serieGrade">Serie Grade</span></dt>
                 <dd>
                     <div *ngIf="grade.serieGrade">
-                        <a [routerLink]="['/serie', grade.serieGrade?.id, 'view']">{{ grade.serieGrade?.id }}</a>
+                        <a [routerLink]="['/serie', grade.serieGrade?.id, 'view']">{{ grade.serieGrade?.nome }}</a>
                     </div>
                 </dd>
                 <dt><span jhiTranslate="escolaOnlineApp.grade.materiaGrade">Materia Grade</span></dt>
                 <dd>
                     <div *ngIf="grade.materiaGrade">
-                        <a [routerLink]="['/materia', grade.materiaGrade?.id, 'view']">{{ grade.materiaGrade?.id }}</a>
+                        <a [routerLink]="['/materia', grade.materiaGrade?.id, 'view']">{{ grade.materiaGrade?.nome }}</a>
                     </div>
                 </dd>
                 <dt><span jhiTranslate="escolaOnlineApp.grade.escolaGrade">Escola Grade</span></dt>
                 <dd>
                     <div *ngIf="grade.escolaGrade">
-                        <a [routerLink]="['/escola', grade.escolaGrade?.id, 'view']">{{ grade.escolaGrade?.id }}</a>
+                        <a [routerLink]="['/escola', grade.escolaGrade?.id, 'view']">{{ grade.escolaGrade?.nome }}</a>
                     </div>
                 </dd>
             </dl>

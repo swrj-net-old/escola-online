@@ -35,7 +35,7 @@
                     <th scope="col"  jhiSortBy="email"><span jhiTranslate="escolaOnlineApp.unidade.email">Email</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="facebook"><span jhiTranslate="escolaOnlineApp.unidade.facebook">Facebook</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="observacoes"><span jhiTranslate="escolaOnlineApp.unidade.observacoes">Observacoes</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="escolaUnidade.id"><span jhiTranslate="escolaOnlineApp.unidade.escolaUnidade">Escola Unidade</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="escolaUnidade.nome"><span jhiTranslate="escolaOnlineApp.unidade.escolaUnidade">Escola Unidade</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -56,7 +56,7 @@
                     <td>{{ unidade.observacoes }}</td>
                     <td>
                         <div *ngIf="unidade.escolaUnidade">
-                            <a [routerLink]="['/escola', unidade.escolaUnidade?.id, 'view']" >{{ unidade.escolaUnidade?.id }}</a>
+                            <a [routerLink]="['/escola', unidade.escolaUnidade?.id, 'view']" >{{ unidade.escolaUnidade?.nome }}</a>
                         </div>
                     </td>
                     <td class="text-right">

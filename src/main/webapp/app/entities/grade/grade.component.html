@@ -24,9 +24,9 @@
                 <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
                     <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="anoLetivo"><span jhiTranslate="escolaOnlineApp.grade.anoLetivo">Ano Letivo</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="serieGrade.id"><span jhiTranslate="escolaOnlineApp.grade.serieGrade">Serie Grade</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="materiaGrade.id"><span jhiTranslate="escolaOnlineApp.grade.materiaGrade">Materia Grade</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="escolaGrade.id"><span jhiTranslate="escolaOnlineApp.grade.escolaGrade">Escola Grade</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="serieGrade.nome"><span jhiTranslate="escolaOnlineApp.grade.serieGrade">Serie Grade</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="materiaGrade.nome"><span jhiTranslate="escolaOnlineApp.grade.materiaGrade">Materia Grade</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="escolaGrade.nome"><span jhiTranslate="escolaOnlineApp.grade.escolaGrade">Escola Grade</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -36,17 +36,17 @@
                     <td>{{ grade.anoLetivo }}</td>
                     <td>
                         <div *ngIf="grade.serieGrade">
-                            <a [routerLink]="['/serie', grade.serieGrade?.id, 'view']" >{{ grade.serieGrade?.id }}</a>
+                            <a [routerLink]="['/serie', grade.serieGrade?.id, 'view']" >{{ grade.serieGrade?.nome }}</a>
                         </div>
                     </td>
                     <td>
                         <div *ngIf="grade.materiaGrade">
-                            <a [routerLink]="['/materia', grade.materiaGrade?.id, 'view']" >{{ grade.materiaGrade?.id }}</a>
+                            <a [routerLink]="['/materia', grade.materiaGrade?.id, 'view']" >{{ grade.materiaGrade?.nome }}</a>
                         </div>
                     </td>
                     <td>
                         <div *ngIf="grade.escolaGrade">
-                            <a [routerLink]="['/escola', grade.escolaGrade?.id, 'view']" >{{ grade.escolaGrade?.id }}</a>
+                            <a [routerLink]="['/escola', grade.escolaGrade?.id, 'view']" >{{ grade.escolaGrade?.nome }}</a>
                         </div>
                     </td>
                     <td class="text-right">

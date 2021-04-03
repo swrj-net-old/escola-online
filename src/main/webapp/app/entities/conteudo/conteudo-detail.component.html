@@ -23,19 +23,19 @@
                 <dt><span jhiTranslate="escolaOnlineApp.conteudo.turmaConteudo">Turma Conteudo</span></dt>
                 <dd>
                     <div *ngIf="conteudo.turmaConteudo">
-                        <a [routerLink]="['/turma', conteudo.turmaConteudo?.id, 'view']">{{ conteudo.turmaConteudo?.id }}</a>
+                        <a [routerLink]="['/turma', conteudo.turmaConteudo?.id, 'view']">{{ conteudo.turmaConteudo?.nome }}</a>
                     </div>
                 </dd>
                 <dt><span jhiTranslate="escolaOnlineApp.conteudo.professorConteudo">Professor Conteudo</span></dt>
                 <dd>
                     <div *ngIf="conteudo.professorConteudo">
-                        <a [routerLink]="['/professor', conteudo.professorConteudo?.id, 'view']">{{ conteudo.professorConteudo?.id }}</a>
+                        <a [routerLink]="['/professor', conteudo.professorConteudo?.id, 'view']">{{ conteudo.professorConteudo?.pessoaProfessor.nome }}</a>
                     </div>
                 </dd>
                 <dt><span jhiTranslate="escolaOnlineApp.conteudo.materiaConteudo">Materia Conteudo</span></dt>
                 <dd>
                     <div *ngIf="conteudo.materiaConteudo">
-                        <a [routerLink]="['/materia', conteudo.materiaConteudo?.id, 'view']">{{ conteudo.materiaConteudo?.id }}</a>
+                        <a [routerLink]="['/materia', conteudo.materiaConteudo?.id, 'view']">{{ conteudo.materiaConteudo?.nome }}</a>
                     </div>
                 </dd>
             </dl>

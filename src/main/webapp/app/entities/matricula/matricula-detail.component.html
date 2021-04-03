@@ -23,13 +23,13 @@
                 <dt><span jhiTranslate="escolaOnlineApp.matricula.turmaMatricula">Turma Matricula</span></dt>
                 <dd>
                     <div *ngIf="matricula.turmaMatricula">
-                        <a [routerLink]="['/turma', matricula.turmaMatricula?.id, 'view']">{{ matricula.turmaMatricula?.id }}</a>
+                        <a [routerLink]="['/turma', matricula.turmaMatricula?.id, 'view']">{{ matricula.turmaMatricula?.nome }}</a>
                     </div>
                 </dd>
                 <dt><span jhiTranslate="escolaOnlineApp.matricula.alunoMatricula">Aluno Matricula</span></dt>
                 <dd>
                     <div *ngIf="matricula.alunoMatricula">
-                        <a [routerLink]="['/aluno', matricula.alunoMatricula?.id, 'view']">{{ matricula.alunoMatricula?.id }}</a>
+                        <a [routerLink]="['/aluno', matricula.alunoMatricula?.id, 'view']">{{ matricula.alunoMatricula?.pessoaAluno.nome }}</a>
                     </div>
                 </dd>
             </dl>

@@ -15,13 +15,13 @@
                 <dt><span jhiTranslate="escolaOnlineApp.turma.serieTurma">Serie Turma</span></dt>
                 <dd>
                     <div *ngIf="turma.serieTurma">
-                        <a [routerLink]="['/serie', turma.serieTurma?.id, 'view']">{{ turma.serieTurma?.id }}</a>
+                        <a [routerLink]="['/serie', turma.serieTurma?.id, 'view']">{{ turma.serieTurma?.nome }}</a>
                     </div>
                 </dd>
                 <dt><span jhiTranslate="escolaOnlineApp.turma.unidadeTurma">Unidade Turma</span></dt>
                 <dd>
                     <div *ngIf="turma.unidadeTurma">
-                        <a [routerLink]="['/unidade', turma.unidadeTurma?.id, 'view']">{{ turma.unidadeTurma?.id }}</a>
+                        <a [routerLink]="['/unidade', turma.unidadeTurma?.id, 'view']">{{ turma.unidadeTurma?.nome }}</a>
                     </div>
                 </dd>
             </dl>

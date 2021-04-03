@@ -26,8 +26,8 @@
                     <th scope="col"  jhiSortBy="anoLetivo"><span jhiTranslate="escolaOnlineApp.matricula.anoLetivo">Ano Letivo</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="dataInicio"><span jhiTranslate="escolaOnlineApp.matricula.dataInicio">Data Inicio</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="dataFim"><span jhiTranslate="escolaOnlineApp.matricula.dataFim">Data Fim</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="turmaMatricula.id"><span jhiTranslate="escolaOnlineApp.matricula.turmaMatricula">Turma Matricula</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="alunoMatricula.id"><span jhiTranslate="escolaOnlineApp.matricula.alunoMatricula">Aluno Matricula</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="turmaMatricula.nome"><span jhiTranslate="escolaOnlineApp.matricula.turmaMatricula">Turma Matricula</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="alunoMatricula.pessoaAluno.nome"><span jhiTranslate="escolaOnlineApp.matricula.alunoMatricula">Aluno Matricula</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -39,12 +39,12 @@
                     <td>{{ matricula.dataFim | date:'mediumDate' }}</td>
                     <td>
                         <div *ngIf="matricula.turmaMatricula">
-                            <a [routerLink]="['/turma', matricula.turmaMatricula?.id, 'view']" >{{ matricula.turmaMatricula?.id }}</a>
+                            <a [routerLink]="['/turma', matricula.turmaMatricula?.id, 'view']" >{{ matricula.turmaMatricula?.nome }}</a>
                         </div>
                     </td>
                     <td>
                         <div *ngIf="matricula.alunoMatricula">
-                            <a [routerLink]="['/aluno', matricula.alunoMatricula?.id, 'view']" >{{ matricula.alunoMatricula?.id }}</a>
+                            <a [routerLink]="['/aluno', matricula.alunoMatricula?.id, 'view']" >{{ matricula.alunoMatricula?.pessoaAluno.nome }}</a>
                         </div>
                     </td>
                     <td class="text-right">

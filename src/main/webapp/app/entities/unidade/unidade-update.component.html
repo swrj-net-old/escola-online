@@ -5,6 +5,13 @@
 
             <div>
                 <jhi-alert-error></jhi-alert-error>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.unidade.escolaUnidade" for="field_escolaUnidade">Escola Unidade</label>
+                    <select class="form-control" id="field_escolaUnidade" name="escolaUnidade" formControlName="escolaUnidade">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="escolaOption.id === editForm.get('escolaUnidade')!.value?.id ? editForm.get('escolaUnidade')!.value : escolaOption" *ngFor="let escolaOption of escolas; trackBy: trackById">{{ escolaOption.nome }}</option>
+                    </select>
+                </div>
 
                 <div class="form-group" [hidden]="!editForm.get('id')!.value">
                     <label for="id" jhiTranslate="global.field.id">ID</label>
@@ -81,14 +88,6 @@
                     <label class="form-control-label" jhiTranslate="escolaOnlineApp.unidade.observacoes" for="field_observacoes">Observacoes</label>
                     <input type="text" class="form-control" name="observacoes" id="field_observacoes"
                            formControlName="observacoes"/>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="escolaOnlineApp.unidade.escolaUnidade" for="field_escolaUnidade">Escola Unidade</label>
-                    <select class="form-control" id="field_escolaUnidade" name="escolaUnidade" formControlName="escolaUnidade">
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="escolaOption.id === editForm.get('escolaUnidade')!.value?.id ? editForm.get('escolaUnidade')!.value : escolaOption" *ngFor="let escolaOption of escolas; trackBy: trackById">{{ escolaOption.id }}</option>
-                    </select>
                 </div>
             </div>
 

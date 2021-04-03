@@ -26,8 +26,8 @@
                     <th scope="col"  jhiSortBy="anoLetivo"><span jhiTranslate="escolaOnlineApp.diretor.anoLetivo">Ano Letivo</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="dataInicio"><span jhiTranslate="escolaOnlineApp.diretor.dataInicio">Data Inicio</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="dataFim"><span jhiTranslate="escolaOnlineApp.diretor.dataFim">Data Fim</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="pessoaDiretor.id"><span jhiTranslate="escolaOnlineApp.diretor.pessoaDiretor">Pessoa Diretor</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="unidadeDiretor.id"><span jhiTranslate="escolaOnlineApp.diretor.unidadeDiretor">Unidade Diretor</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="pessoaDiretor.nome"><span jhiTranslate="escolaOnlineApp.diretor.pessoaDiretor">Pessoa Diretor</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="unidadeDiretor.nome"><span jhiTranslate="escolaOnlineApp.diretor.unidadeDiretor">Unidade Diretor</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -39,12 +39,12 @@
                     <td>{{ diretor.dataFim | date:'mediumDate' }}</td>
                     <td>
                         <div *ngIf="diretor.pessoaDiretor">
-                            <a [routerLink]="['/pessoa', diretor.pessoaDiretor?.id, 'view']" >{{ diretor.pessoaDiretor?.id }}</a>
+                            <a [routerLink]="['/pessoa', diretor.pessoaDiretor?.id, 'view']" >{{ diretor.pessoaDiretor?.nome }}</a>
                         </div>
                     </td>
                     <td>
                         <div *ngIf="diretor.unidadeDiretor">
-                            <a [routerLink]="['/unidade', diretor.unidadeDiretor?.id, 'view']" >{{ diretor.unidadeDiretor?.id }}</a>
+                            <a [routerLink]="['/unidade', diretor.unidadeDiretor?.id, 'view']" >{{ diretor.unidadeDiretor?.nome }}</a>
                         </div>
                     </td>
                     <td class="text-right">

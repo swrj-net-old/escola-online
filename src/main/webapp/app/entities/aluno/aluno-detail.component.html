@@ -47,13 +47,13 @@
                 <dt><span jhiTranslate="escolaOnlineApp.aluno.pessoaAluno">Pessoa Aluno</span></dt>
                 <dd>
                     <div *ngIf="aluno.pessoaAluno">
-                        <a [routerLink]="['/pessoa', aluno.pessoaAluno?.id, 'view']">{{ aluno.pessoaAluno?.id }}</a>
+                        <a [routerLink]="['/pessoa', aluno.pessoaAluno?.id, 'view']">{{ aluno.pessoaAluno?.nome }}</a>
                     </div>
                 </dd>
                 <dt><span jhiTranslate="escolaOnlineApp.aluno.escolaAluno">Escola Aluno</span></dt>
                 <dd>
                     <div *ngIf="aluno.escolaAluno">
-                        <a [routerLink]="['/escola', aluno.escolaAluno?.id, 'view']">{{ aluno.escolaAluno?.id }}</a>
+                        <a [routerLink]="['/escola', aluno.escolaAluno?.id, 'view']">{{ aluno.escolaAluno?.nome }}</a>
                     </div>
                 </dd>
             </dl>

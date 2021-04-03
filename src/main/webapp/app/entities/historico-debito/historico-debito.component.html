@@ -33,7 +33,7 @@
                     <th scope="col"  jhiSortBy="totalDevido"><span jhiTranslate="escolaOnlineApp.historicoDebito.totalDevido">Total Devido</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="observacoes"><span jhiTranslate="escolaOnlineApp.historicoDebito.observacoes">Observacoes</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="debitoHistoricoDebito.id"><span jhiTranslate="escolaOnlineApp.historicoDebito.debitoHistoricoDebito">Debito Historico Debito</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="detalheUsuarioLancamento.id"><span jhiTranslate="escolaOnlineApp.historicoDebito.detalheUsuarioLancamento">Detalhe Usuario Lancamento</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="detalheUsuarioLancamento.usuario.login"><span jhiTranslate="escolaOnlineApp.historicoDebito.detalheUsuarioLancamento">Detalhe Usuario Lancamento</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -56,7 +56,7 @@
                     </td>
                     <td>
                         <div *ngIf="historicoDebito.detalheUsuarioLancamento">
-                            <a [routerLink]="['/detalhe-usuario', historicoDebito.detalheUsuarioLancamento?.id, 'view']" >{{ historicoDebito.detalheUsuarioLancamento?.id }}</a>
+                            <a [routerLink]="['/detalhe-usuario', historicoDebito.detalheUsuarioLancamento?.id, 'view']" >{{ historicoDebito.detalheUsuarioLancamento?.usuario.login }}</a>
                         </div>
                     </td>
                     <td class="text-right">
