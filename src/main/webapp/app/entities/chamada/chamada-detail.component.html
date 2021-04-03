@@ -19,7 +19,7 @@
                 <dt><span jhiTranslate="escolaOnlineApp.chamada.alunoChamada">Aluno Chamada</span></dt>
                 <dd>
                     <div *ngIf="chamada.alunoChamada">
-                        <a [routerLink]="['/aluno', chamada.alunoChamada?.id, 'view']">{{ chamada.alunoChamada?.pessoaAluno.nome }}</a>
+                        <a [routerLink]="['/aluno', chamada.alunoChamada?.id, 'view']">{{ chamada.alunoChamada?.pessoaAluno?.nome }}</a>
                     </div>
                 </dd>
                 <dt><span jhiTranslate="escolaOnlineApp.chamada.turmaChamada">Turma Chamada</span></dt>
@@ -31,7 +31,7 @@
                 <dt><span jhiTranslate="escolaOnlineApp.chamada.professorChamada">Professor Chamada</span></dt>
                 <dd>
                     <div *ngIf="chamada.professorChamada">
-                        <a [routerLink]="['/professor', chamada.professorChamada?.id, 'view']">{{ chamada.professorChamada?.pessoaProfessor.nome }}</a>
+                        <a [routerLink]="['/professor', chamada.professorChamada?.id, 'view']">{{ chamada.professorChamada?.pessoaProfessor?.nome }}</a>
                     </div>
                 </dd>
             </dl>

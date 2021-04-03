@@ -90,7 +90,7 @@
                     <label class="form-control-label" jhiTranslate="escolaOnlineApp.debito.alunoDebito" for="field_alunoDebito">Aluno Debito</label>
                     <select class="form-control" id="field_alunoDebito" name="alunoDebito" formControlName="alunoDebito">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="alunoOption.id === editForm.get('alunoDebito')!.value?.id ? editForm.get('alunoDebito')!.value : alunoOption" *ngFor="let alunoOption of alunos; trackBy: trackById">{{ alunoOption.pessoaAluno.nome }}</option>
+                        <option [ngValue]="alunoOption.id === editForm.get('alunoDebito')!.value?.id ? editForm.get('alunoDebito')!.value : alunoOption" *ngFor="let alunoOption of alunos; trackBy: trackById">{{ alunoOption.pessoaAluno?.nome }}</option>
                     </select>
                 </div>
             </div>

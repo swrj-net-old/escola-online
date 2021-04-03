@@ -31,7 +31,7 @@
                     <label class="form-control-label" jhiTranslate="escolaOnlineApp.chamada.alunoChamada" for="field_alunoChamada">Aluno Chamada</label>
                     <select class="form-control" id="field_alunoChamada" name="alunoChamada" formControlName="alunoChamada">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="alunoOption.id === editForm.get('alunoChamada')!.value?.id ? editForm.get('alunoChamada')!.value : alunoOption" *ngFor="let alunoOption of alunos; trackBy: trackById">{{ alunoOption.pessoaAluno.nome }}</option>
+                        <option [ngValue]="alunoOption.id === editForm.get('alunoChamada')!.value?.id ? editForm.get('alunoChamada')!.value : alunoOption" *ngFor="let alunoOption of alunos; trackBy: trackById">{{ alunoOption.pessoaAluno?.nome }}</option>
                     </select>
                 </div>
 
@@ -47,7 +47,7 @@
                     <label class="form-control-label" jhiTranslate="escolaOnlineApp.chamada.professorChamada" for="field_professorChamada">Professor Chamada</label>
                     <select class="form-control" id="field_professorChamada" name="professorChamada" formControlName="professorChamada">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="professorOption.id === editForm.get('professorChamada')!.value?.id ? editForm.get('professorChamada')!.value : professorOption" *ngFor="let professorOption of professors; trackBy: trackById">{{ professorOption.pessoaProfessor.nome }}</option>
+                        <option [ngValue]="professorOption.id === editForm.get('professorChamada')!.value?.id ? editForm.get('professorChamada')!.value : professorOption" *ngFor="let professorOption of professors; trackBy: trackById">{{ professorOption.pessoaProfessor?.nome }}</option>
                     </select>
                 </div>
             </div>
