@@ -27,13 +27,13 @@
                 <dt><span jhiTranslate="escolaOnlineApp.solicitacao.tipoSolicitacaoSolicitacao">Tipo Solicitacao Solicitacao</span></dt>
                 <dd>
                     <div *ngIf="solicitacao.tipoSolicitacaoSolicitacao">
-                        <a [routerLink]="['/tipo-solicitacao', solicitacao.tipoSolicitacaoSolicitacao?.id, 'view']">{{ solicitacao.tipoSolicitacaoSolicitacao?.id }}</a>
+                        <a [routerLink]="['/tipo-solicitacao', solicitacao.tipoSolicitacaoSolicitacao?.id, 'view']">{{ solicitacao.tipoSolicitacaoSolicitacao?.nome }}</a>
                     </div>
                 </dd>
                 <dt><span jhiTranslate="escolaOnlineApp.solicitacao.alunoSolicitacao">Aluno Solicitacao</span></dt>
                 <dd>
                     <div *ngIf="solicitacao.alunoSolicitacao">
-                        <a [routerLink]="['/aluno', solicitacao.alunoSolicitacao?.id, 'view']">{{ solicitacao.alunoSolicitacao?.id }}</a>
+                        <a [routerLink]="['/aluno', solicitacao.alunoSolicitacao?.id, 'view']">{{ solicitacao.alunoSolicitacao?.pessoaAluno.nome }}</a>
                     </div>
                 </dd>
             </dl>

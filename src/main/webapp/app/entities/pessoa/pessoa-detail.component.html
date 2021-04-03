@@ -63,13 +63,13 @@
                 <dt><span jhiTranslate="escolaOnlineApp.pessoa.cidadePessoa">Cidade Pessoa</span></dt>
                 <dd>
                     <div *ngIf="pessoa.cidadePessoa">
-                        <a [routerLink]="['/cidade', pessoa.cidadePessoa?.id, 'view']">{{ pessoa.cidadePessoa?.id }}</a>
+                        <a [routerLink]="['/cidade', pessoa.cidadePessoa?.id, 'view']">{{ pessoa.cidadePessoa?.nome }}</a>
                     </div>
                 </dd>
                 <dt><span jhiTranslate="escolaOnlineApp.pessoa.escolaPessoa">Escola Pessoa</span></dt>
                 <dd>
                     <div *ngIf="pessoa.escolaPessoa">
-                        <a [routerLink]="['/escola', pessoa.escolaPessoa?.id, 'view']">{{ pessoa.escolaPessoa?.id }}</a>
+                        <a [routerLink]="['/escola', pessoa.escolaPessoa?.id, 'view']">{{ pessoa.escolaPessoa?.nome }}</a>
                     </div>
                 </dd>
             </dl>

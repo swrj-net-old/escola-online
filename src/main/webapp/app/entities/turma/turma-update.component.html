@@ -21,7 +21,7 @@
                     <label class="form-control-label" jhiTranslate="escolaOnlineApp.turma.serieTurma" for="field_serieTurma">Serie Turma</label>
                     <select class="form-control" id="field_serieTurma" name="serieTurma" formControlName="serieTurma">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="serieOption.id === editForm.get('serieTurma')!.value?.id ? editForm.get('serieTurma')!.value : serieOption" *ngFor="let serieOption of series; trackBy: trackById">{{ serieOption.id }}</option>
+                        <option [ngValue]="serieOption.id === editForm.get('serieTurma')!.value?.id ? editForm.get('serieTurma')!.value : serieOption" *ngFor="let serieOption of series; trackBy: trackById">{{ serieOption.nome }}</option>
                     </select>
                 </div>
 
@@ -29,7 +29,7 @@
                     <label class="form-control-label" jhiTranslate="escolaOnlineApp.turma.unidadeTurma" for="field_unidadeTurma">Unidade Turma</label>
                     <select class="form-control" id="field_unidadeTurma" name="unidadeTurma" formControlName="unidadeTurma">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="unidadeOption.id === editForm.get('unidadeTurma')!.value?.id ? editForm.get('unidadeTurma')!.value : unidadeOption" *ngFor="let unidadeOption of unidades; trackBy: trackById">{{ unidadeOption.id }}</option>
+                        <option [ngValue]="unidadeOption.id === editForm.get('unidadeTurma')!.value?.id ? editForm.get('unidadeTurma')!.value : unidadeOption" *ngFor="let unidadeOption of unidades; trackBy: trackById">{{ unidadeOption.nome }}</option>
                     </select>
                 </div>
             </div>

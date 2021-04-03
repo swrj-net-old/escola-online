@@ -32,7 +32,7 @@
                     <th scope="col"  jhiSortBy="totalDesconto"><span jhiTranslate="escolaOnlineApp.debito.totalDesconto">Total Desconto</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="totalDevido"><span jhiTranslate="escolaOnlineApp.debito.totalDevido">Total Devido</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="observacoes"><span jhiTranslate="escolaOnlineApp.debito.observacoes">Observacoes</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="alunoDebito.id"><span jhiTranslate="escolaOnlineApp.debito.alunoDebito">Aluno Debito</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="alunoDebito.pessoaAluno.nome"><span jhiTranslate="escolaOnlineApp.debito.alunoDebito">Aluno Debito</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -50,7 +50,7 @@
                     <td>{{ debito.observacoes }}</td>
                     <td>
                         <div *ngIf="debito.alunoDebito">
-                            <a [routerLink]="['/aluno', debito.alunoDebito?.id, 'view']" >{{ debito.alunoDebito?.id }}</a>
+                            <a [routerLink]="['/aluno', debito.alunoDebito?.id, 'view']" >{{ debito.alunoDebito?.pessoaAluno.nome }}</a>
                         </div>
                     </td>
                     <td class="text-right">

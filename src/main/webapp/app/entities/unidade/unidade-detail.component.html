@@ -8,6 +8,12 @@
             <jhi-alert-error></jhi-alert-error>
 
             <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="escolaOnlineApp.unidade.escolaUnidade">Escola Unidadesss</span></dt>
+                <dd>
+                    <div *ngIf="unidade.escolaUnidade">
+                        <a [routerLink]="['/escola', unidade.escolaUnidade?.id, 'view']">{{ unidade.escolaUnidade?.nome }}</a>
+                    </div>
+                </dd>
                 <dt><span jhiTranslate="escolaOnlineApp.unidade.nome">Nome</span></dt>
                 <dd>
                     <span>{{ unidade.nome }}</span>
@@ -55,12 +61,6 @@
                 <dt><span jhiTranslate="escolaOnlineApp.unidade.observacoes">Observacoes</span></dt>
                 <dd>
                     <span>{{ unidade.observacoes }}</span>
-                </dd>
-                <dt><span jhiTranslate="escolaOnlineApp.unidade.escolaUnidade">Escola Unidade</span></dt>
-                <dd>
-                    <div *ngIf="unidade.escolaUnidade">
-                        <a [routerLink]="['/escola', unidade.escolaUnidade?.id, 'view']">{{ unidade.escolaUnidade?.id }}</a>
-                    </div>
                 </dd>
             </dl>
 

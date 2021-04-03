@@ -26,7 +26,7 @@
                     <th scope="col"  jhiSortBy="nome"><span jhiTranslate="escolaOnlineApp.tipoSolicitacao.nome">Nome</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="prazoAtendimento"><span jhiTranslate="escolaOnlineApp.tipoSolicitacao.prazoAtendimento">Prazo Atendimento</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="valorEmissao"><span jhiTranslate="escolaOnlineApp.tipoSolicitacao.valorEmissao">Valor Emissao</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="escolaTipoSolicitacao.id"><span jhiTranslate="escolaOnlineApp.tipoSolicitacao.escolaTipoSolicitacao">Escola Tipo Solicitacao</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="escolaTipoSolicitacao.nome"><span jhiTranslate="escolaOnlineApp.tipoSolicitacao.escolaTipoSolicitacao">Escola Tipo Solicitacao</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -38,7 +38,7 @@
                     <td>{{ tipoSolicitacao.valorEmissao }}</td>
                     <td>
                         <div *ngIf="tipoSolicitacao.escolaTipoSolicitacao">
-                            <a [routerLink]="['/escola', tipoSolicitacao.escolaTipoSolicitacao?.id, 'view']" >{{ tipoSolicitacao.escolaTipoSolicitacao?.id }}</a>
+                            <a [routerLink]="['/escola', tipoSolicitacao.escolaTipoSolicitacao?.id, 'view']" >{{ tipoSolicitacao.escolaTipoSolicitacao?.nome }}</a>
                         </div>
                     </td>
                     <td class="text-right">

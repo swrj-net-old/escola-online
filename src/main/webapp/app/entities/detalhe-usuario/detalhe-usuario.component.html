@@ -25,17 +25,17 @@
                     <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="cpf"><span jhiTranslate="escolaOnlineApp.detalheUsuario.cpf">Cpf</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="celular"><span jhiTranslate="escolaOnlineApp.detalheUsuario.celular">Celular</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="usuario.id"><span jhiTranslate="escolaOnlineApp.detalheUsuario.usuario">Usuario</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="usuario.login"><span jhiTranslate="escolaOnlineApp.detalheUsuario.usuario">Usuario</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let detalheUsuario of detalheUsuarios ;trackBy: trackId">
-                    <td><a [routerLink]="['/detalhe-usuario', detalheUsuario.id, 'view']">{{ detalheUsuario.id }}</a></td>
+                    <td><a [routerLink]="['/detalhe-usuario', detalheUsuario.id, 'view']">{{ detalheUsuario.usuario.login }}</a></td>
                     <td>{{ detalheUsuario.cpf }}</td>
                     <td>{{ detalheUsuario.celular }}</td>
                     <td>
-                        {{ detalheUsuario.usuario?.id }}
+                        {{ detalheUsuario.usuario?.login }}
                     </td>
                     <td class="text-right">
                         <div class="btn-group">

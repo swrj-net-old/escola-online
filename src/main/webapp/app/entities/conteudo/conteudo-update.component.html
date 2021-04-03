@@ -37,7 +37,7 @@
                     <label class="form-control-label" jhiTranslate="escolaOnlineApp.conteudo.turmaConteudo" for="field_turmaConteudo">Turma Conteudo</label>
                     <select class="form-control" id="field_turmaConteudo" name="turmaConteudo" formControlName="turmaConteudo">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="turmaOption.id === editForm.get('turmaConteudo')!.value?.id ? editForm.get('turmaConteudo')!.value : turmaOption" *ngFor="let turmaOption of turmas; trackBy: trackById">{{ turmaOption.id }}</option>
+                        <option [ngValue]="turmaOption.id === editForm.get('turmaConteudo')!.value?.id ? editForm.get('turmaConteudo')!.value : turmaOption" *ngFor="let turmaOption of turmas; trackBy: trackById">{{ turmaOption.nome }}</option>
                     </select>
                 </div>
 
@@ -45,7 +45,7 @@
                     <label class="form-control-label" jhiTranslate="escolaOnlineApp.conteudo.professorConteudo" for="field_professorConteudo">Professor Conteudo</label>
                     <select class="form-control" id="field_professorConteudo" name="professorConteudo" formControlName="professorConteudo">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="professorOption.id === editForm.get('professorConteudo')!.value?.id ? editForm.get('professorConteudo')!.value : professorOption" *ngFor="let professorOption of professors; trackBy: trackById">{{ professorOption.id }}</option>
+                        <option [ngValue]="professorOption.id === editForm.get('professorConteudo')!.value?.id ? editForm.get('professorConteudo')!.value : professorOption" *ngFor="let professorOption of professors; trackBy: trackById">{{ professorOption.pessoaProfessor.nome }}</option>
                     </select>
                 </div>
 
@@ -53,7 +53,7 @@
                     <label class="form-control-label" jhiTranslate="escolaOnlineApp.conteudo.materiaConteudo" for="field_materiaConteudo">Materia Conteudo</label>
                     <select class="form-control" id="field_materiaConteudo" name="materiaConteudo" formControlName="materiaConteudo">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="materiaOption.id === editForm.get('materiaConteudo')!.value?.id ? editForm.get('materiaConteudo')!.value : materiaOption" *ngFor="let materiaOption of materias; trackBy: trackById">{{ materiaOption.id }}</option>
+                        <option [ngValue]="materiaOption.id === editForm.get('materiaConteudo')!.value?.id ? editForm.get('materiaConteudo')!.value : materiaOption" *ngFor="let materiaOption of materias; trackBy: trackById">{{ materiaOption.nome }}</option>
                     </select>
                 </div>
             </div>

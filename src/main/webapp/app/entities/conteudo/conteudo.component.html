@@ -26,9 +26,9 @@
                     <th scope="col"  jhiSortBy="dataAula"><span jhiTranslate="escolaOnlineApp.conteudo.dataAula">Data Aula</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="habilidadesCompetencias"><span jhiTranslate="escolaOnlineApp.conteudo.habilidadesCompetencias">Habilidades Competencias</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="observacoes"><span jhiTranslate="escolaOnlineApp.conteudo.observacoes">Observacoes</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="turmaConteudo.id"><span jhiTranslate="escolaOnlineApp.conteudo.turmaConteudo">Turma Conteudo</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="professorConteudo.id"><span jhiTranslate="escolaOnlineApp.conteudo.professorConteudo">Professor Conteudo</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="materiaConteudo.id"><span jhiTranslate="escolaOnlineApp.conteudo.materiaConteudo">Materia Conteudo</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="turmaConteudo.nome"><span jhiTranslate="escolaOnlineApp.conteudo.turmaConteudo">Turma Conteudo</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="professorConteudo.pessoaProfessor.nome"><span jhiTranslate="escolaOnlineApp.conteudo.professorConteudo">Professor Conteudo</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="materiaConteudo.nome"><span jhiTranslate="escolaOnlineApp.conteudo.materiaConteudo">Materia Conteudo</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -40,17 +40,17 @@
                     <td>{{ conteudo.observacoes }}</td>
                     <td>
                         <div *ngIf="conteudo.turmaConteudo">
-                            <a [routerLink]="['/turma', conteudo.turmaConteudo?.id, 'view']" >{{ conteudo.turmaConteudo?.id }}</a>
+                            <a [routerLink]="['/turma', conteudo.turmaConteudo?.id, 'view']" >{{ conteudo.turmaConteudo?.nome }}</a>
                         </div>
                     </td>
                     <td>
                         <div *ngIf="conteudo.professorConteudo">
-                            <a [routerLink]="['/professor', conteudo.professorConteudo?.id, 'view']" >{{ conteudo.professorConteudo?.id }}</a>
+                            <a [routerLink]="['/professor', conteudo.professorConteudo?.id, 'view']" >{{ conteudo.professorConteudo?.pessoaProfessor.nome }}</a>
                         </div>
                     </td>
                     <td>
                         <div *ngIf="conteudo.materiaConteudo">
-                            <a [routerLink]="['/materia', conteudo.materiaConteudo?.id, 'view']" >{{ conteudo.materiaConteudo?.id }}</a>
+                            <a [routerLink]="['/materia', conteudo.materiaConteudo?.id, 'view']" >{{ conteudo.materiaConteudo?.nome }}</a>
                         </div>
                     </td>
                     <td class="text-right">

@@ -27,7 +27,7 @@
                     <label class="form-control-label" jhiTranslate="escolaOnlineApp.detalheUsuario.usuario" for="field_usuario">Usuario</label>
                     <select class="form-control" id="field_usuario" name="usuario" formControlName="usuario">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="userOption.id === editForm.get('usuario')!.value?.id ? editForm.get('usuario')!.value : userOption" *ngFor="let userOption of users; trackBy: trackById">{{ userOption.id }}</option>
+                        <option [ngValue]="userOption.id === editForm.get('usuario')!.value?.id ? editForm.get('usuario')!.value : userOption" *ngFor="let userOption of users; trackBy: trackById">{{ userOption.login }}</option>
                     </select>
                 </div>
             </div>

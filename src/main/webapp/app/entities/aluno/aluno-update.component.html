@@ -82,7 +82,7 @@
                     <label class="form-control-label" jhiTranslate="escolaOnlineApp.aluno.pessoaAluno" for="field_pessoaAluno">Pessoa Aluno</label>
                     <select class="form-control" id="field_pessoaAluno" name="pessoaAluno" formControlName="pessoaAluno">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="pessoaOption.id === editForm.get('pessoaAluno')!.value?.id ? editForm.get('pessoaAluno')!.value : pessoaOption" *ngFor="let pessoaOption of pessoas; trackBy: trackById">{{ pessoaOption.id }}</option>
+                        <option [ngValue]="pessoaOption.id === editForm.get('pessoaAluno')!.value?.id ? editForm.get('pessoaAluno')!.value : pessoaOption" *ngFor="let pessoaOption of pessoas; trackBy: trackById">{{ pessoaOption.nome }}</option>
                     </select>
                 </div>
 
@@ -90,7 +90,7 @@
                     <label class="form-control-label" jhiTranslate="escolaOnlineApp.aluno.escolaAluno" for="field_escolaAluno">Escola Aluno</label>
                     <select class="form-control" id="field_escolaAluno" name="escolaAluno" formControlName="escolaAluno">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="escolaOption.id === editForm.get('escolaAluno')!.value?.id ? editForm.get('escolaAluno')!.value : escolaOption" *ngFor="let escolaOption of escolas; trackBy: trackById">{{ escolaOption.id }}</option>
+                        <option [ngValue]="escolaOption.id === editForm.get('escolaAluno')!.value?.id ? editForm.get('escolaAluno')!.value : escolaOption" *ngFor="let escolaOption of escolas; trackBy: trackById">{{ escolaOption.nome }}</option>
                     </select>
                 </div>
             </div>
