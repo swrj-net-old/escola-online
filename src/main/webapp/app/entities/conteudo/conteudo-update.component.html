@@ -45,7 +45,7 @@
                     <label class="form-control-label" jhiTranslate="escolaOnlineApp.conteudo.professorConteudo" for="field_professorConteudo">Professor Conteudo</label>
                     <select class="form-control" id="field_professorConteudo" name="professorConteudo" formControlName="professorConteudo">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="professorOption.id === editForm.get('professorConteudo')!.value?.id ? editForm.get('professorConteudo')!.value : professorOption" *ngFor="let professorOption of professors; trackBy: trackById">{{ professorOption.pessoaProfessor.nome }}</option>
+                        <option [ngValue]="professorOption.id === editForm.get('professorConteudo')!.value?.id ? editForm.get('professorConteudo')!.value : professorOption" *ngFor="let professorOption of professors; trackBy: trackById">{{ professorOption.pessoaProfessor?.nome }}</option>
                     </select>
                 </div>
 

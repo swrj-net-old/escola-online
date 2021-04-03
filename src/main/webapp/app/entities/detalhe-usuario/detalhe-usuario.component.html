@@ -31,7 +31,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let detalheUsuario of detalheUsuarios ;trackBy: trackId">
-                    <td><a [routerLink]="['/detalhe-usuario', detalheUsuario.id, 'view']">{{ detalheUsuario.usuario.login }}</a></td>
+                    <td><a [routerLink]="['/detalhe-usuario', detalheUsuario.id, 'view']">{{ detalheUsuario.usuario?.login }}</a></td>
                     <td>{{ detalheUsuario.cpf }}</td>
                     <td>{{ detalheUsuario.celular }}</td>
                     <td>

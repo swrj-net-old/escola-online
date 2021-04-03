@@ -53,7 +53,7 @@
                 <dt><span jhiTranslate="escolaOnlineApp.historicoDebito.detalheUsuarioLancamento">Detalhe Usuario Lancamento</span></dt>
                 <dd>
                     <div *ngIf="historicoDebito.detalheUsuarioLancamento">
-                        <a [routerLink]="['/detalhe-usuario', historicoDebito.detalheUsuarioLancamento?.id, 'view']">{{ historicoDebito.detalheUsuarioLancamento?.usuario.login }}</a>
+                        <a [routerLink]="['/detalhe-usuario', historicoDebito.detalheUsuarioLancamento?.id, 'view']">{{ historicoDebito.detalheUsuarioLancamento?.usuario?.login }}</a>
                     </div>
                 </dd>
             </dl>

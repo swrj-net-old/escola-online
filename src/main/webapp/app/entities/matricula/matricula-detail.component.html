@@ -29,7 +29,7 @@
                 <dt><span jhiTranslate="escolaOnlineApp.matricula.alunoMatricula">Aluno Matricula</span></dt>
                 <dd>
                     <div *ngIf="matricula.alunoMatricula">
-                        <a [routerLink]="['/aluno', matricula.alunoMatricula?.id, 'view']">{{ matricula.alunoMatricula?.pessoaAluno.nome }}</a>
+                        <a [routerLink]="['/aluno', matricula.alunoMatricula?.id, 'view']">{{ matricula.alunoMatricula?.pessoaAluno?.nome }}</a>
                     </div>
                 </dd>
             </dl>

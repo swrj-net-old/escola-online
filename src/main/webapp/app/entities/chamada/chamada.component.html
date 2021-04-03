@@ -38,7 +38,7 @@
                     <td>{{ chamada.observacoes }}</td>
                     <td>
                         <div *ngIf="chamada.alunoChamada">
-                            <a [routerLink]="['/aluno', chamada.alunoChamada?.id, 'view']" >{{ chamada.alunoChamada?.nome }}</a>
+                            <a [routerLink]="['/aluno', chamada.alunoChamada?.id, 'view']" >{{ chamada.alunoChamada?.pessoaAluno?.nome }}</a>
                         </div>
                     </td>
                     <td>
@@ -48,7 +48,7 @@
                     </td>
                     <td>
                         <div *ngIf="chamada.professorChamada">
-                            <a [routerLink]="['/professor', chamada.professorChamada?.id, 'view']" >{{ chamada.professorChamada?.nome }}</a>
+                            <a [routerLink]="['/professor', chamada.professorChamada?.id, 'view']" >{{ chamada.professorChamada?.pessoaProfessor?.nome }}</a>
                         </div>
                     </td>
                     <td class="text-right">
